@@ -1,0 +1,69 @@
+Class: Owner
+Collaborator: Account, Code
+Responsibilitiy: Host app, manage content (players and codes).
+
+Class: Player
+Collaborator: Account, Player QR, Code, Comment, Score, Photo, Geolocation, Map
+Responsibilitiy: Use app by scanning Codes.
+
+Class: Account
+Collaborator: Owner, Player, Player QR, Score
+Responsibilitiy: Store all relevant info about a player.
+
+Class: Player QR
+Collaborator: Player, Account
+Responsibilitiy: Give info about an Account (to login or see Account).
+
+Class: Code (QR and Bar)
+Collaborator: Owner, Player, Comment, Account, Photo, Geolocation, Map
+Responsibilitiy: Be scanned and scored, stored as hash w/ other info.
+
+Class: Comment
+Collaborator: Player, Code
+Responsibilitiy: Let Players communicate about a Code.
+
+Class: Score
+Collaborator: Player, Code
+Responsibilitiy: Evaluate Codes for comparison.
+
+Class: Photo
+Collaborator: Player, Code, Account
+Responsibilitiy: Visually store info about where a Code was found.
+
+Class: Geolocation
+Collaborator: Player, Code, Account
+Responsibilitiy: Store location of where a Code was found.
+
+Class: Map
+Collaborator: Player, Code
+Responsibilitiy: Visually show a Player nearby Codes
+
+Owner
+
+Player
+
+Account
+
+Player QR
+
+QR code
+
+Barcode
+
+Comment
+
+Score
+
+Photo
+
+Geolocation
+
+Map
+
+
+
+
+
+
+
+
