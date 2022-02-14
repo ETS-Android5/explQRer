@@ -1,69 +1,31 @@
-Class: Owner
-Collaborator: Account, Code
-Responsibilitiy: Host app, manage content (players and codes).
-
 Class: Player
-Collaborator: Account, Player QR, Code, Comment, Score, Photo, Geolocation, Map
-Responsibilitiy: Use app by scanning Codes.
+Collaborator: Player Profile, Code, Map, Leaderboard, Comment, Scanner
+Responsibility: Interact with the app; i.e. scan codes, generate data (photos, comments), view data via Player Profiles, Leaderboard, etc. 
 
-Class: Account
-Collaborator: Owner, Player, Player QR, Score
-Responsibilitiy: Store all relevant info about a player.
+Class: Owner
+Collaborator: Player Profile, Code
+Responsibility: Host app and data. Delete Codes and Player Profiles.
 
-Class: Player QR
-Collaborator: Player, Account
-Responsibilitiy: Give info about an Account (to login or see Account).
+Class: Code
+Collaborator: Player, Player Profile, Owner, Map, Comment, Scanner
+Responsibility: Store hash, store and display score, location, photos, Comments, and which Player Profiles have scanned. 
 
-Class: Code (QR and Bar)
-Collaborator: Owner, Player, Comment, Account, Photo, Geolocation, Map
-Responsibilitiy: Be scanned and scored, stored as hash w/ other info.
-
-Class: Comment
-Collaborator: Player, Code
-Responsibilitiy: Let Players communicate about a Code.
-
-Class: Score
-Collaborator: Player, Code
-Responsibilitiy: Evaluate Codes for comparison.
-
-Class: Photo
-Collaborator: Player, Code, Account
-Responsibilitiy: Visually store info about where a Code was found.
-
-Class: Geolocation
-Collaborator: Player, Code, Account
-Responsibilitiy: Store location of where a Code was found.
+Class: Player Profile
+Collaborator: Player, Code, Leaderboard, Comment, Owner, Scanner
+Responsibility: Store relevant Player information. Generate codes to transfer credentials or share username for lookup.
 
 Class: Map
 Collaborator: Player, Code
-Responsibilitiy: Visually show a Player nearby Codes
+Responsibility: Show Codes based on location with reference map. Show Player location.
 
-Owner
+Class: Leaderboard
+Collaborator: Player, Player Profile
+Responsibility: Know, sort, and display Player Profiles.
 
-Player
+Class: Comment
+Collaborator: Player, Player Profile, Code
+Responsibility: Have player, date/time, and text. Be visible to many players.
 
-Account
-
-Player QR
-
-QR code
-
-Barcode
-
-Comment
-
-Score
-
-Photo
-
-Geolocation
-
-Map
-
-
-
-
-
-
-
-
+Class: Scanner
+Collaborator: Player, Code, Player Profile
+Responsibility: Hash Codes, and look for existing match. Create Codes or add data to Codes including location (optional), photo (optional), which Player Profiles have scanned.
