@@ -1,0 +1,12 @@
+On the CRC
+-Player
+-Owner
+-Code (the qr code)
+-Player Profile
+-Map
+-Leaderboard
+-Comment
+-Scanner
+
+Not on the CRC yet
+-Class to write and read data from firestore
