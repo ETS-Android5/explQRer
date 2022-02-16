@@ -1,12 +1,13 @@
 On the CRC
--Player
--Owner
--Code (the qr code)
--Player Profile
--Map
--Leaderboard
--Comment
--Scanner
+-Player : in the end (during integretion)
+-Owner : --Part 4
+-Code (the qr code) and ArrayAdapter: Mason
+-Player Profile : Falak
+-MapData : Rayna
+-Leaderboard and array adapter : Rayna 
+-Comment and array adapter : Hrid
+-Scanner : Falak
 
 Not on the CRC yet
--Class to write and read data from firestore
+-Class to write and read data from firestore : Hrid
+-ArrayAdapters - Comment, Code, Player Profiles(Leaderboard)
