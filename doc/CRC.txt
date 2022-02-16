@@ -14,7 +14,7 @@ Class: Player Profile
 Collaborator: Player, Code, Leaderboard, Comment, Owner, Scanner
 Responsibility: Store relevant Player information. Generate codes to transfer credentials or share username for lookup.
 
-Class: Map
+Class: MapData
 Collaborator: Player, Code
 Responsibility: Show Codes based on location with reference map. Show Player location.
 
