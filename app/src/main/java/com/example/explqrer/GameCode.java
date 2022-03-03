@@ -3,8 +3,10 @@ package com.example.explqrer;
 import static com.google.firebase.crashlytics.buildtools.reloc.com.google.common.math.IntMath.pow;
 
 import android.location.Location;
+import android.media.Image;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.common.util.Hex;
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.hash.HashFunction;
@@ -15,6 +17,11 @@ import com.google.mlkit.vision.barcode.common.Barcode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+/**
+ * Store information about a code scanned by a player, so that it
+ * can be displayed to the player. Also updates the database on creation
+ * with a new image and/or location.
+ */
 public class GameCode {
     private final String sha256hex;
 
@@ -27,20 +34,16 @@ public class GameCode {
     private ArrayList<String> scannedByList;
     HashFunction hash =  Hashing.sha256();
 
-    GameCode(@NonNull Barcode barcode, Location location, Photo photo, Player player) {
+    /**
+     * Constructor for GameCode.
+     * @param barcode   a scanned barcode to be recorded
+     * @param location  geolocation information. Can be null
+     * @param photo     an image of the location of the barcode. Can be null
+     * @param player    the player scanning the code
+     */
+    public GameCode(@NonNull Barcode barcode, @NonNull Player player, @Nullable Location location, @Nullable Image photo) {
         sha256hex = hash.hashBytes(barcode.getRawBytes()).toString();
-        score = calculateScore();
-    }
-    GameCode(@NonNull Barcode barcode, Location location, Player player) {
-        sha256hex = hash.hashBytes(barcode.getRawBytes()).toString();
-        score = calculateScore();
-    }
-    GameCode(@NonNull Barcode barcode, Photo photo, Player player) {
-        sha256hex = hash.hashBytes(barcode.getRawBytes()).toString();
-        score = calculateScore();
-    }
-    GameCode(@NonNull Barcode barcode, Player player) {
-        sha256hex = hash.hashBytes(barcode.getRawBytes()).toString();
+        // TODO: Check Database for hash
         score = calculateScore();
     }
 
