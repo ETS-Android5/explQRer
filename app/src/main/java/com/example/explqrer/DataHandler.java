@@ -10,7 +10,7 @@ public class DataHandler {
     FirebaseFirestore db;
     CollectionReference totalQr, pts, unique;
 
-    DataHandler(){
+    public DataHandler(){
         db = FirebaseFirestore.getInstance();
     }
 
