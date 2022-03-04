@@ -53,6 +53,10 @@ public class GameCode {
         score = calculateScore();
     }
 
+    /**
+     * Helper function used to calculate the score of the hash string
+     * @return The score as an integer
+     */
     private int calculateScore() {
         int ret = 0;
         int repeats = 0;
@@ -76,10 +80,18 @@ public class GameCode {
         return ret;
     }
 
+    /**
+     * Get the score
+     * @return The score as an integer
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Get the hash
+     * @return The hash as a string
+     */
     public String getSha256hex() {
         return sha256hex;
     }
