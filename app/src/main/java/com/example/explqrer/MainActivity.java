@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     // Data
     private String username;
     // Views
+    private TextView  usernameText;
     private BottomNavigationView bottomNavigationView;
     // Shared Preferences
     private SharedPreferences sharedPreferences;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnItemSelectedListener(this);
+        usernameText = findViewById(R.id.username_text);
+        usernameText.setText(username);
 
     }
 
@@ -59,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         String json = sharedPreferences.getString(SHARED_PREFS_USERNAME_KEY, null);
         username = gson.fromJson(json, String.class);
 
-        if (username.isEmpty()) {
+        if (username ==null || username.isEmpty()) {
             // Random 6 digit number
             username = String.format(Locale.US,"%06d",
                     (int) Math.floor(Math.random() * 1000000));
