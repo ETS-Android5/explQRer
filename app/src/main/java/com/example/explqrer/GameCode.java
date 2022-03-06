@@ -41,11 +41,11 @@ public class GameCode {
      * @param photo     an image of the location of the barcode. Can be null
      * @param player    the player scanning the code
      */
-//    public GameCode(@NonNull Barcode barcode, @NonNull Player player, @Nullable Location location, @Nullable Image photo) {
-//        sha256hex = hash.hashBytes(barcode.getRawBytes()).toString();
-//        // TODO: Check Database for hash
-//        score = calculateScore();
-//    }
+    public GameCode(@NonNull Barcode barcode, @NonNull PlayerProfile player, @Nullable Location location, @Nullable Image photo) {
+        sha256hex = hash.hashBytes(barcode.getRawBytes()).toString();
+        // TODO: Check Database for hash
+        score = calculateScore();
+    }
 
 
     GameCode(String rawValue) {
