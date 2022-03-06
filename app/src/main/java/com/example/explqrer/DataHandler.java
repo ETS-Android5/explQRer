@@ -1,12 +1,18 @@
 package com.example.explqrer;
 
+import static android.content.ContentValues.TAG;
+
+import android.nfc.Tag;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -14,6 +20,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -59,10 +66,42 @@ public class DataHandler {
                         ArrayList<String> usernames = new ArrayList<>();
                         usernames.add(username);
                         data.put("users", usernames);
+                        docRef.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d(TAG, "Success");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "Failure");
+                            }
+                        });
                     }
                 }
             }
         });
 
+    }
+
+    public Map<String,Object> getQR(){
+        CollectionReference cr = db.collection("qrbase");
+
+        // Get the documents
+        Map<String,Object> qrs = new HashMap<>();
+
+        cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot doc: task.getResult()){
+                        String qr = doc.getId();
+                        ArrayList<String> usernames = (ArrayList<String>) doc.getData().get("users");
+                        qrs.put(qr,usernames);
+                    }
+                }
+            }
+        });
+        return qrs;
     }
 }
