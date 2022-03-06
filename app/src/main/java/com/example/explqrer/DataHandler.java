@@ -39,8 +39,8 @@ public class DataHandler {
      * TODO: # of QRs scanned leaderboard
      * TODO: pts leaderboard
      * TODO: Highest Unique QRs scanned leader board
-     * TODO: Player info database
-     * TODO: QR code database
+     * Player info database
+     * QR code database
      */
 
     // QR code database
@@ -84,6 +84,7 @@ public class DataHandler {
 
     }
 
+    // Function to get all the qr codes
     public Map<String,Object> getQR(){
         CollectionReference cr = db.collection("qrbase");
 
@@ -104,4 +105,76 @@ public class DataHandler {
         });
         return qrs;
     }
+
+    // Player Info database
+
+    // Function to create new player
+    public void createPlayer(String username, String contact){
+        // Collection reference
+        CollectionReference cr = db.collection("player");
+
+        // Create hash map and add to document
+        Map<String,Object> data = new HashMap<>();
+        data.put("contact",contact);
+        data.put("pts",0);
+        data.put("scanned",0);
+        data.put("ptsL",-1);
+        data.put("qrL",-1);
+        data.put("uniqueL", -1);
+
+        cr.document(username).set(data);
+    }
+
+    // Function to get a specific player info
+    public Map<String,Object> getPlayer(String username){
+        // Collection reference
+        CollectionReference cr = db.collection("player");
+
+        //Get the data of the specific player
+        final Map<String, Object>[] data = new Map[]{new HashMap<>()};
+
+        DocumentReference dr = cr.document(username);
+
+        dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        data[0] = doc.getData();
+                    }
+                }
+            }
+        });
+
+        // Return the hashmap
+        return data[0];
+    }
+
+    // Function to update the pts
+    public void updatePts(String username, long pts){
+        // Collection ref
+        CollectionReference cr = db.collection("player");
+
+        // Document reference
+        DocumentReference dr = cr.document(username);
+
+        dr.update("pts",FieldValue.increment(pts));
+
+        // TODO: Update ptsL
+    }
+
+    // Function to update scanned
+    public void updateScanned(String username, long scanned){
+        // Collection Ref
+        CollectionReference cr = db.collection("player");
+
+        // Document reference
+        DocumentReference dr = cr.document(username);
+
+        dr.update("scanned",FieldValue.increment(scanned));
+
+        // TODO: Update qrL , uniqueL
+    }
+
 }
