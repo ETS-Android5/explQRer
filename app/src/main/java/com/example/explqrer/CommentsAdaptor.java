@@ -28,16 +28,16 @@ public class CommentsAdaptor extends ArrayAdapter<Comments> {
 
         if (view == null) {
             // Fix this during integration
-            view = LayoutInflater.from(context).inflate(R.layout.content, parent, false);
+//            view = LayoutInflater.from(context).inflate(R.layout.content, parent, false);
         }
         Comments comment = comments.get(position);
 
         // Fix this during integration
-        TextView userName = view.findViewById(R.id.city_text);
-        TextView commented = view.findViewById(R.id.province_text);
+//        TextView userName = view.findViewById(R.id.city_text);
+//        TextView commented = view.findViewById(R.id.province_text);
 
-        userName.setText(comment.getUsername());
-        commented.setText(comment.getComment());
+//        userName.setText(comment.getUsername());
+//        commented.setText(comment.getComment());
 
         return view;
 
