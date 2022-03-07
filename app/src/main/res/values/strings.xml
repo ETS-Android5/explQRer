@@ -5,4 +5,5 @@
     <string name="scanner_nav">Scanner</string>
     <string name="search_nav">Search</string>
     <string name="leaderboard_nav">Leaderboard</string>
+    <string name="default_text">default_text</string>
 </resources>
