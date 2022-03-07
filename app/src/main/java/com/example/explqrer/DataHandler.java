@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DataHandler {
-    private FirebaseFirestore db;
+    final private FirebaseFirestore db;
 
     public DataHandler(){
         db = FirebaseFirestore.getInstance();
@@ -230,6 +230,26 @@ public class DataHandler {
         return ptsL[0];
     }
 
+    public ArrayList<String> getPtsLeaderBoard(){
+        // Hashmap to return
+        ArrayList<String> leaderboard = new ArrayList<>();
+
+        // Collection reference
+        CollectionReference cr = db.collection("player");
+
+        cr.orderBy("ptsL", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot doc: task.getResult()){
+                        leaderboard.add(doc.getId());
+                    }
+                }
+            }
+        });
+
+        return leaderboard;
+    }
 
 
     // TODO: # of QRs scanned leaderboard
@@ -238,5 +258,5 @@ public class DataHandler {
 
 
     // TODO: Highest Unique QRs scanned leader board
-    // TODO: get leader board, update uniqueL, get uniqeL for player
+    // TODO: get leader board, update uniqueL, get uniqueL for player
 }
