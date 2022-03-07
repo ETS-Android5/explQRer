@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -92,7 +93,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
             case R.id.profile_nav:
                 // TODO: add profile activity
-                return true;
+                Intent intent = new Intent(MainActivity.this, Gallery.class);
+                startActivity(intent);
 
             case R.id.scan_nav:
                 // TODO: add scan activity
