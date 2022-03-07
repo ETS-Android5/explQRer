@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     // Views
     private TextView  usernameText;
     private BottomNavigationView bottomNavigationView;
+
     // Shared Preferences
     private SharedPreferences sharedPreferences;
 
@@ -50,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         bottomNavigationView.setOnItemSelectedListener(this);
         usernameText = findViewById(R.id.username_text);
         usernameText.setText(username);
+
+
+
 
     }
 
@@ -96,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
             case R.id.scan_nav:
                 // TODO: add scan activity
+                Intent scanningIntent = new Intent(MainActivity.this, ScanningPageShow.class);
+                startActivity(scanningIntent);
                 return true;
 
             case R.id.search_nav:
