@@ -20,6 +20,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -126,6 +127,8 @@ public class DataHandler {
     }
 
     // Function to get a specific player info
+    // Will throw error if player doesnt exist
+    // TODO: handle error part
     public Map<String,Object> getPlayer(String username){
         // Collection reference
         CollectionReference cr = db.collection("player");
@@ -162,6 +165,7 @@ public class DataHandler {
         dr.update("pts",FieldValue.increment(pts));
 
         // TODO: Update ptsL
+        this.updatePtsL();
     }
 
     // Function to update scanned
@@ -177,4 +181,62 @@ public class DataHandler {
         // TODO: Update qrL , uniqueL
     }
 
+    // TODO: Pts leader board
+    // TODO: get leader board
+    // update ptsL,
+    // get ptsL for player
+    public void updatePtsL(){
+        // Collection ref
+        CollectionReference cr = db.collection("player");
+
+        // Update the ptsL for each player
+        cr.orderBy("pts", Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    int pos = 1;
+                    for(QueryDocumentSnapshot doc : task.getResult()){
+                        String username = doc.getId();
+                        DocumentReference dr = cr.document(username);
+                        dr.update("ptsL",pos++);
+                    }
+                }
+            }
+        });
+    }
+
+    public long getPtsL(String username){
+        // Collection Reference
+        CollectionReference cr = db.collection("player");
+
+        // Doc reference
+        DocumentReference dr = cr.document(username);
+
+        // Get the ptsL and store it
+        final long[] ptsL = {0};
+
+        dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        ptsL[0] = (long) doc.getData().get("ptsL");
+                    }
+                }
+            }
+        });
+
+        return ptsL[0];
+    }
+
+
+
+    // TODO: # of QRs scanned leaderboard
+    // TODO: get leader board, update qrL, get qrL for player
+
+
+
+    // TODO: Highest Unique QRs scanned leader board
+    // TODO: get leader board, update uniqueL, get uniqeL for player
 }
