@@ -246,8 +246,13 @@ public class ScanningPageShow extends AppCompatActivity {
 
             String rawValue = barcode.getRawValue();
 
-            // TODO: show the point of the qr code
-            qrPoints.setText(rawValue);
+            // Create a game code and get score of the scanning code
+            GameCode gameCode = new GameCode(rawValue);
+            int score = gameCode.getScore();
+
+
+            // Display the score on the screen
+            qrPoints.setText("Point: "+String.valueOf(score));
             qrPoints.setVisibility(View.VISIBLE);
             scanCode.setVisibility(View.INVISIBLE);
             takePhoto.setVisibility(View.VISIBLE);
