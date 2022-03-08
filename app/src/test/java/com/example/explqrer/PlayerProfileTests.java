@@ -105,4 +105,20 @@ public class PlayerProfileTests {
         assertNull(player.getHighestCode());
         assertNull(player.getLowestCode());
     }
+
+    @Test
+    public void getNumCodes() {
+        assertEquals(0, player.getNumCodes());
+        player.addCode(code);
+        assertEquals(1, player.getNumCodes());
+        player.addCode(code);
+        assertEquals(1, player.getNumCodes());
+        GameCode newCode = new GameCode("Hello World");
+        player.addCode(newCode);
+        assertEquals(2, player.getNumCodes());
+        player.removeCode(code);
+        player.removeCode(newCode);
+        assertEquals(0, player.getNumCodes());
+
+    }
 }

@@ -138,4 +138,12 @@ public class PlayerProfile {
             }
         }
     }
+
+    /**
+     * Get the total number of codes scanned by the player
+     * @return the number of codes
+     */
+    public int getNumCodes() {
+        return codes.size();
+    }
 }
