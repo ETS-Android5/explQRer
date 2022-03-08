@@ -44,8 +44,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.1.0')
 
     // for scanning
-    //implementation 'com.google.mlkit:barcode-scanning:17.0.2'
-    implementation 'com.google.mlkit:barcode-scanning:16.0.3'
+    implementation 'com.google.mlkit:barcode-scanning:17.0.2'
+    //implementation 'com.google.mlkit:barcode-scanning:16.0.3'
     implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:18.0.0'
 
     // for camera

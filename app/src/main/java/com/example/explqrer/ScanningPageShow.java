@@ -1,6 +1,7 @@
 package com.example.explqrer;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
@@ -15,6 +16,8 @@ import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -22,6 +25,9 @@ import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,8 +42,11 @@ import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 //import com.j256.ormlite.stmt.query.In;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -46,10 +55,18 @@ import java.util.concurrent.Executors;
 public class ScanningPageShow extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
+    // view in activity
+    private TextView qrPoints;
+    private ImageView goBack,scanCode,takePhoto,getGeolocation;
+    AlertDialog.Builder alertBuilder;
+    AlertDialog alertDialog;
+
+    // view for qr code
     private ListenableFuture cameraProviderFuture;
     private ExecutorService  cameraExecutor;
     private PreviewView previewView;
     private MyImageAnalyzer imageAnalyzer;
+    private boolean isScanning = false;
 
 
     @Override
@@ -57,12 +74,21 @@ public class ScanningPageShow extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanning_page_show);
 
+        // get ImageView and Textview for later use
+        qrPoints = findViewById(R.id.qr_points);
+        goBack = findViewById(R.id.go_back);
+        scanCode = findViewById(R.id.scanning_qr);
+        takePhoto = findViewById(R.id.take_photo);
+        getGeolocation = findViewById(R.id.get_geolocation);
+
+        scanCode.setVisibility(View.VISIBLE);
+        takePhoto.setVisibility(View.INVISIBLE);
+
+
         // request permission
         requestPermissionsIfNecessary(new String[]{
                 // if you need to show the current location, uncomment the line below
                 Manifest.permission.CAMERA
-
-
         });
 
         previewView = findViewById(R.id.previewView);
@@ -70,7 +96,9 @@ public class ScanningPageShow extends AppCompatActivity {
 
         cameraExecutor = Executors.newSingleThreadExecutor();
         cameraProviderFuture = ProcessCameraProvider.getInstance(ScanningPageShow.this);
-        imageAnalyzer = new MyImageAnalyzer(getSupportFragmentManager());
+        //imageAnalyzer = new MyImageAnalyzer(getSupportFragmentManager());
+        imageAnalyzer = new MyImageAnalyzer(qrPoints);
+
 
         cameraProviderFuture.addListener(new Runnable() {
             @Override
@@ -92,11 +120,35 @@ public class ScanningPageShow extends AppCompatActivity {
 
         },ContextCompat.getMainExecutor(this));
 
+        // click go Back
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*TODO: send Image: photo
+                  TODO: send Location: location
+                 */
+
+
+                Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // prompt taking photo
+
+
+
+
+
+
+
     }
 
     private void bindPreview(ProcessCameraProvider processCameraProvider){
         // Preview: accepts a surface for displaying a preview, like PreviewView
         Preview preview = new Preview.Builder().build();
+        preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
         CameraSelector cameraSelector = new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
         //Image capture: captures and saves a photo
         ImageCapture imageCapture = new ImageCapture.Builder().build();
@@ -112,7 +164,7 @@ public class ScanningPageShow extends AppCompatActivity {
         processCameraProvider.bindToLifecycle(this, cameraSelector, preview,imageCapture, imageAnalysis);
     }
 
-    public class MyImageAnalyzer implements ImageAnalysis.Analyzer{
+    /*public class MyImageAnalyzer implements ImageAnalysis.Analyzer{
         private FragmentManager fragmentManager;
 
         public MyImageAnalyzer( FragmentManager fragmentManager){
@@ -124,14 +176,29 @@ public class ScanningPageShow extends AppCompatActivity {
         public void analyze(@NonNull ImageProxy image) {
             scanBarcode(image);
         }
+    }*/
+
+    public class MyImageAnalyzer implements ImageAnalysis.Analyzer{
+        TextView textView;
+        public MyImageAnalyzer(TextView textView){
+            this.textView = textView;
+        }
+
+        @Override
+        public void analyze(@NonNull ImageProxy image) {
+
+            scanBarcode(image);
+        }
     }
 
     private void scanBarcode(ImageProxy image){
         @SuppressLint("UnsafeOptInUsageError") Image image1 = image.getImage();
         assert image1!= null;
 
+
         // create an input image
         InputImage inputImage = InputImage.fromMediaImage(image1, image.getImageInfo().getRotationDegrees());
+
         BarcodeScannerOptions options =
                 new BarcodeScannerOptions.Builder()
                         .setBarcodeFormats(
@@ -145,6 +212,12 @@ public class ScanningPageShow extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                     @Override
                     public void onSuccess(List<Barcode> barcodes) {
+
+                        qrPoints.setVisibility(View.INVISIBLE);
+                        scanCode.setVisibility(View.VISIBLE);
+                        takePhoto.setVisibility(View.INVISIBLE);
+
+
                         readerBarcodeData(barcodes);
                         // complete successfully
                     }
@@ -159,6 +232,7 @@ public class ScanningPageShow extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<List<Barcode>> task) {
                         image.close();
+
                     }
                 });
 
@@ -172,7 +246,51 @@ public class ScanningPageShow extends AppCompatActivity {
 
             String rawValue = barcode.getRawValue();
 
+            // TODO: show the point of the qr code
+            qrPoints.setText(rawValue);
+            qrPoints.setVisibility(View.VISIBLE);
+            scanCode.setVisibility(View.INVISIBLE);
+            takePhoto.setVisibility(View.VISIBLE);
+
+            // TODO: change condition from "alertBuilder == null) to
+            // TODO:      ( if barcode is not in database)
+            if(alertBuilder==null) {
+                alertBuilder = new AlertDialog.Builder(ScanningPageShow.this);
+                alertBuilder.setMessage("Do you want to record the Object or Location?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // set ONLY take photo visible
+                                goBack.setVisibility(View.INVISIBLE);
+                                getGeolocation.setVisibility(View.INVISIBLE);
+
+                                // click on take photo imageView
+                                takePhoto.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        // TODO: store the photo in the database (which database)
+
+                                        // set the goBack and getGeolocation back to visible for new scanning
+                                        goBack.setVisibility(View.VISIBLE);
+                                        getGeolocation.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                alertDialog = alertBuilder.create();
+                alertDialog.show();
+            }
+
+
+
             int valueType = barcode.getValueType();
+
             // See API reference for complete list of supported types
             switch (valueType) {
                 case Barcode.TYPE_WIFI:
