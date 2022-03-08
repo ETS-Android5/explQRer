@@ -14,17 +14,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     // DATA
-    public static final String SHARED_PREFS_USERNAME_KEY = "Username";
+    public static final String SHARED_PREFS_PLAYER_KEY = "Player";
     // Data
-    private String username;
+    private PlayerProfile player;
     // Views
     private TextView  usernameText;
     private BottomNavigationView bottomNavigationView;
@@ -44,12 +41,11 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         loadData();
-        saveData();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnItemSelectedListener(this);
         usernameText = findViewById(R.id.username_text);
-        usernameText.setText(username);
+        usernameText.setText(player.getName());
 
     }
 
@@ -60,20 +56,21 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
      * */
     private void loadData() {
         Gson gson = new Gson();
-        String json = sharedPreferences.getString(SHARED_PREFS_USERNAME_KEY, null);
-        username = gson.fromJson(json, String.class);
+        String json = sharedPreferences.getString(SHARED_PREFS_PLAYER_KEY, null);
+        player = gson.fromJson(json, PlayerProfile.class);
 
-        if (username ==null || username.isEmpty()) {
+        if (player == null) {
             // Random 6 digit number
-            username = String.format(Locale.US,"%06d",
-                    (int) Math.floor(Math.random() * 1000000));
+            player = new PlayerProfile(String.format(Locale.US,"%06d",
+                    (int) Math.floor(Math.random() * 1000000)), "");
+            saveData();
         }
     }
     private void saveData() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(username);
-        editor.putString(SHARED_PREFS_USERNAME_KEY, json);
+        String json = gson.toJson(player);
+        editor.putString(SHARED_PREFS_PLAYER_KEY, json);
         editor.apply();
     }
     // end reference
@@ -114,16 +111,16 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
      * Get the username
      * @return username as String
      */
-    public String getUsername() {
-        return username;
+    public PlayerProfile getPlayer() {
+        return player;
     }
 
     /**
      * Update the username
-     * @param username the new username
+     * @param player the new username
      */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPlayer(PlayerProfile player) {
+        this.player = player;
         saveData();
     }
 }
