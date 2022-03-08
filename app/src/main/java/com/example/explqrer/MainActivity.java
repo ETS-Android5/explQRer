@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     // Data
     private PlayerProfile player;
     // Views
-    private TextView  usernameText;
+    private TextView  usernameText, highestText, lowestText;
     private BottomNavigationView bottomNavigationView;
     // Shared Preferences
     private SharedPreferences sharedPreferences;
@@ -46,7 +46,12 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         bottomNavigationView.setOnItemSelectedListener(this);
         usernameText = findViewById(R.id.username_text);
         usernameText.setText(player.getName());
-
+        highestText = findViewById(R.id.highest_qr_display_main);
+        lowestText = findViewById(R.id.lowest_qr_display_main);
+        highestText.setText("Highest: " + (player.getHighestCode() != null ?
+                player.getHighestCode().getSha256hex() : "None"));
+        lowestText.setText("Lowest: " + (player.getLowestCode() != null ?
+                player.getLowestCode().getSha256hex() : "None"));
     }
 
     /* Adapted from:
