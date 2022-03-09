@@ -44,20 +44,20 @@ public class GameCode {
     public GameCode(@NonNull Barcode barcode, @NonNull PlayerProfile player, @Nullable Location location, @Nullable Image photo) {
         sha256hex = hash.hashBytes(barcode.getRawBytes()).toString();
         // TODO: Check Database for hash
-        score = calculateScore();
+        score = calculateScore(sha256hex);
     }
 
 
     GameCode(String rawValue) {
         sha256hex = hash.hashString(rawValue, StandardCharsets.US_ASCII).toString();
-        score = calculateScore();
+        score = calculateScore(sha256hex);
     }
 
     /**
-     * Helper function used to calculate the score of the hash string
+     * Calculate the score of the hash string
      * @return The score as an integer
      */
-    private int calculateScore() {
+    public static int calculateScore(String sha256hex) {
         int ret = 0;
         int repeats = 0;
         char prevChar = sha256hex.charAt(0);
