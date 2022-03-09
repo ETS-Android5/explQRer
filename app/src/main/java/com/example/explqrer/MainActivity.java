@@ -5,14 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
+import com.google.mlkit.vision.barcode.common.Barcode;
 
 import java.util.Locale;
 
@@ -25,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     // Views
     private TextView  usernameText, highestText, lowestText;
     private BottomNavigationView bottomNavigationView;
+
     // Shared Preferences
     private SharedPreferences sharedPreferences;
 
@@ -52,6 +57,14 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 player.getHighestCode().getSha256hex() : "None"));
         lowestText.setText("Lowest: " + (player.getLowestCode() != null ?
                 player.getLowestCode().getSha256hex() : "None"));
+
+        // get the data from the scanning page
+        Barcode barcode = (Barcode) getIntent().getSerializableExtra("barcode");
+        //Toast.makeText(this, String.valueOf(barcode.getRawValue()), Toast.LENGTH_SHORT).show();
+
+
+
+
     }
 
     /* Adapted from:
@@ -98,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
             case R.id.scan_nav:
                 // TODO: add scan activity
+                Intent scanningIntent = new Intent(MainActivity.this, ScanningPageShow.class);
+                startActivity(scanningIntent);
                 return true;
 
             case R.id.search_nav:
