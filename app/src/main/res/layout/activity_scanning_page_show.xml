@@ -91,24 +91,52 @@
                         android:src="@drawable/take_photo"
                         android:clickable="true"
                         android:visibility="invisible"
-                        android:contentDescription="Click to take a photo of your Object">
+                        >
+                    </ImageView>
 
+                    <ImageView
+                        android:id="@+id/take_photo_denied"
+                        android:layout_width="match_parent"
+                        android:layout_height="97dp"
+                        android:foregroundGravity="center_vertical"
+                        android:src="@drawable/photo_denied"
+                        android:clickable="false"
+                        android:visibility="invisible"
+                        >
+                    </ImageView>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginRight="20dp">
+
+                    <ImageView
+                        android:id="@+id/get_geolocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:src="@drawable/access_geolocation"
+                        android:visibility="visible"
+                        android:clickable="true"
+                        >
+
+                    </ImageView>
+
+                    <ImageView
+                        android:id="@+id/geolocation_denied"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:src="@drawable/geolocation_denied"
+                        android:clickable="true"
+                        android:visibility="invisible"
+                        >
 
                     </ImageView>
 
                 </FrameLayout>
 
-                <ImageView
-                    android:id="@+id/get_geolocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="52dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_weight="3"
-                    android:src="@drawable/access_geolocation"
-                    android:clickable="true"
-                    >
-
-                </ImageView>
 
 
 

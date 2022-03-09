@@ -11,10 +11,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
+import com.google.mlkit.vision.barcode.common.Barcode;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -53,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         bottomNavigationView.setOnItemSelectedListener(this);
         usernameText = findViewById(R.id.username_text);
         usernameText.setText(username);
+
+        // get the data from the scanning page
+        Barcode barcode = (Barcode) getIntent().getSerializableExtra("barcode");
+        //Toast.makeText(this, String.valueOf(barcode.getRawValue()), Toast.LENGTH_SHORT).show();
 
 
 
