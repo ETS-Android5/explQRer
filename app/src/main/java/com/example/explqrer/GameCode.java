@@ -16,6 +16,7 @@ import com.google.mlkit.vision.barcode.common.Barcode;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Store information about a code scanned by a player, so that it
@@ -94,5 +95,18 @@ public class GameCode {
      */
     public String getSha256hex() {
         return sha256hex;
+    }
+
+    /**
+     * Return true if the object equals the GameCode
+     * @param o the object to check
+     * @return true if they are equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameCode gameCode = (GameCode) o;
+        return getSha256hex().equals(gameCode.getSha256hex());
     }
 }

@@ -14,10 +14,6 @@ public class PlayerProfileTests {
         code = new GameCode("BFG5DGW54\n");
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void getName() {
         assertEquals("John Doe", player.getName());
@@ -47,12 +43,11 @@ public class PlayerProfileTests {
     }
 
     @Test
-    public void getQrHashes() {
-        assertTrue("List is not empty", player.getQrHashes().isEmpty());
+    public void getCodes() {
+        assertTrue("List is not empty", player.getCodes().isEmpty());
         player.addCode(code);
-        assertEquals("Hashes not equal","696ce4dbd7bb57cbfe58b64f530f428b74999cb37e2ee60980490cd9552de3a6",
-                player.getQrHashes().get(0));
-        assertThrows(IndexOutOfBoundsException.class, () -> player.getQrHashes().get(1));
+        assertTrue("Hashes not equal", player.getCodes().contains(code));
+        assertFalse("Unexpected item in set", player.getCodes().contains(new GameCode("123@teleworm.us")));
     }
 
     @Test
@@ -61,9 +56,53 @@ public class PlayerProfileTests {
     }
 
     @Test
-    public void removeQrByHash() {
+    public void removeCode() {
         player.addCode(code);
-        assertTrue(player.removeQrByHash("696ce4dbd7bb57cbfe58b64f530f428b74999cb37e2ee60980490cd9552de3a6"));
+        assertTrue(player.removeCode(code));
         assertEquals(0, player.getPoints());
+    }
+
+    @Test
+    public void getHighestCode() {
+        GameCode newCode2 = new GameCode("Finding a code with a hash that scores higher than 111 is hard");
+        player.addCode(newCode2);
+        assertEquals(newCode2, player.getHighestCode());
+        GameCode newCode = new GameCode("Hello World");
+        player.addCode(newCode);
+        assertEquals(newCode2, player.getHighestCode());
+        player.addCode(code);
+        assertEquals(code, player.getHighestCode());
+    }
+
+    @Test
+    public void getLowestCode() {
+        GameCode newCode = new GameCode("Finding a code with a hash that scores higher than 111 is hard");
+        player.addCode(newCode);
+        assertEquals(newCode, player.getLowestCode());
+        player.addCode(code);
+        assertEquals(newCode, player.getLowestCode());
+        GameCode newCode2 = new GameCode("Hello World");
+        player.addCode(newCode2);
+        assertEquals(newCode2, player.getLowestCode());
+    }
+
+    @Test
+    public void removeLowest() {
+        player.addCode(code);
+        GameCode newCode = new GameCode("Hello World");
+        player.addCode(newCode);
+        assertEquals(code, player.getHighestCode());
+        assertEquals(newCode, player.getLowestCode());
+        player.removeCode(newCode);
+        assertEquals(code, player.getHighestCode());
+        assertEquals(code, player.getLowestCode());
+    }
+
+    @Test
+    public void removeAll() {
+        player.addCode(code);
+        player.removeCode(code);
+        assertNull(player.getHighestCode());
+        assertNull(player.getLowestCode());
     }
 }
