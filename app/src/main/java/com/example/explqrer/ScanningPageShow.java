@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageProxy;
@@ -60,6 +61,7 @@ import java.util.concurrent.Executors;
 /**
  * Citation 1: https://www.youtube.com/watch?v=iryHXuwuJ3Q
  * Author: Android Coding Time
+ * Much of this section was taken from the tutorial provided in this video
  *
  * Citation 2: https://developers.google.com/ml-kit/vision/barcode-scanning/android
  */
@@ -78,10 +80,10 @@ public class ScanningPageShow extends AppCompatActivity {
     private ExecutorService  cameraExecutor;
     private PreviewView previewView;
     private MyImageAnalyzer imageAnalyzer;
-    private boolean isScanning = false;
-    private HashMap<Barcode, Location> codeLocation; // if player needs to scan multiple in one activity
-    private HashMap<Barcode, Image> codeImage;// if player could scan multiple ( do later)
-    private Barcode barcodeReturn; // Now, just scan one, return 1
+//    private Barcode barcodeReturn; // Now, just scan one, return 1
+//    private boolean isScanning = false;
+//    private HashMap<Barcode, Location> codeLocation; // if player needs to scan multiple in one activity
+//    private HashMap<Barcode, Image> codeImage;// if player could scan multiple ( do later)
 
 
     @Override
@@ -113,42 +115,35 @@ public class ScanningPageShow extends AppCompatActivity {
 
         cameraExecutor = Executors.newSingleThreadExecutor();
         cameraProviderFuture = ProcessCameraProvider.getInstance(ScanningPageShow.this);
-        //imageAnalyzer = new MyImageAnalyzer(getSupportFragmentManager());
         imageAnalyzer = new MyImageAnalyzer(qrPoints);
 
 
-        cameraProviderFuture.addListener(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if ( ActivityCompat.checkSelfPermission( ScanningPageShow.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
-                        ActivityCompat.requestPermissions(ScanningPageShow.this, new String[]{Manifest.permission.CAMERA}, 1);
-                    }else {
+        cameraProviderFuture.addListener(() -> {
+            try {
+                if ( ActivityCompat.checkSelfPermission( ScanningPageShow.this,
+                        Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(ScanningPageShow.this,
+                            new String[]{Manifest.permission.CAMERA}, 1);
+                }else {
 
-                        ProcessCameraProvider processCameraProvider = (ProcessCameraProvider) cameraProviderFuture.get();
-                        bindPreview(processCameraProvider);
-                    }
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    ProcessCameraProvider processCameraProvider =
+                            (ProcessCameraProvider) cameraProviderFuture.get();
+                    bindPreview(processCameraProvider);
                 }
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
             }
-
         },ContextCompat.getMainExecutor(this));
 
         // click go Back ( If just scan 1, then only need this when there is no code scanning)
-        goBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*TODO: send Image: photo
-                  TODO: send Location: location
-                  TODO: send barcode
+        goBack.setOnClickListener(view -> {
+            /*TODO: send Image: photo
+              TODO: send Location: location
+              TODO: send barcode
 
-                 */
-                Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
-                startActivity(intent);
-            }
+             */
+            Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
+            startActivity(intent);
         });
 
         // TODO: access geolocation
@@ -205,7 +200,8 @@ public class ScanningPageShow extends AppCompatActivity {
 
 
         // create an input image
-        InputImage inputImage = InputImage.fromMediaImage(image1, image.getImageInfo().getRotationDegrees());
+        InputImage inputImage = InputImage.fromMediaImage(image1,
+                image.getImageInfo().getRotationDegrees());
 
         BarcodeScannerOptions options =
                 new BarcodeScannerOptions.Builder()
@@ -217,33 +213,21 @@ public class ScanningPageShow extends AppCompatActivity {
         // BarcodeScanner for recognizing barcode
         BarcodeScanner scanner = BarcodeScanning.getClient(options);
         Task<List<Barcode>> task = scanner.process(inputImage)
-                .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
-                    @Override
-                    public void onSuccess(List<Barcode> barcodes) {
-                        geolocationDenied.setVisibility(View.INVISIBLE);
-                        qrPoints.setVisibility(View.INVISIBLE);
-                        scanCode.setVisibility(View.VISIBLE);
-                        takePhoto.setVisibility(View.INVISIBLE);
-                        takePhotoDenied.setVisibility(View.INVISIBLE);
+                .addOnSuccessListener(barcodes -> {
+                    geolocationDenied.setVisibility(View.INVISIBLE);
+                    qrPoints.setVisibility(View.INVISIBLE);
+                    scanCode.setVisibility(View.VISIBLE);
+                    takePhoto.setVisibility(View.INVISIBLE);
+                    takePhotoDenied.setVisibility(View.INVISIBLE);
 
 
-                        readerBarcodeData(barcodes);
-                        // complete successfully
-                    }
+                    readerBarcodeData(barcodes);
+                    // complete successfully
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // failed with an exception
-                    }
+                .addOnFailureListener(e -> {
+                    // failed with an exception
                 })
-                .addOnCompleteListener(new OnCompleteListener<List<Barcode>>() {
-                    @Override
-                    public void onComplete(@NonNull Task<List<Barcode>> task) {
-                        image.close();
-
-                    }
-                });
+                .addOnCompleteListener(task1 -> image.close());
 
 
     }
@@ -266,7 +250,7 @@ public class ScanningPageShow extends AppCompatActivity {
             int score = gameCode.getScore();
 
             // Display the score on the screen
-            qrPoints.setText("Point: " + String.valueOf(score));
+            qrPoints.setText("Points: " + score);
             qrPoints.setVisibility(View.VISIBLE);
             scanCode.setVisibility(View.INVISIBLE);
             takePhoto.setVisibility(View.VISIBLE);
@@ -276,48 +260,45 @@ public class ScanningPageShow extends AppCompatActivity {
             if (alertBuilderPhoto == null) {
 
                 alertBuilderPhoto = new AlertDialog.Builder(ScanningPageShow.this);
-                alertBuilderPhoto.setMessage("Do you want to record the Object or Location?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // set ONLY take photo visible
-                                goBack.setVisibility(View.INVISIBLE);
-                                getGeolocation.setVisibility(View.INVISIBLE);
+                alertBuilderPhoto.setMessage("Do you want to record a photo?")
+                        .setPositiveButton("Yes", (dialogInterface, i) -> {
+                            // set ONLY take photo visible
+                            goBack.setVisibility(View.INVISIBLE);
+                            getGeolocation.setVisibility(View.INVISIBLE);
 
-                                // click on take photo imageView
-                                takePhoto.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        // TODO: taking photo and store the photo in the database (which database)
+                            // click on take photo imageView
+                            takePhoto.setOnClickListener(view -> {
+                                // TODO: taking photo and store the photo in the database (which database)
 
-                                        // set the goBack and getGeolocation back to visible for new scanning code
-                                        goBack.setVisibility(View.VISIBLE);
-                                        getGeolocation.setVisibility(View.VISIBLE);
-
-                                        Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
-                                        startActivity(intent);
-                                        Toast.makeText(ScanningPageShow.this, "Code has been added! You win:"+ String.valueOf(score)+ " points", Toast.LENGTH_LONG).show();
-
-
-                                    }
-                                });
-                                // NOTE: put here now to let scanning page scan ONLY one code and
-                                //       pass it back to the mainActivity.
-                                //       Change this part to the back button part, when want to send
-                                //       multiple barcode and image to the MainActivity
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                Toast.makeText(ScanningPageShow.this, "Taking photo is denied", Toast.LENGTH_SHORT).show();
+                                // set the goBack and getGeolocation back to visible for new scanning code
+                                goBack.setVisibility(View.VISIBLE);
+                                getGeolocation.setVisibility(View.VISIBLE);
 
                                 Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
                                 startActivity(intent);
-                                Toast.makeText(ScanningPageShow.this, "Code has been added! You win:"+ String.valueOf(score)+ " points", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ScanningPageShow.this,
+                                        "Code has been added! You win: "+ score + " points",
+                                        Toast.LENGTH_LONG).show();
 
-                            }
+
+                            });
+                            // NOTE: put here now to let scanning page scan ONLY one code and
+                            //       pass it back to the mainActivity.
+                            //       Change this part to the back button part, when want to send
+                            //       multiple barcode and image to the MainActivity
+                        })
+                        .setNegativeButton("No", (dialogInterface, i) -> {
+
+                            Toast.makeText(ScanningPageShow.this,
+                                    "Taking photo is denied", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
+                            startActivity(intent);
+                            Toast.makeText(ScanningPageShow.this,
+                                    "Code has been added! You win: "+
+                                            score + " points",
+                                    Toast.LENGTH_LONG).show();
+
                         });
                 alertDialogPhoto = alertBuilderPhoto.create();
                 alertDialogPhoto.show();
@@ -328,22 +309,14 @@ public class ScanningPageShow extends AppCompatActivity {
             if (alertBuilderGeolocation == null) {
                 alertBuilderGeolocation = new AlertDialog.Builder(ScanningPageShow.this);
                 alertBuilderGeolocation.setMessage("Do you want to record your location?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // TODO: ask for access geolocation
+                        .setPositiveButton("Yes", (dialogInterface, i) -> {
+                            // TODO: ask for access geolocation
 
-                            }
                         })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(ScanningPageShow.this, "Geolocation access denied", Toast.LENGTH_SHORT).show();
-
-
-
-                            }
-                        });
+                        .setNegativeButton("No", (dialogInterface, i) ->
+                                Toast.makeText(ScanningPageShow.this,
+                                        "Geolocation access denied",
+                                        Toast.LENGTH_SHORT).show());
                 alertDialogGeolocation = alertBuilderGeolocation.create();
                 alertDialogGeolocation.show();
 
@@ -367,14 +340,14 @@ public class ScanningPageShow extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode== REQUEST_PERMISSIONS_REQUEST_CODE &&grantResults.length>0){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                return;
-            }else{
-                Toast.makeText(ScanningPageShow.this,"Permission denied", Toast.LENGTH_LONG).show();
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+              Toast.makeText(ScanningPageShow.this,"Permission denied",
+                      Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -386,14 +359,16 @@ public class ScanningPageShow extends AppCompatActivity {
     private void requestPermissionsIfNecessary(String[] permissions) {
         ArrayList<String> permissionsToRequest = new ArrayList<>();
         for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, permission) !=
+                    PackageManager.PERMISSION_GRANTED) {
                 // Permission is not granted
                 permissionsToRequest.add(permission);
             }
         }
         // more than one permission is not granted
         if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[0]),REQUEST_PERMISSIONS_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, permissionsToRequest
+                    .toArray(new String[0]),REQUEST_PERMISSIONS_REQUEST_CODE);
         } else { // all are granted
             return;
         }
