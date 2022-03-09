@@ -2,20 +2,21 @@ package com.example.explqrer;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 public class PlayerProfile {
 
     private String name;
     private String contact;
     private long points;
-    private ArrayList<String> qrHashes;
+    private GameCode highest, lowest;
+    private HashSet<GameCode> codes;
 
     public PlayerProfile(String username, String Contact) {
         name = username;
         contact = Contact;
         points = 0;
-        qrHashes = new ArrayList<>();
+        codes = new HashSet<>() ;
     }
 
     /**
@@ -57,34 +58,92 @@ public class PlayerProfile {
         return points;
     }
 
-// /**
-//  * This set method sets the points.
-//  *  @param pts a long as score.
-//  * /
-// public void setPlayerPoints(long pts) {
-//     playerPoints = pts;
-// }
-
     /**
      * Get the list of scanned code hashes
      * @return The scanned code hashes in an ArrayList
      */
-    public ArrayList<String> getQrHashes() {
-        return qrHashes;
+    public HashSet<GameCode> getCodes() {
+        return codes;
     }
 
+    /**
+     * Add a GameCode to the PlayerProfile
+     * @param code the code to add
+     * @return true if the code was added, false otherwise
+     */
     public boolean addCode(@NonNull GameCode code) {
-        qrHashes.add(code.getSha256hex());
-        points += code.getScore();
-        return true;
-    }
-
-    public boolean removeQrByHash(String hash) {
-        if (qrHashes.remove(hash)) {
-            // TODO: add some error checking
-            points -= GameCode.calculateScore(hash);
+        if (codes.add(code)) {
+            int score = code.getScore();
+            points += score;
+            if (highest == null || score > highest.getScore()) {
+                highest = code;
+            }
+            if (lowest == null || score < lowest.getScore()) {
+                lowest = code;
+            }
             return true;
         }
         return false;
+    }
+
+    /**
+     * Remove a code from a player profile
+     * @param code the code to remove
+     * @return true if the code was successfully removed
+     */
+    public boolean removeCode(GameCode code) {
+        if (codes.remove(code)) {
+            // TODO: add some error checking
+            points -= code.getScore();
+            if (code == lowest || code == highest) {
+                refreshProfile();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * get the highest scoring GameCode from the account
+     * @return the aforementioned code
+     */
+    public GameCode getHighestCode() {
+        return highest;
+    }
+
+    /**
+     * get the lowest scoring GameCode from the account
+     * @return the aforementioned code
+     */
+    public GameCode getLowestCode() {
+        return lowest;
+    }
+
+    /**
+     * refresh the profile, including highest and lowest codes,
+     * as well as fetching new information from the database.
+     */
+    public void refreshProfile() {
+        // TODO: fetch profile from database
+
+
+        // refresh highest and lowest
+        highest = lowest = null;
+        for (GameCode code : codes) {
+            if (highest == null || code.getScore() > highest.getScore()) {
+                highest = code;
+            }
+            if (lowest == null || code.getScore() < lowest.getScore()) {
+                lowest = code;
+            }
+        }
+    }
+
+    /**
+     * Get the total number of codes scanned by the player
+     * @return the number of codes
+     */
+    public int getNumCodes() {
+        return codes.size();
     }
 }
