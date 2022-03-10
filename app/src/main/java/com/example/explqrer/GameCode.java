@@ -32,7 +32,7 @@ public class GameCode {
     // private linkToPhotos
     // TODO: Add comments
     // private linkToComments
-    private ArrayList<String> scannedByList;
+    // private ArrayList<String> scannedByList;
     HashFunction hash =  Hashing.sha256();
 
     /**
@@ -45,20 +45,22 @@ public class GameCode {
     public GameCode(@NonNull Barcode barcode, @NonNull PlayerProfile player, @Nullable Location location, @Nullable Image photo) {
         sha256hex = hash.hashBytes(barcode.getRawBytes()).toString();
         // TODO: Check Database for hash
-        score = calculateScore(sha256hex);
+        score = calculateScore(barcode.getRawValue());
     }
 
 
     GameCode(String rawValue) {
         sha256hex = hash.hashString(rawValue, StandardCharsets.US_ASCII).toString();
-        score = calculateScore(sha256hex);
+        score = calculateScore(rawValue);
     }
 
     /**
      * Calculate the score of the hash string
      * @return The score as an integer
      */
-    public static int calculateScore(String sha256hex) {
+    public static int calculateScore(String rawValue) {
+        HashFunction hash =  Hashing.sha256();
+        String sha256hex = hash.hashString(rawValue, StandardCharsets.US_ASCII).toString();
         int ret = 0;
         int repeats = 0;
         char prevChar = sha256hex.charAt(0);
