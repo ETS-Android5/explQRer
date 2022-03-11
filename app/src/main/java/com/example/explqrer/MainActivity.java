@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
 import com.google.mlkit.vision.barcode.common.Barcode;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             case R.id.scan_nav:
                 // TODO: add scan activity
                 Intent scanningIntent = new Intent(MainActivity.this, ScanningPageShow.class);
+                scanningIntent.putExtra("playerProfile", (Serializable) player);
                 startActivity(scanningIntent);
                 return true;
 

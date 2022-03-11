@@ -2,9 +2,10 @@ package com.example.explqrer;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
-public class PlayerProfile {
+public class PlayerProfile implements Serializable {
 
     private String name;
     private String contact;
