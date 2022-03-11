@@ -38,7 +38,7 @@ public class DataHandler {
 
     /*
      * TODO: # of QRs scanned leaderboard
-     * TODO: pts leaderboard
+     * pts leaderboard
      * TODO: Highest Unique QRs scanned leader board
      * Player info database
      * QR code database
@@ -119,6 +119,7 @@ public class DataHandler {
         data.put("contact",contact);
         data.put("pts",0);
         data.put("scanned",0);
+        data.put("uniqueScanned",0);
         data.put("ptsL",-1);
         data.put("qrL",-1);
         data.put("uniqueL", -1);
@@ -164,7 +165,7 @@ public class DataHandler {
 
         dr.update("pts",FieldValue.increment(pts));
 
-        // TODO: Update ptsL
+        // Update ptsL
         this.updatePtsL();
     }
 
@@ -178,11 +179,24 @@ public class DataHandler {
 
         dr.update("scanned",FieldValue.increment(scanned));
 
-        // TODO: Update qrL , uniqueL
+        // Update qrL
+        this.updateQrL();
     }
 
-    // TODO: Pts leader board
-    // TODO: get leader board
+    public void updateUniqueScanned(String username, long uniqueScanned){
+        // Collection Ref
+        CollectionReference cr = db.collection("player");
+
+        // Document reference
+        DocumentReference dr = cr.document(username);
+
+        dr.update("uniqueScanned",FieldValue.increment(uniqueScanned));
+
+        // TODO: Update uniqueL
+    }
+
+    // Pts leader board
+    // get leader board
     // update ptsL,
     // get ptsL for player
     public void updatePtsL(){
@@ -252,11 +266,142 @@ public class DataHandler {
     }
 
 
-    // TODO: # of QRs scanned leaderboard
-    // TODO: get leader board, update qrL, get qrL for player
+    // # of QRs scanned leaderboard
+    // get leader board, update qrL, get qrL for player
+    public void updateQrL(){
+        // Collection ref
+        CollectionReference cr = db.collection("player");
+
+        // Update the ptsL for each player
+        cr.orderBy("scanned", Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    int pos = 1;
+                    for(QueryDocumentSnapshot doc : task.getResult()){
+                        String username = doc.getId();
+                        DocumentReference dr = cr.document(username);
+                        dr.update("qrL",pos++);
+                    }
+                }
+            }
+        });
+    }
+
+    public long getQrL(String username){
+        // Collection Reference
+        CollectionReference cr = db.collection("player");
+
+        // Doc reference
+        DocumentReference dr = cr.document(username);
+
+        // Get the ptsL and store it
+        final long[] qrL = {0};
+
+        dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        qrL[0] = (long) doc.getData().get("qrL");
+                    }
+                }
+            }
+        });
+
+        return qrL[0];
+    }
+
+    public ArrayList<String> getQrLeaderBoard(){
+        // Hashmap to return
+        ArrayList<String> leaderboard = new ArrayList<>();
+
+        // Collection reference
+        CollectionReference cr = db.collection("player");
+
+        cr.orderBy("qrL", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot doc: task.getResult()){
+                        leaderboard.add(doc.getId());
+                    }
+                }
+            }
+        });
+
+        return leaderboard;
+    }
 
 
 
     // TODO: Highest Unique QRs scanned leader board
     // TODO: get leader board, update uniqueL, get uniqueL for player
+    public void updateUniqueL(){
+        // Collection ref
+        CollectionReference cr = db.collection("player");
+
+        // Update the ptsL for each player
+        cr.orderBy("uniqueScanned", Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    int pos = 1;
+                    for(QueryDocumentSnapshot doc : task.getResult()){
+                        String username = doc.getId();
+                        DocumentReference dr = cr.document(username);
+                        dr.update("uniqueL",pos++);
+                    }
+                }
+            }
+        });
+    }
+
+    public long getUniqueL(String username){
+        // Collection Reference
+        CollectionReference cr = db.collection("player");
+
+        // Doc reference
+        DocumentReference dr = cr.document(username);
+
+        // Get the ptsL and store it
+        final long[] qrL = {0};
+
+        dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        qrL[0] = (long) doc.getData().get("uniqueL");
+                    }
+                }
+            }
+        });
+
+        return qrL[0];
+    }
+
+    public ArrayList<String> getUniqueLeaderBoard(){
+        // Hashmap to return
+        ArrayList<String> leaderboard = new ArrayList<>();
+
+        // Collection reference
+        CollectionReference cr = db.collection("player");
+
+        cr.orderBy("uniqueL", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot doc: task.getResult()){
+                        leaderboard.add(doc.getId());
+                    }
+                }
+            }
+        });
+
+        return leaderboard;
+    }
+
 }

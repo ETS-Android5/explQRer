@@ -3,10 +3,16 @@ package com.example.explqrer;
 
 import org.junit.*;
 import org.junit.rules.TestRule;
+import org.mockito.Mock;
 
 import static org.junit.Assert.*;
 
+import android.app.Application;
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
+import android.content.Context;
+
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DataHandlerTest {
     DataHandler dh;
