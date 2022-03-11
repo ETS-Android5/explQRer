@@ -336,8 +336,8 @@ public class DataHandler {
 
 
 
-    // TODO: Highest Unique QRs scanned leader board
-    // TODO: get leader board, update uniqueL, get uniqueL for player
+    // Highest Unique QRs scanned leader board
+    // get leader board, update uniqueL, get uniqueL for player
     public void updateUniqueL(){
         // Collection ref
         CollectionReference cr = db.collection("player");
@@ -404,4 +404,31 @@ public class DataHandler {
         return leaderboard;
     }
 
+    public Boolean hasScannedBefore(String hash, String username){
+        // Connect to collection
+        CollectionReference cr = db.collection("qrbase");
+
+        // Get the document
+        DocumentReference docRef = cr.document(hash);
+
+        // Set the flag to false by default
+        final boolean[] flag = {false};
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        ArrayList<String> usernames = (ArrayList<String>) doc.getData().get("users");
+                        for(String user: usernames){
+                            if(user.equals(username)){
+                                flag[0] = true;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        return  flag[0];
+    }
 }
