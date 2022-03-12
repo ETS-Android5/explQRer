@@ -24,6 +24,8 @@ public class Gallery extends AppCompatActivity{
         Integer[] imagePoints = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29};
         Integer[] imageIds;
         imageIds = new Integer[]{R.drawable.nature1, R.drawable.nature2, R.drawable.nature3,
+                R.drawable.nature4,
+                R.drawable.nature5,
                 R.drawable.nature6,
                 R.drawable.nature7,
                 R.drawable.nature8,

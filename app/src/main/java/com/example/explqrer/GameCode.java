@@ -16,6 +16,7 @@ import com.google.mlkit.vision.barcode.common.Barcode;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Store information about a code scanned by a player, so that it
@@ -45,27 +46,27 @@ public class GameCode {
     public <Player> GameCode(@NonNull Barcode barcode, @NonNull Player player, @Nullable Location location, @Nullable Image photo) {
         sha256hex = hash.hashBytes(barcode.getRawBytes()).toString();
         // TODO: Check Database for hash
-        score = calculateScore();
+        score = calculateScore(sha256hex);
     }
 
     public GameCode(@NonNull Barcode barcode, @NonNull PlayerProfile player, @Nullable Location location, @Nullable Image photo) {
         sha256hex = hash.hashBytes(barcode.getRawBytes()).toString();
         // TODO: Check Database for hash
-        score = calculateScore();
+        score = calculateScore(sha256hex);
     }
 
 
 
     GameCode(String rawValue) {
         sha256hex = hash.hashString(rawValue, StandardCharsets.US_ASCII).toString();
-        score = calculateScore();
+        score = calculateScore(sha256hex);
     }
 
     /**
-     * Helper function used to calculate the score of the hash string
+     * Calculate the score of the hash string
      * @return The score as an integer
      */
-    private int calculateScore() {
+    public static int calculateScore(String sha256hex) {
         int ret = 0;
         int repeats = 0;
         char prevChar = sha256hex.charAt(0);
@@ -102,5 +103,18 @@ public class GameCode {
      */
     public String getSha256hex() {
         return sha256hex;
+    }
+
+    /**
+     * Return true if the object equals the GameCode
+     * @param o the object to check
+     * @return true if they are equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameCode gameCode = (GameCode) o;
+        return getSha256hex().equals(gameCode.getSha256hex());
     }
 }
