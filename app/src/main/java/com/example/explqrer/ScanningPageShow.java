@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentManager;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -93,7 +94,7 @@ public class ScanningPageShow extends AppCompatActivity {
     // object get from previous intent
     private PlayerProfile playerProfile;
 
-    private Image imageBitmap;
+    private Bitmap imageBitmap;
 
 //    private Barcode barcodeReturn; // Now, just scan one, return 1
 //    private boolean isScanning = false;
@@ -109,14 +110,12 @@ public class ScanningPageShow extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData()!= null) {
                         Intent data = result.getData();
                         Bundle extras = data.getExtras();
-                        imageBitmap = (Image) extras.get("data");
-
-                        Intent intentBack = new Intent(ScanningPageShow.this, MainActivity.class);
-                        startActivity(intentBack);
-
+                        imageBitmap = (Bitmap) extras.get("data");
+                        if ( imageBitmap!= null){
+                            showPhoto.findViewById(R.id.show_photo);
+                            showPhoto.setImageBitmap(imageBitmap);
+                        }
                     }
-
-
                 }
             });
 
@@ -257,7 +256,6 @@ public class ScanningPageShow extends AppCompatActivity {
                     takePhoto.setVisibility(View.INVISIBLE);
                     takePhotoDenied.setVisibility(View.INVISIBLE);
 
-
                     readerBarcodeData(barcodes);
                     // complete successfully
                 })
@@ -265,7 +263,6 @@ public class ScanningPageShow extends AppCompatActivity {
                     // failed with an exception
                 })
                 .addOnCompleteListener(task1 -> image.close());
-
 
     }
 
@@ -288,8 +285,6 @@ public class ScanningPageShow extends AppCompatActivity {
             // TODO: Construct a new GameCode using the 1st constructor in the GameCode Class
             GameCode gameCode = new GameCode(barcode,playerProfile,null,null );
             int score = gameCode.getScore();
-            //GameCode gameCode = new GameCode(rawValue);
-            //int score = gameCode.getScore();
 
             // Display the score on the screen
             qrPoints.setText("Points: " + score);
@@ -310,12 +305,12 @@ public class ScanningPageShow extends AppCompatActivity {
 
 
                             Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivity(intentCapture);
 
-                            if (intentCapture.resolveActivity(getPackageManager())!= null){
+                            try{
                                 someActivityResultLauncher.launch(intentCapture);
-                                Log.d("TAG", "readerBarcodeData: ---------------");
 
+                            }catch (ActivityNotFoundException e){
+                                Toast.makeText(ScanningPageShow.this, "Your device cannot take photos", Toast.LENGTH_SHORT).show();
                             }
 
                             goBack.setVisibility(View.VISIBLE);
