@@ -21,6 +21,8 @@ public class Gallery extends AppCompatActivity{
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),4);
         recyclerView.setLayoutManager(layoutManager);
+
+        // TODO: getting the data from the Data Base and loop through populating the lists
         Integer[] imagePoints = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29};
         Integer[] imageIds;
         imageIds = new Integer[]{R.drawable.nature1, R.drawable.nature2, R.drawable.nature3,
@@ -51,21 +53,6 @@ public class Gallery extends AppCompatActivity{
                 R.drawable.nature28,
                 R.drawable.nature29
                 };
-        /*  R.drawable.nature6,
-                R.drawable.nature7,
-                R.drawable.nature8,
-                R.drawable.nature9,
-                R.drawable.nature10,
-                R.drawable.nature11,
-                R.drawable.nature12,
-                R.drawable.nature13,
-                R.drawable.nature14,
-                R.drawable.nature15,
-                R.drawable.nature16,
-                R.drawable.nature17,
-                R.drawable.nature18,
-                R.drawable.nature19*/
-
 
 
 

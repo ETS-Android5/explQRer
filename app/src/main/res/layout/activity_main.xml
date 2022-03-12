@@ -26,21 +26,24 @@
                 android:id="@+id/username_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/default_text" />
+                android:text="@string/default_text"
+                android:textColor="@color/white"/>
 
             <TextView
                 android:id="@+id/highest_qr_display_main"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/default_text" />
+                android:text="@string/default_text"
+                android:textColor="@color/white"/>
 
             <TextView
                 android:id="@+id/lowest_qr_display_main"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/default_text" />
+                android:text="@string/default_text"
+                android:textColor="@color/white"/>
         </LinearLayout>
     </FrameLayout>
 
