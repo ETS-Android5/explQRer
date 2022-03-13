@@ -97,6 +97,7 @@ public class ScanningPageShow extends AppCompatActivity {
     private PlayerProfile playerProfile;
 
     private Bitmap imageBitmap;
+    private DataHandler dataHandler;
 
 //    private Barcode barcodeReturn; // Now, just scan one, return 1
 //    private boolean isScanning = false;
@@ -132,7 +133,7 @@ public class ScanningPageShow extends AppCompatActivity {
 
         // get the player from main activity
         playerProfile = (PlayerProfile) getIntent().getSerializableExtra("playerProfile");
-
+        dataHandler = new DataHandler();
         // get ImageView and Textview for later use
         qrPoints = findViewById(R.id.qr_points);
         goBack = findViewById(R.id.go_back);
@@ -288,6 +289,7 @@ public class ScanningPageShow extends AppCompatActivity {
             int score = gameCode.getScore();
             String hash = gameCode.getSha256hex();
             String username = playerProfile.getName();
+            dataHandler.addQR(hash,username);
             // TODO: add the qr into the database
 
             // Display the score on the screen
