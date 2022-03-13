@@ -60,13 +60,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         lowestText.setText("Lowest: " + (player.getLowestCode() != null ?
                 player.getLowestCode().getSha256hex() : "None"));
 
-        // get the data from the scanning page
-        Barcode barcode = (Barcode) getIntent().getSerializableExtra("barcode");
-        //Toast.makeText(this, String.valueOf(barcode.getRawValue()), Toast.LENGTH_SHORT).show();
-
-
-
-
     }
 
     /* Adapted from:
@@ -112,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 return true;
 
             case R.id.scan_nav:
-                // TODO: add scan activity
                 Intent scanningIntent = new Intent(MainActivity.this, ScanningPageShow.class);
                 scanningIntent.putExtra("playerProfile", (Serializable) player);
                 startActivity(scanningIntent);

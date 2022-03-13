@@ -33,6 +33,7 @@ import android.location.Location;
 import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
@@ -57,6 +58,7 @@ import com.google.mlkit.vision.common.InputImage;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -115,6 +117,10 @@ public class ScanningPageShow extends AppCompatActivity {
                             showPhoto.findViewById(R.id.show_photo);
                             showPhoto.setImageBitmap(imageBitmap);
                         }
+
+                       // TODO: Convert bitmap to image and store in gameCode constructor
+
+
                     }
                 }
             });
@@ -221,7 +227,6 @@ public class ScanningPageShow extends AppCompatActivity {
 
         @Override
         public void analyze(@NonNull ImageProxy image) {
-
             scanBarcode(image);
         }
     }
@@ -282,9 +287,13 @@ public class ScanningPageShow extends AppCompatActivity {
             String rawValue = barcode.getRawValue();
 
             // Create a game code and get score of the scanning code
-            // TODO: Construct a new GameCode using the 1st constructor in the GameCode Class
             GameCode gameCode = new GameCode(barcode,playerProfile,null,null );
             int score = gameCode.getScore();
+            String hash = gameCode.getSha256hex();
+            String username = playerProfile.getName();
+            // TODO: add the qr into the database
+
+
 
             // Display the score on the screen
             qrPoints.setText("Points: " + score);
