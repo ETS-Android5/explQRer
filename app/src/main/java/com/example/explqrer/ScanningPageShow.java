@@ -1,14 +1,9 @@
 package com.example.explqrer;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageProxy;
@@ -17,36 +12,20 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.location.Location;
 import android.media.Image;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Parcelable;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.util.Size;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
@@ -54,18 +33,10 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
-//import com.j256.ormlite.stmt.query.In;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -99,33 +70,7 @@ public class ScanningPageShow extends AppCompatActivity
 
     private Bitmap imageBitmap;
     private DataHandler dataHandler;
-
-//    private Barcode barcodeReturn; // Now, just scan one, return 1
-//    private boolean isScanning = false;
-//    private HashMap<Barcode, Location> codeLocation; // if player needs to scan multiple in one activity
-//    private HashMap<Barcode, Image> codeImage;// if player could scan multiple ( do later)
-
-    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData()!= null) {
-                        Intent data = result.getData();
-                        Bundle extras = data.getExtras();
-                        imageBitmap = (Bitmap) extras.get("data");
-                        if ( imageBitmap!= null){
-                            showPhoto.findViewById(R.id.show_photo);
-                            showPhoto.setImageBitmap(imageBitmap);
-                        }
-
-                       // TODO: Convert bitmap to image and store in gameCode constructor
-
-
-                    }
-                }
-            });
+    private boolean isScanning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,28 +114,18 @@ public class ScanningPageShow extends AppCompatActivity
                         Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(ScanningPageShow.this,
                             new String[]{Manifest.permission.CAMERA}, 1);
-                }else {
-                    ProcessCameraProvider processCameraProvider =
-                            (ProcessCameraProvider) cameraProviderFuture.get();
-                    bindPreview(processCameraProvider);
                 }
+                ProcessCameraProvider processCameraProvider =
+                        (ProcessCameraProvider) cameraProviderFuture.get();
+                bindPreview(processCameraProvider);
+
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
         },ContextCompat.getMainExecutor(ScanningPageShow.this));
 
         // click go Back ( If just scan 1, then only need this when there is no code scanning)
-        goBack.setOnClickListener(view -> {
-            /*TODO: send Image: photo
-              TODO: send Location: location
-              TODO: send barcode
-             */
-//            Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
-//            startActivity(intent);
-            finish();
-        });
-
-        // TODO: access geolocation
+        goBack.setOnClickListener(view -> finish());
     }
 
     /**
@@ -246,6 +181,7 @@ public class ScanningPageShow extends AppCompatActivity
      * @param image
      */
     private void scanBarcode(ImageProxy image){
+        if (isScanning) { return; }
         @SuppressLint("UnsafeOptInUsageError") Image image1 = image.getImage();
         assert image1!= null;
 
@@ -292,123 +228,12 @@ public class ScanningPageShow extends AppCompatActivity
             CodeScannedFragment codeScannedFragment = CodeScannedFragment
                     .newInstance(barcode.getRawValue(), playerProfile.getName());
             codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
+            isScanning = true;
             previewView.setController(null);
+            // TODO: turn scanning off eventually.
+            break;
         }
-/*
-            Rect bounds = barcode.getBoundingBox();
-            Point[] corners = barcode.getCornerPoints();
-
-            String rawValue = barcode.getRawValue();
-
-            // Create a game code and get score of the scanning code
-            GameCode gameCode = new GameCode(barcode,playerProfile.getName(),null,null );
-            int score = gameCode.getScore();
-            String hash = gameCode.getSha256hex();
-            String username = playerProfile.getName();
-            dataHandler.addQR(hash,username);
-            // TODO: add the qr into the database
-
-            // Display the score on the screen
-            qrPoints.setText("Points: " + score);
-            qrPoints.setVisibility(View.VISIBLE);
-            scanCode.setVisibility(View.INVISIBLE);
-            takePhoto.setVisibility(View.VISIBLE);
-
-            // TODO: change condition from (alertBuilder == null) to
-            // TODO:      ( if barcode is not in database)
-            if (alertBuilderPhoto == null) {
-                alertBuilderPhoto = new AlertDialog.Builder(ScanningPageShow.this);
-                alertBuilderPhoto.setMessage("Do you want to record a photo?")
-                        .setPositiveButton("Yes", (dialogInterface, i) -> {
-                            // set ONLY take photo visible
-                            //goBack.setVisibility(View.INVISIBLE);
-                            //getGeolocation.setVisibility(View.INVISIBLE);
-                            Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            try{
-                                someActivityResultLauncher.launch(intentCapture);
-
-                            }catch (ActivityNotFoundException e){
-                                Toast.makeText(ScanningPageShow.this, "Your device cannot take photos", Toast.LENGTH_SHORT).show();
-                            }
-
-                            goBack.setVisibility(View.VISIBLE);
-                            getGeolocation.setVisibility(View.VISIBLE);
-
-                            // click on take photo imageView
-                            /*takePhoto.setOnClickListener(view -> {
-                                // set the goBack and getGeolocation back to visible for new scanning code
-                                goBack.setVisibility(View.VISIBLE);
-                                getGeolocation.setVisibility(View.VISIBLE);
-
-                                // TODO: taking photo and store the photo in the database (which database)
-                                Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivity(intentCapture);
-                                if (intentCapture.resolveActivity(getPackageManager())!= null){
-                                    someActivityResultLauncher.launch(intentCapture);
-                                }
-
-                                * //*Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
-                                startActivity(intent);
-                                Toast.makeText(ScanningPageShow.this,
-                                        "Code has been added! You win: "+ score + " points",
-                                        Toast.LENGTH_LONG).show();* //*
-
-
-                            });* /
-
-                        })
-                        .setNegativeButton("No", (dialogInterface, i) -> {
-
-                            Toast.makeText(ScanningPageShow.this,
-                                    "Taking photo is denied", Toast.LENGTH_SHORT).show();
-
-                            Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
-                            startActivity(intent);
-                            Toast.makeText(ScanningPageShow.this,
-                                    "Code has been added! You win: "+
-                                            score + " points",
-                                    Toast.LENGTH_LONG).show();
-
-                        });
-                alertDialogPhoto = alertBuilderPhoto.create();
-                alertDialogPhoto.show();
-            }
-
-            // Show the getting geolocation dialog
-            if (alertBuilderGeolocation == null) {
-                alertBuilderGeolocation = new AlertDialog.Builder(ScanningPageShow.this);
-                alertBuilderGeolocation.setMessage("Do you want to record your location?")
-                        .setPositiveButton("Yes", (dialogInterface, i) -> {
-                            // TODO: ask for access geolocation
-
-                        })
-                        .setNegativeButton("No", (dialogInterface, i) ->
-                                Toast.makeText(ScanningPageShow.this,
-                                        "Geolocation access denied",
-                                        Toast.LENGTH_SHORT).show());
-                alertDialogGeolocation = alertBuilderGeolocation.create();
-                alertDialogGeolocation.show();
-
-            }
-
-            // get the value type of the barcode
-            int valueType = barcode.getValueType();
-
-            // See API reference for complete list of supported types
-            switch (valueType) {
-                case Barcode.TYPE_WIFI:
-                    String ssid = barcode.getWifi().getSsid();
-                    String password = barcode.getWifi().getPassword();
-                    int type = barcode.getWifi().getEncryptionType();
-                    break;
-                case Barcode.TYPE_URL:
-                    String title = barcode.getUrl().getTitle();
-                    String url = barcode.getUrl().getUrl();
-                    break;
-            }
-        }
-*/
-        }
+    }
 
     /**
      * requestPermission result

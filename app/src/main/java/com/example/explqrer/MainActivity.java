@@ -1,7 +1,5 @@
 package com.example.explqrer;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -12,18 +10,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
-import com.google.mlkit.vision.barcode.common.Barcode;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
@@ -63,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
         scannerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
+                    if (result.getResultCode() != RESULT_OK) { return; }
                     assert result.getData() != null;
                     player.addCode((GameCode) result.getData().getSerializableExtra("Code"));
                     saveData();
@@ -114,9 +108,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 return true;
 
             case R.id.scan_nav:
-                Intent scanningIntent = new Intent(MainActivity.this, ScanningPageShow.class);
+                Intent scanningIntent = new Intent(this, ScanningPageShow.class);
                 scanningIntent.putExtra("playerProfile", player);
-                startActivity(scanningIntent);
+                scannerLauncher.launch(scanningIntent);
                 return true;
 
             case R.id.search_nav:

@@ -1,25 +1,19 @@
 package com.example.explqrer;
 
-import static com.google.firebase.crashlytics.buildtools.reloc.com.google.common.math.IntMath.pow;
+import static com.google.common.math.IntMath.pow;
 
 import android.graphics.Bitmap;
 import android.location.Location;
-import android.media.Image;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.common.util.Hex;
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.hash.HashFunction;
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.hash.Hashing;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.codec.digest.DigestUtils;
-import com.google.mlkit.vision.barcode.common.Barcode;
+
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * Store information about a code scanned by a player, so that it
@@ -36,7 +30,7 @@ public class GameCode implements Serializable {
     // TODO: Add comments
     // private linkToComments
     // private ArrayList<String> scannedByList;
-    HashFunction hash =  Hashing.sha256();
+    static HashFunction hash =  Hashing.sha256();
 
     /**
      * Constructor for GameCode.
