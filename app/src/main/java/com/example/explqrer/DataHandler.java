@@ -113,6 +113,22 @@ public class DataHandler {
         return qrs;
     }
 
+    // Function to get the qrs of a specific user
+    public ArrayList<String> userQrs(String username){
+        ArrayList<String> qrs = new ArrayList<>();
+        Map<String,Object> map = this.getQR();
+
+        for(String hash: map.keySet()){
+            ArrayList<String> users = (ArrayList<String>) map.get(hash);
+            for(String user: users) {
+                if (user.equals(username)) {
+                    qrs.add(hash);
+                }
+            }
+        }
+        return qrs;
+    }
+
     // Player Info database
 
     // Function to create new player
