@@ -2,6 +2,7 @@ package com.example.explqrer;
 
 import static android.content.ContentValues.TAG;
 
+import android.graphics.Bitmap;
 import android.nfc.Tag;
 import android.util.Log;
 
@@ -23,7 +24,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,9 +35,10 @@ import java.util.Map;
 
 public class DataHandler {
     final private FirebaseFirestore db;
-
+    final private FirebaseStorage storage;
     public DataHandler(){
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     /*
@@ -430,5 +435,31 @@ public class DataHandler {
             }
         });
         return  flag[0];
+    }
+
+    // Image upload
+    public void uploadImage(String hash, String username, Bitmap image, long pts){
+        // Connect to collection
+        CollectionReference collectionReference = db.collection("images");
+
+        // Document reference
+        DocumentReference doc = collectionReference.document(hash);
+
+        Map<String,Object> data = new HashMap<>();
+        data.put("pts",pts);
+
+        doc.set(data);
+
+        // Get the StorageReference
+        StorageReference storageReference = storage.getReference();
+        // Defining the child of storageReference
+        StorageReference imageRef = storageReference.child("images/"+hash);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageData = baos.toByteArray();
+
+
+
     }
 }
