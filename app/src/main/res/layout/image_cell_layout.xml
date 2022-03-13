@@ -2,18 +2,17 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="#FFFFFF"
+    android:background="@color/cool_dark"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+   >
 
     <com.example.explqrer.UniformSizeImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginBottom="2dp"
+        android:paddingVertical="3dp"
+        android:paddingHorizontal="3dp"
         android:adjustViewBounds="true"
         android:cropToPadding="true"
         android:hapticFeedbackEnabled="true">
