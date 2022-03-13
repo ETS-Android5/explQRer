@@ -70,7 +70,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         public ViewHolder(View view) {
             super(view);
 
-            image = view.findViewById(R.id.image);
+            image = (ImageView) view.findViewById(R.id.image);
         }
     }
 
