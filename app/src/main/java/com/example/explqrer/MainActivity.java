@@ -106,9 +106,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 return true;
 
             case R.id.profile_nav:
-                // TODO: add profile activity
-                Intent intent = new Intent(MainActivity.this, Gallery.class);
-                startActivity(intent);
+                // goes to UserProfile activity
+                Intent profileIntent = new Intent(MainActivity.this, UserProfileActivity.class);
+                startActivity(profileIntent);
+                return true;
 
             case R.id.scan_nav:
                 // TODO: add scan activity

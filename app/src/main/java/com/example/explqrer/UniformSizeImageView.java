@@ -16,9 +16,6 @@ public class UniformSizeImageView extends androidx.appcompat.widget.AppCompatIma
         Drawable d = getDrawable();
 
         if(d!=null){
-            // ceil not round - avoid thin vertical gaps along the left/right edges
-           // int width = MeasureSpec.getSize(widthMeasureSpec);
-            //int height = (int) Math.ceil((float) width * (float) d.getIntrinsicHeight() / (float) d.getIntrinsicWidth());
             setMeasuredDimension(350,350 );
         }else{
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
