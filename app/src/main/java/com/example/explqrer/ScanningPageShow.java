@@ -77,7 +77,8 @@ import java.util.concurrent.Executors;
  * Citation 2: https://developers.google.com/ml-kit/vision/barcode-scanning/android
  */
 
-public class ScanningPageShow extends AppCompatActivity {
+public class ScanningPageShow extends AppCompatActivity
+        implements CodeScannedFragment.CodeScannerFragmentListener {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -217,6 +218,15 @@ public class ScanningPageShow extends AppCompatActivity {
         processCameraProvider.bindToLifecycle(this, cameraSelector, preview,imageCapture, imageAnalysis);
     }
 
+    @Override
+    public void processQR(GameCode code) {
+        // TODO: STUFF!!
+        Intent intent = new Intent();
+        intent.putExtra("Code", code);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
 
     public class MyImageAnalyzer implements ImageAnalysis.Analyzer{
         TextView textView;
@@ -279,13 +289,19 @@ public class ScanningPageShow extends AppCompatActivity {
      */
     private void readerBarcodeData( List<Barcode> barcodes) {
         for (Barcode barcode : barcodes) {
+            CodeScannedFragment codeScannedFragment = CodeScannedFragment
+                    .newInstance(barcode.getRawValue(), playerProfile.getName());
+            codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
+            previewView.setController(null);
+        }
+/*
             Rect bounds = barcode.getBoundingBox();
             Point[] corners = barcode.getCornerPoints();
 
             String rawValue = barcode.getRawValue();
 
             // Create a game code and get score of the scanning code
-            GameCode gameCode = new GameCode(barcode,playerProfile,null,null );
+            GameCode gameCode = new GameCode(barcode,playerProfile.getName(),null,null );
             int score = gameCode.getScore();
             String hash = gameCode.getSha256hex();
             String username = playerProfile.getName();
@@ -331,14 +347,14 @@ public class ScanningPageShow extends AppCompatActivity {
                                     someActivityResultLauncher.launch(intentCapture);
                                 }
 
-                                *//*Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
+                                * //*Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
                                 startActivity(intent);
                                 Toast.makeText(ScanningPageShow.this,
                                         "Code has been added! You win: "+ score + " points",
-                                        Toast.LENGTH_LONG).show();*//*
+                                        Toast.LENGTH_LONG).show();* //*
 
 
-                            });*/
+                            });* /
 
                         })
                         .setNegativeButton("No", (dialogInterface, i) -> {
@@ -391,7 +407,8 @@ public class ScanningPageShow extends AppCompatActivity {
                     break;
             }
         }
-    }
+*/
+        }
 
     /**
      * requestPermission result
