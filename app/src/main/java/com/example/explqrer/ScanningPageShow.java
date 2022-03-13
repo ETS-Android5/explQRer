@@ -131,7 +131,7 @@ public class ScanningPageShow extends AppCompatActivity {
         setContentView(R.layout.activity_scanning_page_show);
 
         // get the player from main activity
-        playerProfile = getIntent().getParcelableExtra("playerProfile");
+        playerProfile = getIntent().getSerializableExtra("playerProfile");
 
         // get ImageView and Textview for later use
         qrPoints = findViewById(R.id.qr_points);
@@ -168,7 +168,6 @@ public class ScanningPageShow extends AppCompatActivity {
                     ActivityCompat.requestPermissions(ScanningPageShow.this,
                             new String[]{Manifest.permission.CAMERA}, 1);
                 }else {
-
                     ProcessCameraProvider processCameraProvider =
                             (ProcessCameraProvider) cameraProviderFuture.get();
                     bindPreview(processCameraProvider);
@@ -176,21 +175,19 @@ public class ScanningPageShow extends AppCompatActivity {
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
-        },ContextCompat.getMainExecutor(this));
+        },ContextCompat.getMainExecutor(ScanningPageShow.this));
 
         // click go Back ( If just scan 1, then only need this when there is no code scanning)
         goBack.setOnClickListener(view -> {
             /*TODO: send Image: photo
               TODO: send Location: location
               TODO: send barcode
-
              */
             Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
             startActivity(intent);
         });
 
         // TODO: access geolocation
-
     }
 
     /**
@@ -268,7 +265,6 @@ public class ScanningPageShow extends AppCompatActivity {
                     // failed with an exception
                 })
                 .addOnCompleteListener(task1 -> image.close());
-
     }
 
     /**
@@ -293,8 +289,6 @@ public class ScanningPageShow extends AppCompatActivity {
             String username = playerProfile.getName();
             // TODO: add the qr into the database
 
-
-
             // Display the score on the screen
             qrPoints.setText("Points: " + score);
             qrPoints.setVisibility(View.VISIBLE);
@@ -304,17 +298,13 @@ public class ScanningPageShow extends AppCompatActivity {
             // TODO: change condition from (alertBuilder == null) to
             // TODO:      ( if barcode is not in database)
             if (alertBuilderPhoto == null) {
-
                 alertBuilderPhoto = new AlertDialog.Builder(ScanningPageShow.this);
                 alertBuilderPhoto.setMessage("Do you want to record a photo?")
                         .setPositiveButton("Yes", (dialogInterface, i) -> {
                             // set ONLY take photo visible
                             //goBack.setVisibility(View.INVISIBLE);
                             //getGeolocation.setVisibility(View.INVISIBLE);
-
-
                             Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
                             try{
                                 someActivityResultLauncher.launch(intentCapture);
 
