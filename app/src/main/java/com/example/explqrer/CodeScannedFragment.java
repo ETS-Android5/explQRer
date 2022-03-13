@@ -98,6 +98,9 @@ public class CodeScannedFragment extends DialogFragment {
         return builder.setView(view)
                 .setPositiveButton("Add Code", (dialogInterface, i) -> {
                     code.setDescription(description.getText().toString());
+                    if (code.getDescription().isEmpty()) {
+                        code.setDescription("No Description");
+                    }
                     if (locationToggle.isChecked()) {
                         // TODO: Record Location
                     }

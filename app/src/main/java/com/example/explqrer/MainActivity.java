@@ -128,9 +128,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     private void updateStrings() {
         usernameText.setText(player.getName());
         highestText.setText("Highest: " + (player.getHighestCode() != null ?
-                player.getHighestCode().getSha256hex() : "None"));
+                player.getHighestCode().getDescription() : "None"));
         lowestText.setText("Lowest: " + (player.getLowestCode() != null ?
-                player.getLowestCode().getSha256hex() : "None"));
+                player.getLowestCode().getDescription() : "None"));
     }
 
     /**
