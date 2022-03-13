@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
             case R.id.scan_nav:
                 Intent scanningIntent = new Intent(MainActivity.this, ScanningPageShow.class);
-                scanningIntent.putExtra("playerProfile", (Serializable) player);
+                scanningIntent.putExtra("playerProfile", player);
                 startActivity(scanningIntent);
                 return true;
 
