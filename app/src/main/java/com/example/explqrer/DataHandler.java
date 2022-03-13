@@ -3,6 +3,7 @@ package com.example.explqrer;
 import static android.content.ContentValues.TAG;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.nfc.Tag;
 import android.util.Log;
 
@@ -42,9 +43,9 @@ public class DataHandler {
     }
 
     /*
-     * TODO: # of QRs scanned leaderboard
+     * # of QRs scanned leaderboard
      * pts leaderboard
-     * TODO: Highest Unique QRs scanned leader board
+     * Highest Unique QRs scanned leader board
      * Player info database
      * QR code database
      */
@@ -438,7 +439,7 @@ public class DataHandler {
     }
 
     // Image upload
-    public void uploadImage(String hash, String username, Bitmap image, long pts){
+    public void uploadImage(String hash,String username, Bitmap image, long pts){
         // Connect to collection
         CollectionReference collectionReference = db.collection("images");
 
@@ -453,13 +454,33 @@ public class DataHandler {
         // Get the StorageReference
         StorageReference storageReference = storage.getReference();
         // Defining the child of storageReference
-        StorageReference imageRef = storageReference.child("images/"+hash);
+        StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        image.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageData = baos.toByteArray();
 
+        // Upload the image
+        imageRef.putBytes(imageData);
 
+        // Add user to the qr
+        this.addQR(hash,username);
+    }
 
+    public Bitmap downloadImage(String hash){
+        StorageReference storageReference = storage.getReference();
+        StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
+        final byte[][] data = new byte[1][1];
+        final long ONE_MEGABYTE = 1024 * 1024;
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                data[0] = bytes.clone();
+            }
+        });
+
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data[0], 0, data[0].length);
+        return bitmap;
     }
 }
