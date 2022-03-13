@@ -483,6 +483,35 @@ public class DataHandler {
         this.addQR(hash,username);
     }
 
+    // Method to get the point of a specific hash
+    public long hashPts(String hash){
+        // Connect to collection
+        CollectionReference collectionReference = db.collection("images");
+
+        // Document reference
+        DocumentReference doc = collectionReference.document(hash);
+
+        // Store the point
+        final long[] pts = {0};
+
+        // Get the document
+        doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        pts[0] =(long) doc.getData().get("pts");
+                    }
+                }
+            }
+        });
+
+        return pts[0];
+    }
+
+    // Method to download the image
+    // The method returns null if the image doesnt exist
     public Bitmap downloadImage(String hash){
         StorageReference storageReference = storage.getReference();
         StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
