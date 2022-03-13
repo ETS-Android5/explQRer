@@ -289,7 +289,10 @@ public class ScanningPageShow extends AppCompatActivity {
             int score = gameCode.getScore();
             String hash = gameCode.getSha256hex();
             String username = playerProfile.getName();
-            dataHandler.addQR(hash,username);
+            if(dataHandler.hasScannedBefore(hash,username)) {
+                dataHandler.addQR(hash, username);
+            }
+
             // TODO: add the qr into the database
 
             // Display the score on the screen
@@ -300,7 +303,7 @@ public class ScanningPageShow extends AppCompatActivity {
 
             // TODO: change condition from (alertBuilder == null) to
             // TODO:      ( if barcode is not in database)
-            if (alertBuilderPhoto == null) {
+            if (dataHandler.hasScannedBefore(hash,username)) {
                 alertBuilderPhoto = new AlertDialog.Builder(ScanningPageShow.this);
                 alertBuilderPhoto.setMessage("Do you want to record a photo?")
                         .setPositiveButton("Yes", (dialogInterface, i) -> {
@@ -359,7 +362,7 @@ public class ScanningPageShow extends AppCompatActivity {
             }
 
             // Show the getting geolocation dialog
-            if (alertBuilderGeolocation == null) {
+            if (dataHandler.hasScannedBefore(hash,username)) {
                 alertBuilderGeolocation = new AlertDialog.Builder(ScanningPageShow.this);
                 alertBuilderGeolocation.setMessage("Do you want to record your location?")
                         .setPositiveButton("Yes", (dialogInterface, i) -> {
