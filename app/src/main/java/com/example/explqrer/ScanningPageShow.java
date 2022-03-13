@@ -131,7 +131,7 @@ public class ScanningPageShow extends AppCompatActivity {
         setContentView(R.layout.activity_scanning_page_show);
 
         // get the player from main activity
-        playerProfile = getIntent().getSerializableExtra("playerProfile");
+        playerProfile = (PlayerProfile) getIntent().getSerializableExtra("playerProfile");
 
         // get ImageView and Textview for later use
         qrPoints = findViewById(R.id.qr_points);
