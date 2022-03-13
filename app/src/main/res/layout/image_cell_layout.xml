@@ -8,14 +8,15 @@
 
     <com.example.explqrer.UniformSizeImageView
         android:id="@+id/image"
-        android:adjustViewBounds="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="2dp"
-        android:layout_marginRight="2dp"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="2dp"
-        android:background="@color/transparent">
+        android:layout_marginRight="2dp"
+        android:layout_marginBottom="2dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true"
+        android:hapticFeedbackEnabled="true">
 
     </com.example.explqrer.UniformSizeImageView>
 

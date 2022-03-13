@@ -5,9 +5,10 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/image_gallery"
+        android:id="@+id/image_gallery_2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/cool_dark"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
