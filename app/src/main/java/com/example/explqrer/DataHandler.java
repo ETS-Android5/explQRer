@@ -214,7 +214,8 @@ public class DataHandler {
 
         dr.update("uniqueScanned",FieldValue.increment(uniqueScanned));
 
-        // TODO: Update uniqueL
+        // Update uniqueL
+        updateUniqueL();
     }
 
     // Pts leader board
