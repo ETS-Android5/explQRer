@@ -67,17 +67,9 @@ public class DataHandler {
                         ArrayList<String> usernames = new ArrayList<>();
                         usernames.add(username);
                         data.put("users", usernames);
-                        docRef.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.d(TAG, "Success");
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "Failure");
-                            }
-                        });
+                        docRef.set(data)
+                                .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
+                                .addOnFailureListener(e -> Log.d(TAG, "Failure"));
                     }
                 }
             }

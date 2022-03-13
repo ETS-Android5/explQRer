@@ -1,14 +1,9 @@
 package com.example.explqrer;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageProxy;
@@ -17,36 +12,22 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.location.Location;
 import android.media.Image;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Parcelable;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.util.Size;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
@@ -54,18 +35,10 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
-//import com.j256.ormlite.stmt.query.In;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -77,7 +50,8 @@ import java.util.concurrent.Executors;
  * Citation 2: https://developers.google.com/ml-kit/vision/barcode-scanning/android
  */
 
-public class ScanningPageShow extends AppCompatActivity {
+public class ScanningPageShow extends AppCompatActivity
+        implements CodeScannedFragment.CodeScannerFragmentListener {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -98,33 +72,7 @@ public class ScanningPageShow extends AppCompatActivity {
 
     private Bitmap imageBitmap;
     private DataHandler dataHandler;
-
-//    private Barcode barcodeReturn; // Now, just scan one, return 1
-//    private boolean isScanning = false;
-//    private HashMap<Barcode, Location> codeLocation; // if player needs to scan multiple in one activity
-//    private HashMap<Barcode, Image> codeImage;// if player could scan multiple ( do later)
-
-    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData()!= null) {
-                        Intent data = result.getData();
-                        Bundle extras = data.getExtras();
-                        imageBitmap = (Bitmap) extras.get("data");
-                        if ( imageBitmap!= null){
-                            showPhoto.findViewById(R.id.show_photo);
-                            showPhoto.setImageBitmap(imageBitmap);
-                        }
-
-                       // TODO: Convert bitmap to image and store in gameCode constructor
-
-
-                    }
-                }
-            });
+    private boolean isScanning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,28 +116,18 @@ public class ScanningPageShow extends AppCompatActivity {
                         Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(ScanningPageShow.this,
                             new String[]{Manifest.permission.CAMERA}, 1);
-                }else {
-                    ProcessCameraProvider processCameraProvider =
-                            (ProcessCameraProvider) cameraProviderFuture.get();
-                    bindPreview(processCameraProvider);
                 }
+                ProcessCameraProvider processCameraProvider =
+                        (ProcessCameraProvider) cameraProviderFuture.get();
+                bindPreview(processCameraProvider);
+
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
         },ContextCompat.getMainExecutor(ScanningPageShow.this));
 
         // click go Back ( If just scan 1, then only need this when there is no code scanning)
-        goBack.setOnClickListener(view -> {
-            /*TODO: send Image: photo
-              TODO: send Location: location
-              TODO: send barcode
-             */
-//            Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
-//            startActivity(intent);
-            finish();
-        });
-
-        // TODO: access geolocation
+        goBack.setOnClickListener(view -> finish());
     }
 
     /**
@@ -217,6 +155,15 @@ public class ScanningPageShow extends AppCompatActivity {
         processCameraProvider.bindToLifecycle(this, cameraSelector, preview,imageCapture, imageAnalysis);
     }
 
+    @Override
+    public void processQR(GameCode code) {
+        // TODO: STUFF!!
+        Intent intent = new Intent();
+        intent.putExtra("Code", code);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
 
     public class MyImageAnalyzer implements ImageAnalysis.Analyzer{
         TextView textView;
@@ -236,6 +183,7 @@ public class ScanningPageShow extends AppCompatActivity {
      * @param image
      */
     private void scanBarcode(ImageProxy image){
+        if (isScanning) { return; }
         @SuppressLint("UnsafeOptInUsageError") Image image1 = image.getImage();
         assert image1!= null;
 
@@ -279,31 +227,33 @@ public class ScanningPageShow extends AppCompatActivity {
      */
     private void readerBarcodeData( List<Barcode> barcodes) {
         for (Barcode barcode : barcodes) {
+//<<<<<<< HEAD
             Rect bounds = barcode.getBoundingBox();
             Point[] corners = barcode.getCornerPoints();
 
             String rawValue = barcode.getRawValue();
 
             // Create a game code and get score of the scanning code
-            GameCode gameCode = new GameCode(barcode,playerProfile,null,null );
+            /*GameCode gameCode = new GameCode(barcode.getRawValue(),playerProfile.getName(),null,null );
             int score = gameCode.getScore();
+
             String hash = gameCode.getSha256hex();
             String username = playerProfile.getName();
             if(dataHandler.hasScannedBefore(hash,username)) {
                 dataHandler.addQR(hash, username);
             }
-
+             */
             // TODO: add the qr into the database
 
             // Display the score on the screen
-            qrPoints.setText("Points: " + score);
+            //qrPoints.setText("Points: " + score);
             qrPoints.setVisibility(View.VISIBLE);
             scanCode.setVisibility(View.INVISIBLE);
             takePhoto.setVisibility(View.VISIBLE);
 
             // TODO: change condition from (alertBuilder == null) to
             // TODO:      ( if barcode is not in database)
-            if (dataHandler.hasScannedBefore(hash,username)) {
+            /*if (dataHandler.hasScannedBefore(hash,username)) {
                 alertBuilderPhoto = new AlertDialog.Builder(ScanningPageShow.this);
                 alertBuilderPhoto.setMessage("Do you want to record a photo?")
                         .setPositiveButton("Yes", (dialogInterface, i) -> {
@@ -320,28 +270,6 @@ public class ScanningPageShow extends AppCompatActivity {
 
                             goBack.setVisibility(View.VISIBLE);
                             getGeolocation.setVisibility(View.VISIBLE);
-
-                            // click on take photo imageView
-                            /*takePhoto.setOnClickListener(view -> {
-                                // set the goBack and getGeolocation back to visible for new scanning code
-                                goBack.setVisibility(View.VISIBLE);
-                                getGeolocation.setVisibility(View.VISIBLE);
-
-                                // TODO: taking photo and store the photo in the database (which database)
-                                Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivity(intentCapture);
-                                if (intentCapture.resolveActivity(getPackageManager())!= null){
-                                    someActivityResultLauncher.launch(intentCapture);
-                                }
-
-                                *//*Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
-                                startActivity(intent);
-                                Toast.makeText(ScanningPageShow.this,
-                                        "Code has been added! You win: "+ score + " points",
-                                        Toast.LENGTH_LONG).show();*//*
-
-
-                            });*/
 
                         })
                         .setNegativeButton("No", (dialogInterface, i) -> {
@@ -376,7 +304,7 @@ public class ScanningPageShow extends AppCompatActivity {
                 alertDialogGeolocation = alertBuilderGeolocation.create();
                 alertDialogGeolocation.show();
 
-            }
+            }*/
 
             // get the value type of the barcode
             int valueType = barcode.getValueType();
@@ -393,6 +321,15 @@ public class ScanningPageShow extends AppCompatActivity {
                     String url = barcode.getUrl().getUrl();
                     break;
             }
+//=======
+            CodeScannedFragment codeScannedFragment = CodeScannedFragment
+                    .newInstance(barcode.getRawValue(), playerProfile.getName());
+            codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
+            isScanning = true;
+            previewView.setController(null);
+            // TODO: turn scanning off eventually.
+            break;
+//>>>>>>> a1bc66dccdae579a7cdbd86041ec6bd39d4d0407
         }
     }
 

@@ -1,5 +1,7 @@
 package com.example.explqrer;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -8,18 +10,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
-import com.google.mlkit.vision.barcode.common.Barcode;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
@@ -28,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     public static final String SHARED_PREFS_PLAYER_KEY = "Player";
     // Data
     private PlayerProfile player;
+    private ActivityResultLauncher<Intent> scannerLauncher;
     // Views
     private TextView  usernameText, highestText, lowestText;
     private BottomNavigationView bottomNavigationView;
@@ -52,13 +50,18 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnItemSelectedListener(this);
         usernameText = findViewById(R.id.username_text);
-        usernameText.setText(player.getName());
         highestText = findViewById(R.id.highest_qr_display_main);
         lowestText = findViewById(R.id.lowest_qr_display_main);
-        highestText.setText("Highest: " + (player.getHighestCode() != null ?
-                player.getHighestCode().getSha256hex() : "None"));
-        lowestText.setText("Lowest: " + (player.getLowestCode() != null ?
-                player.getLowestCode().getSha256hex() : "None"));
+        updateStrings();
+
+        scannerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() != RESULT_OK) { return; }
+                    assert result.getData() != null;
+                    player.addCode((GameCode) result.getData().getSerializableExtra("Code"));
+                    saveData();
+                    updateStrings();
+                });
 
     }
 
@@ -105,9 +108,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 return true;
 
             case R.id.scan_nav:
-                Intent scanningIntent = new Intent(MainActivity.this, ScanningPageShow.class);
+                Intent scanningIntent = new Intent(this, ScanningPageShow.class);
                 scanningIntent.putExtra("playerProfile", player);
-                startActivity(scanningIntent);
+                scannerLauncher.launch(scanningIntent);
                 return true;
 
             case R.id.search_nav:
@@ -120,6 +123,14 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
         }
         return false;
+    }
+
+    private void updateStrings() {
+        usernameText.setText(player.getName());
+        highestText.setText("Highest: " + (player.getHighestCode() != null ?
+                player.getHighestCode().getDescription() : "None"));
+        lowestText.setText("Lowest: " + (player.getLowestCode() != null ?
+                player.getLowestCode().getDescription() : "None"));
     }
 
     /**
