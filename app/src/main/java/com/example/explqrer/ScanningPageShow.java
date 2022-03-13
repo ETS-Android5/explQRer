@@ -183,8 +183,9 @@ public class ScanningPageShow extends AppCompatActivity {
               TODO: send Location: location
               TODO: send barcode
              */
-            Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
+//            startActivity(intent);
+            finish();
         });
 
         // TODO: access geolocation
