@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">explQRer</string>
-    <string name="map_screen_nav">Map Screen</string>
-    <string name="profile_page_nav">Profile Page</string>
+    <string name="back_button">Back</string>
+    <string name="profile_page_nav">Profile</string>
+    <string name="map_nav">Map</string>
+    <string name="user_profile_qr">User QR</string>
     <string name="scanner_nav">Scanner</string>
     <string name="search_nav">Search</string>
     <string name="leaderboard_nav">Leaderboard</string>
@@ -13,4 +15,5 @@
     <string name="no_picture">No picture</string>
     <string name="no">NO</string>
     <string name="yes">YES</string>
+    <string name = "banner">Banner</string>
 </resources>
