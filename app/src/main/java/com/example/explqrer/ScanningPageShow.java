@@ -245,16 +245,10 @@ public class ScanningPageShow extends AppCompatActivity
                 dataHandler.addQR(hash, username);
             }
              */
-            // TODO: add the qr into the database
-
             // Display the score on the screen
-            //qrPoints.setText("Points: " + score);
             qrPoints.setVisibility(View.VISIBLE);
             scanCode.setVisibility(View.INVISIBLE);
             takePhoto.setVisibility(View.VISIBLE);
-
-            // TODO: change condition from (alertBuilder == null) to
-            // TODO:      ( if barcode is not in database)
 
             /*if (dataHandler.hasScannedBefore(hash,username)) {
                 alertBuilderPhoto = new AlertDialog.Builder(ScanningPageShow.this);
@@ -297,8 +291,6 @@ public class ScanningPageShow extends AppCompatActivity
                 alertBuilderGeolocation = new AlertDialog.Builder(ScanningPageShow.this);
                 alertBuilderGeolocation.setMessage("Do you want to record your location?")
                         .setPositiveButton("Yes", (dialogInterface, i) -> {
-                            // TODO: ask for access geolocation
-
                         })
                         .setNegativeButton("No", (dialogInterface, i) ->
                                 Toast.makeText(ScanningPageShow.this,
@@ -324,6 +316,7 @@ public class ScanningPageShow extends AppCompatActivity
                     String url = barcode.getUrl().getUrl();
                     break;
             }
+
             CodeScannedFragment codeScannedFragment = CodeScannedFragment
                     .newInstance(barcode.getRawValue(), playerProfile.getName());
             codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");

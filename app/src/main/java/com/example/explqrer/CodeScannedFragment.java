@@ -108,6 +108,7 @@ public class CodeScannedFragment extends DialogFragment {
                     }
                     if (locationToggle.isChecked()) {
                         // TODO: Record Location
+
                     }
                     listener.processQR(code);
                 })
