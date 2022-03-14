@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">explQRer</string>
+    <string name="map_screen_nav">Map Screen</string>
+    <string name="profile_page_nav">Profile Page</string>
+    <string name="scanner_nav">Scanner</string>
+    <string name="search_nav">Search</string>
+    <string name="leaderboard_nav">Leaderboard</string>
+    <string name="default_text">default_text</string>
+</resources>

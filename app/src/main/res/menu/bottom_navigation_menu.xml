@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/map_nav"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:title="@string/map_screen_nav" />
+    <item
+        android:id="@+id/profile_nav"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="@string/profile_page_nav" />
+    <item
+        android:id="@+id/scan_nav"
+        android:icon="@android:drawable/ic_dialog_dialer"
+        android:title="@string/scanner_nav" />
+    <item
+        android:id="@+id/search_nav"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/search_nav" />
+    <item
+        android:id="@+id/leaderboard_nav"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="@string/leaderboard_nav" />
+</menu>
