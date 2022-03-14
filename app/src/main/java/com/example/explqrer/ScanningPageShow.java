@@ -207,13 +207,13 @@ public class ScanningPageShow extends AppCompatActivity
      */
     private void readerBarcodeData( List<Barcode> barcodes) {
         for (Barcode barcode : barcodes) {
-            if (playerProfile.hasCode(barcode.getRawValue())) {
-                alreadyScanned.setVisibility(View.VISIBLE);
+            String rawValue = barcode.getRawValue();
+            if (rawValue == null || playerProfile.hasCode(rawValue)) {
                 continue;
             }
             alreadyScanned.setVisibility(View.INVISIBLE);
             CodeScannedFragment codeScannedFragment = CodeScannedFragment
-                    .newInstance(barcode.getRawValue(), playerProfile.getName());
+                    .newInstance(rawValue, playerProfile.getName());
             codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
             isScanning = true;
             break;
