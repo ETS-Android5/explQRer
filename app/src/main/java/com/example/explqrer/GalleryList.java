@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
  * Author: Adam Sinicki
  */
-public class GalleryList implements Comparable<GalleryList> {
+public class GalleryList {
 
     public ArrayList<GalleryListItem> updateGallery(String playerName){
         // TODO: getting the data from the Data Base and loop through populating the lists
