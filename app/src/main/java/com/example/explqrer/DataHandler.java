@@ -51,6 +51,14 @@ public class DataHandler {
      */
 
     // QR code database
+
+    /**
+     * Method to add the user to the QRcode when a user scans it
+     * @param hash
+     *  This is the hash of the QRcode
+     * @param username
+     *  This is the username of the user that has scanned the QRcode
+     */
     public void addQR(String hash,String username){
         // Check if it exists if it does add username or add qr and username
 
@@ -84,6 +92,12 @@ public class DataHandler {
     }
 
     // Function to get all the qr codes
+
+    /**
+     * Method to get all the qr hashes and the users that scanned that qr code
+     * @return
+     *  Hashmap with string as a key and arraylist that has the names of all the users.
+     */
     public Map<String,Object> getQR(){
         CollectionReference cr = db.collection("qrbase");
 
@@ -106,6 +120,14 @@ public class DataHandler {
     }
 
     // Function to get the qrs of a specific user
+
+    /**
+     * Method to get all the hashes of the QRs scanned by a specific user
+     * @param username
+     *  This is the username of the user
+     * @return
+     *  Arraylist with all the hashes of the QR codes
+     */
     public ArrayList<String> userQrs(String username){
         ArrayList<String> qrs = new ArrayList<>();
         Map<String,Object> map = this.getQR();
@@ -144,6 +166,16 @@ public class DataHandler {
     // Function to get a specific player info
     // Will throw error if player doesnt exist
     // TODO: handle error part
+
+    /**
+     * This function returns all the data that is stored about a user
+     * @param username
+     *  This is the username of the user
+     * @return
+     *  It return a Hashmap of all the data of the user
+     *  If it returns null that means the player doesnt exist, this can be used to check if
+     *  the player exists or not.
+     */
     public Map<String,Object> getPlayer(String username){
         // Collection reference
         CollectionReference cr = db.collection("player");
@@ -152,7 +184,6 @@ public class DataHandler {
         final Map<String, Object>[] data = new Map[]{new HashMap<>()};
 
         DocumentReference dr = cr.document(username);
-
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -160,6 +191,9 @@ public class DataHandler {
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
                         data[0] = doc.getData();
+                    }
+                    else{
+                        data[0] = null;
                     }
                 }
             }
@@ -170,6 +204,14 @@ public class DataHandler {
     }
 
     // Function to update the pts
+
+    /**
+     * Method to update the points of a specific player
+     * @param username
+     *  This is the username of the player
+     * @param pts
+     *  This is the point by which we have to update the points by
+     */
     public void updatePts(String username, long pts){
         // Collection ref
         CollectionReference cr = db.collection("player");
@@ -184,6 +226,14 @@ public class DataHandler {
     }
 
     // Function to update scanned
+
+    /**
+     * Method to update the number of scanned qr codes
+     * @param username
+     *  This is the username of the player
+     * @param scanned
+     *  This is the number of qr codes scanned
+     */
     public void updateScanned(String username, long scanned){
         // Collection Ref
         CollectionReference cr = db.collection("player");
@@ -197,6 +247,13 @@ public class DataHandler {
         this.updateQrL();
     }
 
+    /**
+     * This function updates the unique scanned of the user
+     * @param username
+     *  This is the username of the user
+     * @param uniqueScanned
+     *  This is the integer value by which we have to update the unique scanned
+     */
     public void updateUniqueScanned(String username, long uniqueScanned){
         // Collection Ref
         CollectionReference cr = db.collection("player");
@@ -214,6 +271,10 @@ public class DataHandler {
     // get leader board
     // update ptsL,
     // get ptsL for player
+
+    /**
+     * Method to update the points leaderboard
+     */
     public void updatePtsL(){
         // Collection ref
         CollectionReference cr = db.collection("player");
@@ -234,6 +295,13 @@ public class DataHandler {
         });
     }
 
+    /**
+     * Method to get the position of the user on the points leaderboard
+     * @param username
+     *  This is the username of the user
+     * @return
+     *  The position of the user on the leaderboard
+     */
     public long getPtsL(String username){
         // Collection Reference
         CollectionReference cr = db.collection("player");
@@ -259,6 +327,11 @@ public class DataHandler {
         return ptsL[0];
     }
 
+    /**
+     * Method to get the points leader board
+     * @return
+     *  It returns an arraylist with the usernames of the users which represents the leaderboard
+     */
     public ArrayList<String> getPtsLeaderBoard(){
         // Hashmap to return
         ArrayList<String> leaderboard = new ArrayList<>();
@@ -283,6 +356,10 @@ public class DataHandler {
 
     // # of QRs scanned leaderboard
     // get leader board, update qrL, get qrL for player
+
+    /**
+     * Method to update the qr leaderboard
+     */
     public void updateQrL(){
         // Collection ref
         CollectionReference cr = db.collection("player");
@@ -303,6 +380,13 @@ public class DataHandler {
         });
     }
 
+    /**
+     * Method to get the position of the user on the qr scanned leaderboard
+     * @param username
+     *  This is the username of the user
+     * @return
+     *  The position of the user on the leaderboard
+     */
     public long getQrL(String username){
         // Collection Reference
         CollectionReference cr = db.collection("player");
@@ -328,6 +412,11 @@ public class DataHandler {
         return qrL[0];
     }
 
+    /**
+     * Method to get the qr scanned leader board
+     * @return
+     *  It returns an arraylist with the usernames of the users which represents the leaderboard
+     */
     public ArrayList<String> getQrLeaderBoard(){
         // Hashmap to return
         ArrayList<String> leaderboard = new ArrayList<>();
@@ -353,6 +442,10 @@ public class DataHandler {
 
     // Highest Unique QRs scanned leader board
     // get leader board, update uniqueL, get uniqueL for player
+
+    /**
+     * Method to get update the unique scanned leaderboard
+     */
     public void updateUniqueL(){
         // Collection ref
         CollectionReference cr = db.collection("player");
@@ -373,6 +466,13 @@ public class DataHandler {
         });
     }
 
+    /**
+     * Method to get the position of the user on the Unique scanned leaderboard
+     * @param username
+     *  This is the username of the user
+     * @return
+     *  The position of the user on the leaderboard
+     */
     public long getUniqueL(String username){
         // Collection Reference
         CollectionReference cr = db.collection("player");
@@ -398,6 +498,11 @@ public class DataHandler {
         return qrL[0];
     }
 
+    /**
+     * Method to get the unique scanned leader board
+     * @return
+     *  It returns an arraylist with the usernames of the users which represents the leaderboard
+     */
     public ArrayList<String> getUniqueLeaderBoard(){
         // Hashmap to return
         ArrayList<String> leaderboard = new ArrayList<>();
@@ -419,6 +524,16 @@ public class DataHandler {
         return leaderboard;
     }
 
+    /**
+     * Method to check if the qr has been scanned before by a given user
+     * @param hash
+     *  The qr hash
+     * @param username
+     *  The name of the user
+     * @return
+     *  It returns true if a given user has scanned the qr code before or false if the
+     *  user didn't scanned the qr before
+     */
     public Boolean hasScannedBefore(String hash, String username){
         // Connect to collection
         CollectionReference cr = db.collection("qrbase");
@@ -440,6 +555,36 @@ public class DataHandler {
                                 flag[0] = true;
                             }
                         }
+                    }
+                }
+            }
+        });
+        return  flag[0];
+    }
+
+    /**
+     * Method to check if the qr code is being scanned for the first time
+     * @param hash
+     *  This is the hash of the qr code
+     * @return
+     *  Returns true if the qr code is being scanned for the first time else returns false
+     */
+    public Boolean firstScan(String hash){
+        // Connect to collection
+        CollectionReference cr = db.collection("qrbase");
+
+        // Get the document
+        DocumentReference docRef = cr.document(hash);
+
+        // Set the flag to false by default
+        final boolean[] flag = {true};
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        flag[0] = false;
                     }
                 }
             }

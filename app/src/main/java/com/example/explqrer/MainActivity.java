@@ -135,12 +135,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 player.getLowestCode().getDescription() : "None"));
     }
 
-    /*@Override
-    protected void onResume() {
-        super.onResume();
-        updateStrings();
-    }*/
-
     /**
      * Get the username
      * @return username as String

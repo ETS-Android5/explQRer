@@ -163,6 +163,7 @@ public class ScanningPageShow extends AppCompatActivity
         //dataHandler.addQR(code.getSha256hex(),code.);
         // Back to mainActivity
         dataHandler.uploadImage(code.getSha256hex(),playerProfile.getName(),code.getPhoto(),code.getScore());
+
         Intent intent = new Intent();
         intent.putExtra("Code", code);
         setResult(RESULT_OK, intent);
@@ -232,84 +233,6 @@ public class ScanningPageShow extends AppCompatActivity
      */
     private void readerBarcodeData( List<Barcode> barcodes) {
         for (Barcode barcode : barcodes) {
-            Rect bounds = barcode.getBoundingBox();
-            Point[] corners = barcode.getCornerPoints();
-
-            String rawValue = barcode.getRawValue();
-
-            // Display the score on the screen
-            qrPoints.setVisibility(View.VISIBLE);
-            scanCode.setVisibility(View.INVISIBLE);
-            takePhoto.setVisibility(View.VISIBLE);
-
-
-            /*if (dataHandler.hasScannedBefore(hash,username)) {
-                alertBuilderPhoto = new AlertDialog.Builder(ScanningPageShow.this);
-                alertBuilderPhoto.setMessage("Do you want to record a photo?")
-                        .setPositiveButton("Yes", (dialogInterface, i) -> {
-                            // set ONLY take photo visible
-                            //goBack.setVisibility(View.INVISIBLE);
-                            //getGeolocation.setVisibility(View.INVISIBLE);
-                            Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            try{
-                                someActivityResultLauncher.launch(intentCapture);
-
-                            }catch (ActivityNotFoundException e){
-                                Toast.makeText(ScanningPageShow.this, "Your device cannot take photos", Toast.LENGTH_SHORT).show();
-                            }
-
-                            goBack.setVisibility(View.VISIBLE);
-                            getGeolocation.setVisibility(View.VISIBLE);
-
-                        })
-                        .setNegativeButton("No", (dialogInterface, i) -> {
-
-                            Toast.makeText(ScanningPageShow.this,
-                                    "Taking photo is denied", Toast.LENGTH_SHORT).show();
-
-                            Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
-                            startActivity(intent);
-                            Toast.makeText(ScanningPageShow.this,
-                                    "Code has been added! You win: "+
-                                            score + " points",
-                                    Toast.LENGTH_LONG).show();
-
-                        });
-                alertDialogPhoto = alertBuilderPhoto.create();
-                alertDialogPhoto.show();
-            }
-
-            // Show the getting geolocation dialog
-            if (dataHandler.hasScannedBefore(hash,username)) {
-                alertBuilderGeolocation = new AlertDialog.Builder(ScanningPageShow.this);
-                alertBuilderGeolocation.setMessage("Do you want to record your location?")
-                        .setPositiveButton("Yes", (dialogInterface, i) -> {
-                        })
-                        .setNegativeButton("No", (dialogInterface, i) ->
-                                Toast.makeText(ScanningPageShow.this,
-                                        "Geolocation access denied",
-                                        Toast.LENGTH_SHORT).show());
-                alertDialogGeolocation = alertBuilderGeolocation.create();
-                alertDialogGeolocation.show();
-
-            }*/
-
-            // get the value type of the barcode
-            int valueType = barcode.getValueType();
-
-            // See API reference for complete list of supported types
-            switch (valueType) {
-                case Barcode.TYPE_WIFI:
-                    String ssid = barcode.getWifi().getSsid();
-                    String password = barcode.getWifi().getPassword();
-                    int type = barcode.getWifi().getEncryptionType();
-                    break;
-                case Barcode.TYPE_URL:
-                    String title = barcode.getUrl().getTitle();
-                    String url = barcode.getUrl().getUrl();
-                    break;
-            }
-
             CodeScannedFragment codeScannedFragment = CodeScannedFragment
                     .newInstance(barcode.getRawValue(), playerProfile.getName());
             codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
@@ -317,7 +240,6 @@ public class ScanningPageShow extends AppCompatActivity
             previewView.setController(null);
             // TODO: turn scanning off eventually.
             break;
-
         }
     }
 

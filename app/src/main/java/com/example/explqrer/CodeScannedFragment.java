@@ -63,13 +63,11 @@ public class CodeScannedFragment extends DialogFragment {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity())
                 .inflate(R.layout.code_scanned_fragment_layout, null);
-        scoreText = view.findViewById(R.id.scan_dialog_title);
         description = view.findViewById(R.id.code_scanned_description_text);
         locationToggle = view.findViewById(R.id.code_scanned_record_location);
         takePictureButton = view.findViewById(R.id.code_scanned_take_picture);
@@ -93,7 +91,6 @@ public class CodeScannedFragment extends DialogFragment {
                         }
                     }
                 });
-        scoreText.setText("Code worth: " + code.getScore() + " points!");
         takePictureButton.setOnClickListener(view1 -> {
             Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             try{
@@ -114,6 +111,7 @@ public class CodeScannedFragment extends DialogFragment {
                     }
                     listener.processQR(code);
                 })
+                .setTitle("Code worth: " + code.getScore() + " points!")
                 .create();
 
     }
