@@ -1,20 +1,25 @@
 package com.example.explqrer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -27,7 +32,6 @@ import java.io.Serializable;
 public class CodeScannedFragment extends DialogFragment {
     private CodeScannerFragmentListener listener;
 
-    private TextView scoreText;
     private EditText description;
     private SwitchCompat locationToggle;
     private Button takePictureButton;
@@ -36,6 +40,7 @@ public class CodeScannedFragment extends DialogFragment {
 
     public interface CodeScannerFragmentListener {
         void processQR(GameCode code);
+        void dismissed();
     }
 
     public static CodeScannedFragment newInstance(String code, String username) {
@@ -81,15 +86,15 @@ public class CodeScannedFragment extends DialogFragment {
                         Bundle extras = data.getExtras();
                         Bitmap image = (Bitmap) extras.get("data");
                         if (image != null){
+                            code.setPhoto(image);   // added: set photo taken
                             pictureTaken.setImageResource(android.R.drawable.checkbox_on_background);
                             takePictureButton.setOnClickListener(null);
                         }
                     }
                 });
-
         takePictureButton.setOnClickListener(view1 -> {
             Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            try{
+            try {
                 pictureActivityResultLauncher.launch(intentCapture);
             } catch (ActivityNotFoundException ignored){ }
         });
@@ -97,16 +102,19 @@ public class CodeScannedFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder.setView(view)
                 .setPositiveButton("Add Code", (dialogInterface, i) -> {
-                    if (code.getDescription().isEmpty()) {
+                    if (description.getText().toString().isEmpty()) {
                         code.setDescription("No Description");
                     }else{
                         code.setDescription(description.getText().toString());
                     }
+/*
                     if (locationToggle.isChecked()) {
                         // TODO: Record Location
                     }
+*/
                     listener.processQR(code);
                 })
+                .setOnDismissListener(dialogInterface -> listener.dismissed())
                 .setTitle("Code worth: " + code.getScore() + " points!")
                 .create();
 

@@ -54,37 +54,35 @@ public class DataHandler {
 
     /**
      * Method to add the user to the QRcode when a user scans it
-     * @param hash
+     * @param code
      *  This is the hash of the QRcode
      * @param username
      *  This is the username of the user that has scanned the QRcode
      */
-    public void addQR(String hash,String username){
+    public void addQR(GameCode code, String username){
         // Check if it exists if it does add username or add qr and username
 
+        String hash = code.getSha256hex();
         // Connect to collection
         CollectionReference cr = db.collection("qrbase");
 
         // Get the document
         DocumentReference docRef = cr.document(hash);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    // Check if the document exists, add username if it does
-                    if(documentSnapshot.exists()){
-                        docRef.update("users", FieldValue.arrayUnion(username));
-                    }
-                    else{
-                        Map<String,Object> data = new HashMap<>();
-                        ArrayList<String> usernames = new ArrayList<>();
-                        usernames.add(username);
-                        data.put("users", usernames);
-                        docRef.set(data)
-                                .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
-                                .addOnFailureListener(e -> Log.d(TAG, "Failure"));
-                    }
+        docRef.get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                DocumentSnapshot documentSnapshot = task.getResult();
+                // Check if the document exists, add username if it does
+                if(documentSnapshot.exists()){
+                    docRef.update("users", FieldValue.arrayUnion(username));
+                }
+                else{
+                    Map<String,Object> data = new HashMap<>();
+                    ArrayList<String> usernames = new ArrayList<>();
+                    usernames.add(username);
+                    data.put("users", usernames);
+                    docRef.set(data)
+                            .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
+                            .addOnFailureListener(e -> Log.d(TAG, "Failure"));
                 }
             }
         });
@@ -593,10 +591,13 @@ public class DataHandler {
     }
 
     // Image upload
-    public void uploadImage(String hash,String username, Bitmap image, long pts){
+    public void uploadImage(GameCode code, String username){
         // Connect to collection
         CollectionReference collectionReference = db.collection("images");
 
+        String hash = code.getSha256hex();
+        long pts = code.getScore();
+        Bitmap image = code.getPhoto();
         // Document reference
         DocumentReference doc = collectionReference.document(hash);
 
@@ -605,20 +606,22 @@ public class DataHandler {
 
         doc.set(data);
 
-        // Get the StorageReference
-        StorageReference storageReference = storage.getReference();
-        // Defining the child of storageReference
-        StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
+        if (image != null) {
+            // Get the StorageReference
+            StorageReference storageReference = storage.getReference();
+            // Defining the child of storageReference
+            StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-        byte[] imageData = baos.toByteArray();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+            byte[] imageData = baos.toByteArray();
 
-        // Upload the image
-        imageRef.putBytes(imageData);
+            // Upload the image
+            imageRef.putBytes(imageData);
+        }
 
         // Add user to the qr
-        this.addQR(hash,username);
+        this.addQR(code,username);
     }
 
     // Method to get the point of a specific hash
