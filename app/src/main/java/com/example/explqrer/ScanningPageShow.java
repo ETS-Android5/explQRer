@@ -257,8 +257,7 @@ public class ScanningPageShow extends AppCompatActivity
         if (permissionsToRequest.size() > 0) {
             ActivityCompat.requestPermissions(this, permissionsToRequest
                     .toArray(new String[0]),REQUEST_PERMISSIONS_REQUEST_CODE);
-        } else { // all are granted
-            return;
-        }
+        }  // all are granted
+
     }
 }
