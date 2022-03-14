@@ -3,6 +3,8 @@ package com.example.explqrer;
 import static com.example.explqrer.R.id.image;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 /**
- * This is a class for a custome adapter for the recycler View
+ * Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
+ * Author: Adam Sinicki
+ * This is a class for a custom adapter for the recycler View
  */
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
-    private ArrayList<ImageListItem> galleryList;
+    private ArrayList<GalleryListItem> galleryList;
     private Context context;
 
     /**
@@ -28,11 +32,18 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
      * @param galleryList
      *  galleryList is the array list for the adapter
      */
-    public GalleryAdapter(Context context, ArrayList<ImageListItem> galleryList) {
+    public GalleryAdapter(Context context, ArrayList<GalleryListItem> galleryList) {
         this.galleryList = galleryList;
         this.context = context;
     }
 
+    /**
+     *sets up the ViewHolder for the recycler View
+     * @param viewGroup
+     *    where the viewHolder will be grouped
+     * @param i
+     * @return ViewHolder with the defined view parameters
+     */
     @NonNull
     @Override
     public GalleryAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -50,7 +61,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override
     public void onBindViewHolder(GalleryAdapter.ViewHolder viewHolder, int i) {
         viewHolder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        viewHolder.image.setImageResource((galleryList.get(i).getImageId()));
+        viewHolder.image.setImageBitmap(galleryList.get(i).getImage());
     }
 
     /**
@@ -70,7 +81,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         public ViewHolder(View view) {
             super(view);
 
-            image = (ImageView) view.findViewById(R.id.image);
+            image = view.findViewById(R.id.image);
         }
     }
 
