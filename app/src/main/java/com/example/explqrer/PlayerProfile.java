@@ -73,6 +73,7 @@ public class PlayerProfile implements Serializable {
      * @return true if the code was added, false otherwise
      */
     public boolean addCode(@NonNull GameCode code) {
+
         if (codes.add(code)) {
             int score = code.getScore();
             points += score;
@@ -146,5 +147,14 @@ public class PlayerProfile implements Serializable {
      */
     public int getNumCodes() {
         return codes.size();
+    }
+
+    /**
+     * Check if a player profile already contains a given code.
+     * @param rawValue
+     * @return
+     */
+    public boolean hasCode(String rawValue) {
+        return codes.contains(new GameCode(rawValue));
     }
 }

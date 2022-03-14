@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         loadData();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setSelectedItemId(R.id.scan_nav);
         bottomNavigationView.setOnItemSelectedListener(this);
         usernameText = findViewById(R.id.username_text);
         highestText = findViewById(R.id.highest_qr_display_main);
@@ -100,12 +102,14 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.map_nav:
+                Toast.makeText(this, "Map not yet available.", Toast.LENGTH_SHORT).show();
                 // TODO: add map activity
                 return true;
 
             case R.id.profile_nav:
                 // goes to UserProfile activity
-                Intent profileIntent = new Intent(MainActivity.this, UserProfileActivity.class);
+                Intent profileIntent = new Intent(
+                        MainActivity.this, UserProfileActivity.class);
                 startActivity(profileIntent);
                 return true;
 
@@ -116,10 +120,12 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 return true;
 
             case R.id.search_nav:
+                Toast.makeText(this, "Search not yet available.", Toast.LENGTH_SHORT).show();
                 // TODO: add search activity
                 return true;
 
             case R.id.leaderboard_nav:
+                Toast.makeText(this, "Leaderboard not yet available.", Toast.LENGTH_SHORT).show();
                 // TODO: add leaderboard activity
                 return true;
 

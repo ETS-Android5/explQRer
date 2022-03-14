@@ -18,8 +18,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Size;
@@ -56,10 +54,10 @@ public class ScanningPageShow extends AppCompatActivity
     private final int REQUEST_IMAGE_CAPTURE = 1;
 
     // view in activity
-    private TextView qrPoints;
-    private ImageView goBack,scanCode,takePhoto,takePhotoDenied,getGeolocation, geolocationDenied, showPhoto;
-    AlertDialog.Builder alertBuilderPhoto, alertBuilderGeolocation;
-    AlertDialog alertDialogPhoto, alertDialogGeolocation;
+    private TextView alreadyScanned;
+    private ImageView goBack;
+//    AlertDialog.Builder alertBuilderPhoto, alertBuilderGeolocation;
+//    AlertDialog alertDialogPhoto, alertDialogGeolocation;
 
     // view for qr code
     private ListenableFuture cameraProviderFuture;
@@ -70,10 +68,8 @@ public class ScanningPageShow extends AppCompatActivity
     // object get from previous intent
     private PlayerProfile playerProfile;
 
-    private Bitmap imageBitmap;
     private DataHandler dataHandler;
     private boolean isScanning = false;
-    private long pts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,22 +80,11 @@ public class ScanningPageShow extends AppCompatActivity
         playerProfile = (PlayerProfile) getIntent().getSerializableExtra("playerProfile");
         dataHandler = new DataHandler();
         // get ImageView and Textview for later use
-        qrPoints = findViewById(R.id.qr_points);
+        alreadyScanned = findViewById(R.id.already_scanned_text);
         goBack = findViewById(R.id.go_back);
-        scanCode = findViewById(R.id.scanning_qr);
-        takePhoto = findViewById(R.id.take_photo);
-        takePhotoDenied = findViewById(R.id.take_photo_denied);
-        getGeolocation = findViewById(R.id.get_geolocation);
-        geolocationDenied = findViewById(R.id.geolocation_denied);
-        showPhoto = findViewById(R.id.show_photo);
-
-        scanCode.setVisibility(View.VISIBLE);
-        takePhoto.setVisibility(View.INVISIBLE);
-
 
         // request permission
         requestPermissionsIfNecessary(new String[]{
-                // if you need to show the current location, uncomment the line below
                 Manifest.permission.CAMERA
         });
 
@@ -108,7 +93,7 @@ public class ScanningPageShow extends AppCompatActivity
 
         cameraExecutor = Executors.newSingleThreadExecutor();
         cameraProviderFuture = ProcessCameraProvider.getInstance(ScanningPageShow.this);
-        imageAnalyzer = new MyImageAnalyzer(qrPoints);
+        imageAnalyzer = new MyImageAnalyzer(alreadyScanned);
 
 
         cameraProviderFuture.addListener(() -> {
@@ -125,9 +110,8 @@ public class ScanningPageShow extends AppCompatActivity
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
-        },ContextCompat.getMainExecutor(ScanningPageShow.this));
+        }, ContextCompat.getMainExecutor(ScanningPageShow.this));
 
-        // click go Back ( If just scan 1, then only need this when there is no code scanning)
         goBack.setOnClickListener(view -> finish());
     }
 
@@ -158,16 +142,17 @@ public class ScanningPageShow extends AppCompatActivity
 
     @Override
     public void processQR(GameCode code) {
-        // TODO: STUFF!!
-        // Add to database???
-        //dataHandler.addQR(code.getSha256hex(),code.);
-        // Back to mainActivity
-        dataHandler.uploadImage(code.getSha256hex(),playerProfile.getName(),code.getPhoto(),code.getScore());
-
+        cameraExecutor.shutdown();
+        dataHandler.uploadImage(code, playerProfile.getName());
         Intent intent = new Intent();
         intent.putExtra("Code", code);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void dismissed() {
+        isScanning = false;
     }
 
 
@@ -199,27 +184,16 @@ public class ScanningPageShow extends AppCompatActivity
 
         BarcodeScannerOptions options =
                 new BarcodeScannerOptions.Builder()
-                        .setBarcodeFormats(
-                                Barcode.FORMAT_QR_CODE,
-                                Barcode.FORMAT_AZTEC
-                        ).build();
+                        .build();
 
         // BarcodeScanner for recognizing barcode
         BarcodeScanner scanner = BarcodeScanning.getClient(options);
+        // complete successfully
         Task<List<Barcode>> task = scanner.process(inputImage)
-                .addOnSuccessListener(barcodes -> {
-                    geolocationDenied.setVisibility(View.INVISIBLE);
-                    qrPoints.setVisibility(View.INVISIBLE);
-                    scanCode.setVisibility(View.VISIBLE);
-                    takePhoto.setVisibility(View.INVISIBLE);
-                    takePhotoDenied.setVisibility(View.INVISIBLE);
-
-                    readerBarcodeData(barcodes);
-                    // complete successfully
-                })
-                .addOnFailureListener(e -> {
-                    // failed with an exception
-                })
+                .addOnSuccessListener(this::readerBarcodeData)
+//                .addOnFailureListener(e -> {
+//                    // failed with an exception
+//                })
                 .addOnCompleteListener(task1 -> image.close());
     }
 
@@ -233,12 +207,15 @@ public class ScanningPageShow extends AppCompatActivity
      */
     private void readerBarcodeData( List<Barcode> barcodes) {
         for (Barcode barcode : barcodes) {
+            String rawValue = barcode.getRawValue();
+            if (rawValue == null || playerProfile.hasCode(rawValue)) {
+                continue;
+            }
+            alreadyScanned.setVisibility(View.INVISIBLE);
             CodeScannedFragment codeScannedFragment = CodeScannedFragment
-                    .newInstance(barcode.getRawValue(), playerProfile.getName());
+                    .newInstance(rawValue, playerProfile.getName());
             codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
             isScanning = true;
-            previewView.setController(null);
-            // TODO: turn scanning off eventually.
             break;
         }
     }
@@ -280,8 +257,7 @@ public class ScanningPageShow extends AppCompatActivity
         if (permissionsToRequest.size() > 0) {
             ActivityCompat.requestPermissions(this, permissionsToRequest
                     .toArray(new String[0]),REQUEST_PERMISSIONS_REQUEST_CODE);
-        } else { // all are granted
-            return;
-        }
+        }  // all are granted
+
     }
 }
