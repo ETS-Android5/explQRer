@@ -8,6 +8,6 @@
     <string name="search_nav">Search</string>
     <string name="leaderboard_nav">Leaderboard</string>
     <string name="default_text">default_text</string>
-    <string name = "banner">Banner</string>
+    <string name="banner">Banner</string>
 
 </resources>

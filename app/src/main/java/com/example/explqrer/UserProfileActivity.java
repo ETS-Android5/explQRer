@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -35,6 +37,8 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
     private PlayerProfile player;
 
     private SharedPreferences sharedPreferences;
+
+    TextView tvEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -106,6 +110,8 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
         switch (position) {
             case 0:
                 // Edit player profile
+                Intent intent = new Intent(this, EditProfile.class);
+                startActivity(intent);
                 break;
             case 1:
                 // Scan to sign in
@@ -146,9 +152,9 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
         //The LinearSnapHelper will snap the center of the target child view to the center of the attached RecyclerView
         final LinearSnapHelper linearSnapHelper = new LinearSnapHelper();
         linearSnapHelper.attachToRecyclerView(recyclerView);
-        //initilize the timer
+        //initialize the timer
         final Timer timer = new Timer();
-        //have this block run on a continuous intravals
+        //have this block run on a continuous interval
         timer.schedule(new TimerTask() {
             //first position in the recycler
             int position = 0;
