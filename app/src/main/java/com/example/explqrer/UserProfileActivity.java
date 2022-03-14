@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -62,6 +63,8 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
         switch (position) {
             case 0:
                 // Edit player profile
+                Intent intent = new Intent(this, EditProfile.class);
+                startActivity(intent);
                 break;
             case 1:
                 // Scan to sign in
