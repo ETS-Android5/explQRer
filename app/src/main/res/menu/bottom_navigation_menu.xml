@@ -3,7 +3,7 @@
     <item
         android:id="@+id/map_nav"
         android:icon="@android:drawable/ic_menu_mapmode"
-        android:title="@string/map_screen_nav" />
+        android:title="@string/map_nav" />
     <item
         android:id="@+id/profile_nav"
         android:icon="@android:drawable/ic_menu_myplaces"

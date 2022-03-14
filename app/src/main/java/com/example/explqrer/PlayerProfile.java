@@ -2,9 +2,10 @@ package com.example.explqrer;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
-public class PlayerProfile {
+public class PlayerProfile implements Serializable {
 
     private String name;
     private String contact;
@@ -72,6 +73,7 @@ public class PlayerProfile {
      * @return true if the code was added, false otherwise
      */
     public boolean addCode(@NonNull GameCode code) {
+
         if (codes.add(code)) {
             int score = code.getScore();
             points += score;
@@ -145,5 +147,14 @@ public class PlayerProfile {
      */
     public int getNumCodes() {
         return codes.size();
+    }
+
+    /**
+     * Check if a player profile already contains a given code.
+     * @param rawValue
+     * @return
+     */
+    public boolean hasCode(String rawValue) {
+        return codes.contains(new GameCode(rawValue));
     }
 }

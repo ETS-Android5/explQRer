@@ -7,5 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="cool_dark">#202225</color>
     <color name="transparent">#000000</color>
+    <color name="lightblue">#00e5ff</color>
+    <color name="cyan">#00c3ff</color>
+    <color name="pacificclue">#1ca9c9</color>
+    <color name="bluemagenta">#845f9c</color>
+    <color name="beige">#FFFBE6</color>
+    <color name="lightgreen">#B9E4C9</color>
+    <color name="basilorange">#FD5523</color>
+    <color name="orange500">#ff8d00</color>
 </resources>
