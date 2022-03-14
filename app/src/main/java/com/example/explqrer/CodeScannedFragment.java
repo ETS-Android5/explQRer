@@ -1,5 +1,6 @@
 package com.example.explqrer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,12 +10,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -81,12 +85,12 @@ public class CodeScannedFragment extends DialogFragment {
                         Bundle extras = data.getExtras();
                         Bitmap image = (Bitmap) extras.get("data");
                         if (image != null){
+                            code.setPhoto(image);   // added: set photo taken
                             pictureTaken.setImageResource(android.R.drawable.checkbox_on_background);
                             takePictureButton.setOnClickListener(null);
                         }
                     }
                 });
-
         takePictureButton.setOnClickListener(view1 -> {
             Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             try{

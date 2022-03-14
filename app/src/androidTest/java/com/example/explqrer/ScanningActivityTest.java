@@ -53,7 +53,5 @@ public class ScanningActivityTest {
     // TODO: test point show
 
     // TODO: test image capture ( if have time)
-
-
 }
 
