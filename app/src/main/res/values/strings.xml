@@ -8,6 +8,14 @@
     <string name="search_nav">Search</string>
     <string name="leaderboard_nav">Leaderboard</string>
     <string name="default_text">default_text</string>
-    <string name="banner">Banner</string>
-
+    <string name="short_description">Enter a short description (optional)</string>
+    <string name="record_location">Record Location?</string>
+    <string name="take_a_picture">Take a Picture</string>
+    <string name="record_code">Record Code!</string>
+    <string name="no_picture">No picture</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
+    <string name = "banner">Banner</string>
+    <string name="already_scanned">Already Scanned!</string>
+    <string name="preview">Preview</string>
 </resources>

@@ -2,6 +2,8 @@ package com.example.explqrer;
 
 import static android.content.ContentValues.TAG;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.nfc.Tag;
 import android.util.Log;
 
@@ -23,7 +25,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,54 +36,53 @@ import java.util.Map;
 
 public class DataHandler {
     final private FirebaseFirestore db;
-
+    final private FirebaseStorage storage;
     public DataHandler(){
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     /*
-     * TODO: # of QRs scanned leaderboard
+     * # of QRs scanned leaderboard
      * pts leaderboard
-     * TODO: Highest Unique QRs scanned leader board
+     * Highest Unique QRs scanned leader board
      * Player info database
      * QR code database
      */
 
     // QR code database
-    public void addQR(String hash,String username){
+
+    /**
+     * Method to add the user to the QRcode when a user scans it
+     * @param code
+     *  This is the hash of the QRcode
+     * @param username
+     *  This is the username of the user that has scanned the QRcode
+     */
+    public void addQR(GameCode code, String username){
         // Check if it exists if it does add username or add qr and username
 
+        String hash = code.getSha256hex();
         // Connect to collection
         CollectionReference cr = db.collection("qrbase");
 
         // Get the document
         DocumentReference docRef = cr.document(hash);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    // Check if the document exists, add username if it does
-                    if(documentSnapshot.exists()){
-                        docRef.update("users", FieldValue.arrayUnion(username));
-                    }
-                    else{
-                        Map<String,Object> data = new HashMap<>();
-                        ArrayList<String> usernames = new ArrayList<>();
-                        usernames.add(username);
-                        data.put("users", usernames);
-                        docRef.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.d(TAG, "Success");
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "Failure");
-                            }
-                        });
-                    }
+        docRef.get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                DocumentSnapshot documentSnapshot = task.getResult();
+                // Check if the document exists, add username if it does
+                if(documentSnapshot.exists()){
+                    docRef.update("users", FieldValue.arrayUnion(username));
+                }
+                else{
+                    Map<String,Object> data = new HashMap<>();
+                    ArrayList<String> usernames = new ArrayList<>();
+                    usernames.add(username);
+                    data.put("users", usernames);
+                    docRef.set(data)
+                            .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
+                            .addOnFailureListener(e -> Log.d(TAG, "Failure"));
                 }
             }
         });
@@ -86,6 +90,12 @@ public class DataHandler {
     }
 
     // Function to get all the qr codes
+
+    /**
+     * Method to get all the qr hashes and the users that scanned that qr code
+     * @return
+     *  Hashmap with string as a key and arraylist that has the names of all the users.
+     */
     public Map<String,Object> getQR(){
         CollectionReference cr = db.collection("qrbase");
 
@@ -104,6 +114,30 @@ public class DataHandler {
                 }
             }
         });
+        return qrs;
+    }
+
+    // Function to get the qrs of a specific user
+
+    /**
+     * Method to get all the hashes of the QRs scanned by a specific user
+     * @param username
+     *  This is the username of the user
+     * @return
+     *  Arraylist with all the hashes of the QR codes
+     */
+    public ArrayList<String> userQrs(String username){
+        ArrayList<String> qrs = new ArrayList<>();
+        Map<String,Object> map = this.getQR();
+
+        for(String hash: map.keySet()){
+            ArrayList<String> users = (ArrayList<String>) map.get(hash);
+            for(String user: users) {
+                if (user.equals(username)) {
+                    qrs.add(hash);
+                }
+            }
+        }
         return qrs;
     }
 
@@ -130,6 +164,16 @@ public class DataHandler {
     // Function to get a specific player info
     // Will throw error if player doesnt exist
     // TODO: handle error part
+
+    /**
+     * This function returns all the data that is stored about a user
+     * @param username
+     *  This is the username of the user
+     * @return
+     *  It return a Hashmap of all the data of the user
+     *  If it returns null that means the player doesnt exist, this can be used to check if
+     *  the player exists or not.
+     */
     public Map<String,Object> getPlayer(String username){
         // Collection reference
         CollectionReference cr = db.collection("player");
@@ -138,7 +182,6 @@ public class DataHandler {
         final Map<String, Object>[] data = new Map[]{new HashMap<>()};
 
         DocumentReference dr = cr.document(username);
-
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -146,6 +189,9 @@ public class DataHandler {
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
                         data[0] = doc.getData();
+                    }
+                    else{
+                        data[0] = null;
                     }
                 }
             }
@@ -156,6 +202,14 @@ public class DataHandler {
     }
 
     // Function to update the pts
+
+    /**
+     * Method to update the points of a specific player
+     * @param username
+     *  This is the username of the player
+     * @param pts
+     *  This is the point by which we have to update the points by
+     */
     public void updatePts(String username, long pts){
         // Collection ref
         CollectionReference cr = db.collection("player");
@@ -170,6 +224,14 @@ public class DataHandler {
     }
 
     // Function to update scanned
+
+    /**
+     * Method to update the number of scanned qr codes
+     * @param username
+     *  This is the username of the player
+     * @param scanned
+     *  This is the number of qr codes scanned
+     */
     public void updateScanned(String username, long scanned){
         // Collection Ref
         CollectionReference cr = db.collection("player");
@@ -183,6 +245,13 @@ public class DataHandler {
         this.updateQrL();
     }
 
+    /**
+     * This function updates the unique scanned of the user
+     * @param username
+     *  This is the username of the user
+     * @param uniqueScanned
+     *  This is the integer value by which we have to update the unique scanned
+     */
     public void updateUniqueScanned(String username, long uniqueScanned){
         // Collection Ref
         CollectionReference cr = db.collection("player");
@@ -192,13 +261,18 @@ public class DataHandler {
 
         dr.update("uniqueScanned",FieldValue.increment(uniqueScanned));
 
-        // TODO: Update uniqueL
+        // Update uniqueL
+        updateUniqueL();
     }
 
     // Pts leader board
     // get leader board
     // update ptsL,
     // get ptsL for player
+
+    /**
+     * Method to update the points leaderboard
+     */
     public void updatePtsL(){
         // Collection ref
         CollectionReference cr = db.collection("player");
@@ -219,6 +293,13 @@ public class DataHandler {
         });
     }
 
+    /**
+     * Method to get the position of the user on the points leaderboard
+     * @param username
+     *  This is the username of the user
+     * @return
+     *  The position of the user on the leaderboard
+     */
     public long getPtsL(String username){
         // Collection Reference
         CollectionReference cr = db.collection("player");
@@ -244,6 +325,11 @@ public class DataHandler {
         return ptsL[0];
     }
 
+    /**
+     * Method to get the points leader board
+     * @return
+     *  It returns an arraylist with the usernames of the users which represents the leaderboard
+     */
     public ArrayList<String> getPtsLeaderBoard(){
         // Hashmap to return
         ArrayList<String> leaderboard = new ArrayList<>();
@@ -268,6 +354,10 @@ public class DataHandler {
 
     // # of QRs scanned leaderboard
     // get leader board, update qrL, get qrL for player
+
+    /**
+     * Method to update the qr leaderboard
+     */
     public void updateQrL(){
         // Collection ref
         CollectionReference cr = db.collection("player");
@@ -288,6 +378,13 @@ public class DataHandler {
         });
     }
 
+    /**
+     * Method to get the position of the user on the qr scanned leaderboard
+     * @param username
+     *  This is the username of the user
+     * @return
+     *  The position of the user on the leaderboard
+     */
     public long getQrL(String username){
         // Collection Reference
         CollectionReference cr = db.collection("player");
@@ -313,6 +410,11 @@ public class DataHandler {
         return qrL[0];
     }
 
+    /**
+     * Method to get the qr scanned leader board
+     * @return
+     *  It returns an arraylist with the usernames of the users which represents the leaderboard
+     */
     public ArrayList<String> getQrLeaderBoard(){
         // Hashmap to return
         ArrayList<String> leaderboard = new ArrayList<>();
@@ -338,6 +440,10 @@ public class DataHandler {
 
     // Highest Unique QRs scanned leader board
     // get leader board, update uniqueL, get uniqueL for player
+
+    /**
+     * Method to get update the unique scanned leaderboard
+     */
     public void updateUniqueL(){
         // Collection ref
         CollectionReference cr = db.collection("player");
@@ -358,6 +464,13 @@ public class DataHandler {
         });
     }
 
+    /**
+     * Method to get the position of the user on the Unique scanned leaderboard
+     * @param username
+     *  This is the username of the user
+     * @return
+     *  The position of the user on the leaderboard
+     */
     public long getUniqueL(String username){
         // Collection Reference
         CollectionReference cr = db.collection("player");
@@ -383,6 +496,11 @@ public class DataHandler {
         return qrL[0];
     }
 
+    /**
+     * Method to get the unique scanned leader board
+     * @return
+     *  It returns an arraylist with the usernames of the users which represents the leaderboard
+     */
     public ArrayList<String> getUniqueLeaderBoard(){
         // Hashmap to return
         ArrayList<String> leaderboard = new ArrayList<>();
@@ -404,6 +522,16 @@ public class DataHandler {
         return leaderboard;
     }
 
+    /**
+     * Method to check if the qr has been scanned before by a given user
+     * @param hash
+     *  The qr hash
+     * @param username
+     *  The name of the user
+     * @return
+     *  It returns true if a given user has scanned the qr code before or false if the
+     *  user didn't scanned the qr before
+     */
     public Boolean hasScannedBefore(String hash, String username){
         // Connect to collection
         CollectionReference cr = db.collection("qrbase");
@@ -430,5 +558,115 @@ public class DataHandler {
             }
         });
         return  flag[0];
+    }
+
+    /**
+     * Method to check if the qr code is being scanned for the first time
+     * @param hash
+     *  This is the hash of the qr code
+     * @return
+     *  Returns true if the qr code is being scanned for the first time else returns false
+     */
+    public Boolean firstScan(String hash){
+        // Connect to collection
+        CollectionReference cr = db.collection("qrbase");
+
+        // Get the document
+        DocumentReference docRef = cr.document(hash);
+
+        // Set the flag to false by default
+        final boolean[] flag = {true};
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        flag[0] = false;
+                    }
+                }
+            }
+        });
+        return  flag[0];
+    }
+
+    // Image upload
+    public void uploadImage(GameCode code, String username){
+        // Connect to collection
+        CollectionReference collectionReference = db.collection("images");
+
+        String hash = code.getSha256hex();
+        long pts = code.getScore();
+        Bitmap image = code.getPhoto();
+        // Document reference
+        DocumentReference doc = collectionReference.document(hash);
+
+        Map<String,Object> data = new HashMap<>();
+        data.put("pts",pts);
+
+        doc.set(data);
+
+        if (image != null) {
+            // Get the StorageReference
+            StorageReference storageReference = storage.getReference();
+            // Defining the child of storageReference
+            StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+            byte[] imageData = baos.toByteArray();
+
+            // Upload the image
+            imageRef.putBytes(imageData);
+        }
+
+        // Add user to the qr
+        this.addQR(code,username);
+    }
+
+    // Method to get the point of a specific hash
+    public long hashPts(String hash){
+        // Connect to collection
+        CollectionReference collectionReference = db.collection("images");
+
+        // Document reference
+        DocumentReference doc = collectionReference.document(hash);
+
+        // Store the point
+        final long[] pts = {0};
+
+        // Get the document
+        doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        pts[0] =(long) doc.getData().get("pts");
+                    }
+                }
+            }
+        });
+
+        return pts[0];
+    }
+
+    // Method to download the image
+    // The method returns null if the image doesnt exist
+    public Bitmap downloadImage(String hash){
+        StorageReference storageReference = storage.getReference();
+        StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
+        final byte[][] data = new byte[1][1];
+        final long ONE_MEGABYTE = 1024 * 1024;
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                data[0] = bytes.clone();
+            }
+        });
+
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data[0], 0, data[0].length);
+        return bitmap;
     }
 }
