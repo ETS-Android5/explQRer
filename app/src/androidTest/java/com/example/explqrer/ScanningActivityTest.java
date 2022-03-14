@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.robotium.solo.Solo;
 
@@ -34,7 +35,7 @@ public class ScanningActivityTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
 
         MainActivity activity = (MainActivity) solo.getCurrentActivity();
-        NavigationView navigationView= activity.findViewById(R.id.bottom_navigation_view);
+        BottomNavigationView navigationView= activity.findViewById(R.id.bottom_navigation_view);
         Menu menu = navigationView.getMenu();
         MenuItem item = menu.findItem(R.id.scan_nav);
         solo.clickOnMenuItem(item.toString());

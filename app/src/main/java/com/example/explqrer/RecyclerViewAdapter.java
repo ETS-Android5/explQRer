@@ -1,7 +1,6 @@
 package com.example.explqrer;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
     /* Site: stackoverflow.com
@@ -45,13 +42,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.textView.setText(pts_and_scanned);
         Log.e("", "BindView");
     }
-
-//    // binds the data to the textview in each row
-//    @Override
-//    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-//        String pts_and_scanned = banner.get(position);
-//        holder.textView.setText(pts_and_scanned);
-//    }
 
     @Override
     public int getItemCount() {
