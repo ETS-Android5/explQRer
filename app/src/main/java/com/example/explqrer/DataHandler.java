@@ -51,6 +51,14 @@ public class DataHandler {
      */
 
     // QR code database
+
+    /**
+     * Method to add the user to the QRcode when a user scans it
+     * @param hash
+     *  This is the hash of the QRcode
+     * @param username
+     *  This is the username of the user that has scanned the QRcode
+     */
     public void addQR(String hash,String username){
         // Check if it exists if it does add username or add qr and username
 
@@ -84,6 +92,12 @@ public class DataHandler {
     }
 
     // Function to get all the qr codes
+
+    /**
+     * Method to get all the qr hashes and the users that scanned that qr code
+     * @return
+     *  Hashmap with string as a key and arraylist that has the names of all the users.
+     */
     public Map<String,Object> getQR(){
         CollectionReference cr = db.collection("qrbase");
 
@@ -106,6 +120,14 @@ public class DataHandler {
     }
 
     // Function to get the qrs of a specific user
+
+    /**
+     * Method to get all the hashes of the QRs scanned by a specific user
+     * @param username
+     *  This is the username of the user
+     * @return
+     *  Arraylist with all the hashes of the QR codes
+     */
     public ArrayList<String> userQrs(String username){
         ArrayList<String> qrs = new ArrayList<>();
         Map<String,Object> map = this.getQR();
