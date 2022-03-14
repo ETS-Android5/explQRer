@@ -108,9 +108,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
             case R.id.profile_nav:
                 // goes to UserProfile activity
-                Intent profileIntent = new Intent(
-                        MainActivity.this, UserProfileActivity.class);
+                Intent profileIntent = new Intent(MainActivity.this, UserProfileActivity.class);
+                profileIntent.putExtra("playerProfile", player);
                 startActivity(profileIntent);
+            
                 return true;
 
             case R.id.scan_nav:
