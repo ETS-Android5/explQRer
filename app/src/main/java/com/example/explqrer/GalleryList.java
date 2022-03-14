@@ -7,18 +7,14 @@ import java.util.ArrayList;
 /**
  * Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
  * Author: Adam Sinicki
+ * populates the Gallery images list
  */
 public class GalleryList {
 
-    public ArrayList<GalleryListItem> updateGallery(String playerName){
-        // TODO: getting the data from the Data Base and loop through populating the lists
+    public static ArrayList<GalleryListItem> updateGallery(String playerName){
+
         //creating an object of type DataHandler to access the data base
         DataHandler dataHandler = new DataHandler();
-
-        // Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.nature1);
-        // System.out.println(bitmap);
-        // dataHandler.uploadImage("hello","explorer",bitmap,10);
-        //userQRs gets all the QRs the user has
 
         ArrayList<String> userQRs = dataHandler.userQrs(playerName);
         System.out.println("size of userQRs: "+ userQRs.size());
@@ -43,13 +39,4 @@ public class GalleryList {
 
         return listOfImages;
     }
-
-    public int getCount(ArrayList<GalleryListItem> gallery){
-        return gallery.size();
-    }
-
-//    @Override
-//    public int compareTo(GalleryList galleryList) {
-//        return this.galleryList.compareTo(galleryList);
-//    }
 }

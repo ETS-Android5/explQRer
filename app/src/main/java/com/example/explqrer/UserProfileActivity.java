@@ -82,18 +82,18 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
     }
 
     /**
-     * populates the Banner with the total poinst and the total scanned
+     * populates the Banner with the total points and the total scanned
      * @param playerName
+     *    This is the username of the profile
      */
     private void populateBanner(String playerName){
 
         ArrayList<String> banner = new ArrayList<>();
-        //creating DataHandler object
-        DataHandler dataHandler = new DataHandler();
+
         //get the Total points
-        Long playerTotalPoints = dataHandler.getPtsL(playerName);
+        Long playerTotalPoints =  player.getPoints();
         //get the Total scanned
-        Long playerTotalScanned = dataHandler.getQrL(playerName);
+        int playerTotalScanned = player.getNumCodes();
         //format the string to display total points in the banner
         String ptsTotalDisplay = "pts\n" + playerTotalPoints;
         //format the string to display total scanned in the banner
@@ -116,11 +116,11 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
         linearSnapHelper.attachToRecyclerView(recyclerView);
         //initialize the timer
         final Timer timer = new Timer();
-        //have this block run on a continuous interval
+        //have this block run on a continuous intervals
         timer.schedule(new TimerTask() {
             //first position in the recycler
             int position = 0;
-            //manages when the position should be incremented or decremented to get to the propper position
+            //manages when the position should be incremented or decremented to get to the proper position
             @Override
             public void run() {
                 //if true increment position by 1
@@ -141,6 +141,8 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
 
     /**
      * This populates the gallery with a GalleryAdapter
+     *  Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
+     *  Author: Adam Sinicki
      */
     private void populateGallery(String playerName){
 
@@ -150,8 +152,7 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),4);
         galleryRecyclerView.setLayoutManager(gridLayoutManager);
 
-        GalleryList galleryList = new GalleryList();
-        ArrayList<GalleryListItem> listOfImages = galleryList.updateGallery(playerName);
+        ArrayList<GalleryListItem> listOfImages = GalleryList.updateGallery(playerName);
 
         GalleryAdapter galleryListAdapter = new GalleryAdapter(getApplicationContext(),listOfImages);
         galleryRecyclerView.setAdapter(galleryListAdapter);

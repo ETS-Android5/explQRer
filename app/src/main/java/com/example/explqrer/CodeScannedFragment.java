@@ -93,10 +93,11 @@ public class CodeScannedFragment extends DialogFragment {
                     }
                 });
         takePictureButton.setOnClickListener(view1 -> {
-            Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            try {
-                pictureActivityResultLauncher.launch(intentCapture);
-            } catch (ActivityNotFoundException ignored){ }
+            Toast.makeText(getContext(), "Pictures currently disabled.", Toast.LENGTH_SHORT).show();
+//            Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            try {
+//                pictureActivityResultLauncher.launch(intentCapture);
+//            } catch (ActivityNotFoundException ignored){ }
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

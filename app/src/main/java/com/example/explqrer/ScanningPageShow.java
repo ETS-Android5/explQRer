@@ -144,6 +144,9 @@ public class ScanningPageShow extends AppCompatActivity
     public void processQR(GameCode code) {
         cameraExecutor.shutdown();
         dataHandler.uploadImage(code, playerProfile.getName());
+        dataHandler.addQR(code,playerProfile.getName());
+        dataHandler.updatePts(playerProfile.getName(),code.getScore());
+
         Intent intent = new Intent();
         intent.putExtra("Code", code);
         setResult(RESULT_OK, intent);

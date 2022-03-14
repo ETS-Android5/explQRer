@@ -28,10 +28,7 @@ public class GameCode implements Serializable {
     private Location location;
     private Bitmap photo;
     private String description;
-    // TODO: Add comments
-    // private linkToComments
-    // private ArrayList<String> scannedByList;
-    static HashFunction hash =  Hashing.sha256();
+    private static HashFunction hash =  Hashing.sha256();
 
     /**
      * Constructor for GameCode.
@@ -43,7 +40,6 @@ public class GameCode implements Serializable {
     public GameCode(@NonNull String barcode, @NonNull String player,
                     @Nullable Location location, @Nullable Bitmap photo) {
         sha256hex = hashCode(barcode);
-        // TODO: Check Database for hash
         score = calculateScore(barcode);
         this.location = location;
         this.photo = photo;
