@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
+/**
+ * Creates a specific size to crop the galley images to
+ */
 
 public class UniformSizeImageView extends androidx.appcompat.widget.AppCompatImageView {
 
