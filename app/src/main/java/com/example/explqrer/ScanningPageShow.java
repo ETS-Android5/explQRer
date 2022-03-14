@@ -73,6 +73,7 @@ public class ScanningPageShow extends AppCompatActivity
     private Bitmap imageBitmap;
     private DataHandler dataHandler;
     private boolean isScanning = false;
+    private long pts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +162,8 @@ public class ScanningPageShow extends AppCompatActivity
         // Add to database???
         //dataHandler.addQR(code.getSha256hex(),code.);
         // Back to mainActivity
-        Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
+        dataHandler.uploadImage(code.getSha256hex(),playerProfile.getName(),code.getPhoto(),code.getScore());
+        Intent intent = new Intent();
         intent.putExtra("Code", code);
         setResult(RESULT_OK, intent);
         finish();
@@ -235,20 +237,11 @@ public class ScanningPageShow extends AppCompatActivity
 
             String rawValue = barcode.getRawValue();
 
-            // Create a game code and get score of the scanning code
-            /*GameCode gameCode = new GameCode(barcode.getRawValue(),playerProfile.getName(),null,null );
-            int score = gameCode.getScore();
-
-            String hash = gameCode.getSha256hex();
-            String username = playerProfile.getName();
-            if(dataHandler.hasScannedBefore(hash,username)) {
-                dataHandler.addQR(hash, username);
-            }
-             */
             // Display the score on the screen
             qrPoints.setVisibility(View.VISIBLE);
             scanCode.setVisibility(View.INVISIBLE);
             takePhoto.setVisibility(View.VISIBLE);
+
 
             /*if (dataHandler.hasScannedBefore(hash,username)) {
                 alertBuilderPhoto = new AlertDialog.Builder(ScanningPageShow.this);

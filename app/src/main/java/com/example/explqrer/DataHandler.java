@@ -2,6 +2,8 @@ package com.example.explqrer;
 
 import static android.content.ContentValues.TAG;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.nfc.Tag;
 import android.util.Log;
 
@@ -23,7 +25,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,15 +36,16 @@ import java.util.Map;
 
 public class DataHandler {
     final private FirebaseFirestore db;
-
+    final private FirebaseStorage storage;
     public DataHandler(){
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     /*
-     * TODO: # of QRs scanned leaderboard
+     * # of QRs scanned leaderboard
      * pts leaderboard
-     * TODO: Highest Unique QRs scanned leader board
+     * Highest Unique QRs scanned leader board
      * Player info database
      * QR code database
      */
@@ -96,6 +102,22 @@ public class DataHandler {
                 }
             }
         });
+        return qrs;
+    }
+
+    // Function to get the qrs of a specific user
+    public ArrayList<String> userQrs(String username){
+        ArrayList<String> qrs = new ArrayList<>();
+        Map<String,Object> map = this.getQR();
+
+        for(String hash: map.keySet()){
+            ArrayList<String> users = (ArrayList<String>) map.get(hash);
+            for(String user: users) {
+                if (user.equals(username)) {
+                    qrs.add(hash);
+                }
+            }
+        }
         return qrs;
     }
 
@@ -184,7 +206,8 @@ public class DataHandler {
 
         dr.update("uniqueScanned",FieldValue.increment(uniqueScanned));
 
-        // TODO: Update uniqueL
+        // Update uniqueL
+        updateUniqueL();
     }
 
     // Pts leader board
@@ -422,5 +445,80 @@ public class DataHandler {
             }
         });
         return  flag[0];
+    }
+
+    // Image upload
+    public void uploadImage(String hash,String username, Bitmap image, long pts){
+        // Connect to collection
+        CollectionReference collectionReference = db.collection("images");
+
+        // Document reference
+        DocumentReference doc = collectionReference.document(hash);
+
+        Map<String,Object> data = new HashMap<>();
+        data.put("pts",pts);
+
+        doc.set(data);
+
+        // Get the StorageReference
+        StorageReference storageReference = storage.getReference();
+        // Defining the child of storageReference
+        StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        byte[] imageData = baos.toByteArray();
+
+        // Upload the image
+        imageRef.putBytes(imageData);
+
+        // Add user to the qr
+        this.addQR(hash,username);
+    }
+
+    // Method to get the point of a specific hash
+    public long hashPts(String hash){
+        // Connect to collection
+        CollectionReference collectionReference = db.collection("images");
+
+        // Document reference
+        DocumentReference doc = collectionReference.document(hash);
+
+        // Store the point
+        final long[] pts = {0};
+
+        // Get the document
+        doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        pts[0] =(long) doc.getData().get("pts");
+                    }
+                }
+            }
+        });
+
+        return pts[0];
+    }
+
+    // Method to download the image
+    // The method returns null if the image doesnt exist
+    public Bitmap downloadImage(String hash){
+        StorageReference storageReference = storage.getReference();
+        StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
+        final byte[][] data = new byte[1][1];
+        final long ONE_MEGABYTE = 1024 * 1024;
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                data[0] = bytes.clone();
+            }
+        });
+
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data[0], 0, data[0].length);
+        return bitmap;
     }
 }

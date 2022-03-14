@@ -48,7 +48,6 @@ public class GameCode implements Serializable {
         this.photo = photo;
     }
 
-
     GameCode(String rawValue) {
         sha256hex = hash.hashString(rawValue, StandardCharsets.US_ASCII).toString();
         score = calculateScore(rawValue);
