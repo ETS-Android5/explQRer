@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class GalleryList {
 
-    public ArrayList<GalleryListItem> updateGallery(String playerName){
+    public static ArrayList<GalleryListItem> updateGallery(String playerName){
 
         //creating an object of type DataHandler to access the data base
         DataHandler dataHandler = new DataHandler();
@@ -39,13 +39,4 @@ public class GalleryList {
 
         return listOfImages;
     }
-
-    public int getCount(ArrayList<GalleryListItem> gallery){
-        return gallery.size();
-    }
-
-//    @Override
-//    public int compareTo(GalleryList galleryList) {
-//        return this.galleryList.compareTo(galleryList);
-//    }
 }

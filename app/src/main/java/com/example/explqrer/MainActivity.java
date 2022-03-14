@@ -23,7 +23,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     // DATA
-    public static final String SHARED_PREFS_PLAYER_KEY = "Player";
+    private static final String SHARED_PREFS_PLAYER_KEY = "Player";
     // Data
     private PlayerProfile player;
     private ActivityResultLauncher<Intent> scannerLauncher;

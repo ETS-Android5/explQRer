@@ -626,6 +626,7 @@ public class DataHandler {
 
     // Method to get the point of a specific hash
     public long hashPts(String hash){
+        // TODO: REMOVE
         // Connect to collection
         CollectionReference collectionReference = db.collection("images");
 
