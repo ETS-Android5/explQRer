@@ -16,4 +16,6 @@
     <string name="no">NO</string>
     <string name="yes">YES</string>
     <string name = "banner">Banner</string>
+    <string name="already_scanned">Already Scanned!</string>
+    <string name="preview">Preview</string>
 </resources>

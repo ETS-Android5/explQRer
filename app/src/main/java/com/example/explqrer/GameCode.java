@@ -14,6 +14,7 @@ import com.google.common.hash.Hashing;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * Store information about a code scanned by a player, so that it
@@ -41,7 +42,7 @@ public class GameCode implements Serializable {
      */
     public GameCode(@NonNull String barcode, @NonNull String player,
                     @Nullable Location location, @Nullable Bitmap photo) {
-        sha256hex = hash.hashString(barcode, StandardCharsets.UTF_8).toString();
+        sha256hex = hashCode(barcode);
         // TODO: Check Database for hash
         score = calculateScore(barcode);
         this.location = location;
@@ -49,7 +50,7 @@ public class GameCode implements Serializable {
     }
   
     GameCode(String rawValue) {
-        sha256hex = hash.hashString(rawValue, StandardCharsets.US_ASCII).toString();
+        sha256hex = hashCode(rawValue);
         score = calculateScore(rawValue);
     }
 
@@ -58,8 +59,7 @@ public class GameCode implements Serializable {
      * @return The score as an integer
      */
     public static int calculateScore(String rawValue) {
-        HashFunction hash =  Hashing.sha256();
-        String sha256hex = hash.hashString(rawValue, StandardCharsets.US_ASCII).toString();
+        String sha256hex = hashCode(rawValue);
         int ret = 0;
         int repeats = 0;
         char prevChar = sha256hex.charAt(0);
@@ -80,6 +80,10 @@ public class GameCode implements Serializable {
             ret += Integer.parseInt(String.valueOf(prevChar), 16);
         }
         return ret;
+    }
+
+    public static String hashCode(String rawValue) {
+        return hash.hashString(rawValue, StandardCharsets.US_ASCII).toString();
     }
 
     /**
@@ -149,5 +153,10 @@ public class GameCode implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         GameCode gameCode = (GameCode) o;
         return getSha256hex().equals(gameCode.getSha256hex());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sha256hex);
     }
 }

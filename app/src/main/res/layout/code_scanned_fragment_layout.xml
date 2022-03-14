@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/beige">
-    <TextView
-        android:id="@+id/scan_dialog_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:fontFamily="@font/hubballi"
-        android:background="@color/bluemagenta"
-        android:text="asdfa"
-        android:textColor="@color/white"
-        android:textSize="25dp"
-        android:textStyle="bold">
-
-    </TextView>
+    android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/code_scanned_description_text"
@@ -40,9 +25,7 @@
         android:text="@string/record_location"
         android:fontFamily="@font/hubballi"
         android:textColor="#455A64"
-        android:textOff="@string/no"
-        android:textSize="17dp"
-        android:textColor="#455A64"
+        android:textSize="17sp"
         android:textOff="@string/no"
         android:textOn="@string/yes" />
 
@@ -59,7 +42,7 @@
             android:text="@string/take_a_picture"
             android:backgroundTint="@color/bluemagenta"
             android:textStyle="bold"
-            android:layout_marginLeft="50dp"
+            android:layout_marginStart="50dp"
             android:fontFamily="@font/hubballi"
             />
 
