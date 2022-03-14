@@ -40,13 +40,19 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
          * Link: https://stackoverflow.com/a/57175501
          * Author: https://stackoverflow.com/users/5255963/ali-rezaiyan
          */
+
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         loadData();
+
+        DataHandler dataHandler = new DataHandler();
+        dataHandler.createPlayer(player.getName(), player.getName() + "@gmail.com");
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setSelectedItemId(R.id.scan_nav);
@@ -135,7 +141,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     }
 
     private void updateStrings() {
+
         usernameText.setText(player.getName());
+
         highestText.setText("Highest: " + (player.getHighestCode() != null ?
                 player.getHighestCode().getDescription() : "None"));
         lowestText.setText("Lowest: " + (player.getLowestCode() != null ?

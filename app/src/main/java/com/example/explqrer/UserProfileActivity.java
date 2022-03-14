@@ -81,16 +81,16 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
     /**
      * populates the Banner with the total poinst and the total scanned
      * @param playerName
+     *    This is the username of the profile
      */
     private void populateBanner(String playerName){
 
         ArrayList<String> banner = new ArrayList<>();
-        //creating DataHandler object
-        DataHandler dataHandler = new DataHandler();
+
         //get the Total points
-        Long playerTotalPoints = dataHandler.getPtsL(playerName);
+        Long playerTotalPoints =  player.getPoints();
         //get the Total scanned
-        Long playerTotalScanned = dataHandler.getQrL(playerName);
+        int playerTotalScanned = player.getNumCodes();
         //format the string to display total points in the banner
         String ptsTotalDisplay = "pts\n" + playerTotalPoints;
         //format the string to display total scanned in the banner
@@ -138,6 +138,8 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
 
     /**
      * This populates the gallery with a GalleryAdapter
+     *  Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
+     *  Author: Adam Sinicki
      */
     private void populateGallery(String playerName){
 
