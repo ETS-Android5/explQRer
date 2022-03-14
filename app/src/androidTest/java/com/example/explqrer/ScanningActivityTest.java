@@ -46,13 +46,12 @@ public class ScanningActivityTest {
         solo.assertCurrentActivity("Wrong Activity",ScanningPageShow.class);
     }
 
-    //TODO: test camera open
-
     //TODO: test qr code scanned
 
     // TODO: test point show
 
     // TODO: test image capture ( if have time)
+
 
 
 }

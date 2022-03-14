@@ -158,7 +158,10 @@ public class ScanningPageShow extends AppCompatActivity
     @Override
     public void processQR(GameCode code) {
         // TODO: STUFF!!
-        Intent intent = new Intent();
+        // Add to database???
+        //dataHandler.addQR(code.getSha256hex(),code.);
+        // Back to mainActivity
+        Intent intent = new Intent(ScanningPageShow.this, MainActivity.class);
         intent.putExtra("Code", code);
         setResult(RESULT_OK, intent);
         finish();
@@ -227,7 +230,6 @@ public class ScanningPageShow extends AppCompatActivity
      */
     private void readerBarcodeData( List<Barcode> barcodes) {
         for (Barcode barcode : barcodes) {
-//<<<<<<< HEAD
             Rect bounds = barcode.getBoundingBox();
             Point[] corners = barcode.getCornerPoints();
 
@@ -253,6 +255,7 @@ public class ScanningPageShow extends AppCompatActivity
 
             // TODO: change condition from (alertBuilder == null) to
             // TODO:      ( if barcode is not in database)
+
             /*if (dataHandler.hasScannedBefore(hash,username)) {
                 alertBuilderPhoto = new AlertDialog.Builder(ScanningPageShow.this);
                 alertBuilderPhoto.setMessage("Do you want to record a photo?")
@@ -321,7 +324,6 @@ public class ScanningPageShow extends AppCompatActivity
                     String url = barcode.getUrl().getUrl();
                     break;
             }
-//=======
             CodeScannedFragment codeScannedFragment = CodeScannedFragment
                     .newInstance(barcode.getRawValue(), playerProfile.getName());
             codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
@@ -329,7 +331,7 @@ public class ScanningPageShow extends AppCompatActivity
             previewView.setController(null);
             // TODO: turn scanning off eventually.
             break;
-//>>>>>>> a1bc66dccdae579a7cdbd86041ec6bd39d4d0407
+
         }
     }
 
