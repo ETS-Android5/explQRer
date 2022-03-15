@@ -20,13 +20,16 @@ import com.google.gson.Gson;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity
+        implements NavigationBarView.OnItemSelectedListener,
+        CodeScannedFragment.CodeScannerFragmentListener {
 
     // DATA
     private static final String SHARED_PREFS_PLAYER_KEY = "Player";
     // Data
     private PlayerProfile player;
     private ActivityResultLauncher<Intent> scannerLauncher;
+    private DataHandler dataHandler;
     // Views
     private TextView  usernameText, highestText, lowestText;
     private BottomNavigationView bottomNavigationView;
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         loadData();
 
-        DataHandler dataHandler = new DataHandler();
+        dataHandler = new DataHandler();
         dataHandler.createPlayer(player.getName(), player.getName() + "@gmail.com");
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
@@ -66,9 +69,11 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 result -> {
                     if (result.getResultCode() != RESULT_OK) { return; }
                     assert result.getData() != null;
-                    player.addCode((GameCode) result.getData().getSerializableExtra("Code"));
-                    saveData();
-                    updateStrings();
+                    CodeScannedFragment codeScannedFragment = CodeScannedFragment
+                            .newInstance((String) result.getData().getStringExtra("Code"),
+                                    player.getName());
+                    codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
+
                 });
 
     }
@@ -121,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 return true;
 
             case R.id.scan_nav:
-                Intent scanningIntent = new Intent(this, ScanningPageShow.class);
+                Intent scanningIntent = new Intent(this, ScanningPageActivity.class);
                 scanningIntent.putExtra("playerProfile", player);
                 scannerLauncher.launch(scanningIntent);
                 return true;
@@ -165,5 +170,14 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     public void setPlayer(PlayerProfile player) {
         this.player = player;
         saveData();
+    }
+
+    @Override
+    public void processQR(GameCode code) {
+        dataHandler.uploadImage(code, player.getName());
+        dataHandler.updatePts(player.getName(),code.getScore());
+        player.addCode(code);
+        saveData();
+        updateStrings();
     }
 }

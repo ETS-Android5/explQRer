@@ -40,7 +40,6 @@ public class CodeScannedFragment extends DialogFragment {
 
     public interface CodeScannerFragmentListener {
         void processQR(GameCode code);
-        void dismissed();
     }
 
     public static CodeScannedFragment newInstance(String code, String username) {
@@ -93,11 +92,10 @@ public class CodeScannedFragment extends DialogFragment {
                     }
                 });
         takePictureButton.setOnClickListener(view1 -> {
-            Toast.makeText(getContext(), "Pictures currently disabled.", Toast.LENGTH_SHORT).show();
-//            Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            try {
-//                pictureActivityResultLauncher.launch(intentCapture);
-//            } catch (ActivityNotFoundException ignored){ }
+            Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            try {
+                pictureActivityResultLauncher.launch(intentCapture);
+            } catch (ActivityNotFoundException ignored){ }
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -115,7 +113,6 @@ public class CodeScannedFragment extends DialogFragment {
 */
                     listener.processQR(code);
                 })
-                .setOnDismissListener(dialogInterface -> listener.dismissed())
                 .setTitle("Code worth: " + code.getScore() + " points!")
                 .create();
 

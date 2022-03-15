@@ -19,7 +19,7 @@
             android:value="barcode" />
 
         <activity
-            android:name=".ScanningPageShow"
+            android:name=".ScanningPageActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

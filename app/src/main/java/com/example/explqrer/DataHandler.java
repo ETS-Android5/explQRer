@@ -621,7 +621,7 @@ public class DataHandler {
         }
 
         // Add user to the qr
-        this.addQR(code,username);
+        addQR(code,username);
     }
 
     // Method to get the point of a specific hash
