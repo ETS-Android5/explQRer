@@ -74,7 +74,7 @@ public class ScanningPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scanning_page_show);
 
         // get the player from main activity
-        playerProfile = (PlayerProfile) getIntent().getSerializableExtra("playerProfile");
+        playerProfile = MainActivity.getPlayer();
         dataHandler = new DataHandler();
         // get ImageView and Textview for later use
         alreadyScanned = findViewById(R.id.already_scanned_text);

@@ -26,7 +26,7 @@ public class GameCode implements Serializable {
 
     private final int score;
     private Location location;
-    private Bitmap photo;
+    private ProxyBitmap photo;
     private String description;
     private static HashFunction hash =  Hashing.sha256();
 
@@ -42,7 +42,9 @@ public class GameCode implements Serializable {
         sha256hex = hashCode(barcode);
         score = calculateScore(barcode);
         this.location = location;
-        this.photo = photo;
+        if (photo != null) {
+            this.photo = new ProxyBitmap(photo);
+        }
     }
   
     GameCode(String rawValue) {
@@ -111,7 +113,7 @@ public class GameCode implements Serializable {
      * @return
      */
     public Bitmap getPhoto() {
-        return photo;
+        return photo.getBitmap();
     }
 
     /**
@@ -127,7 +129,7 @@ public class GameCode implements Serializable {
      * @param photo
      */
     public void setPhoto(Bitmap photo) {
-        this.photo = photo;
+        this.photo = new ProxyBitmap(photo);
     }
 
     public String getDescription() {
