@@ -1,23 +1,33 @@
 package com.example.explqrer;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationToken;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
@@ -26,10 +36,12 @@ public class MainActivity extends AppCompatActivity
 
     // DATA
     private static final String SHARED_PREFS_PLAYER_KEY = "Player";
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     // Data
-    private PlayerProfile player;
+    private static PlayerProfile player;
     private ActivityResultLauncher<Intent> scannerLauncher;
     private DataHandler dataHandler;
+    private FusedLocationProviderClient fusedLocationClient;
     // Views
     private TextView  usernameText, highestText, lowestText;
     private BottomNavigationView bottomNavigationView;
@@ -53,9 +65,15 @@ public class MainActivity extends AppCompatActivity
 
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         loadData();
+        requestPermissionsIfNecessary(new String[] {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.CAMERA
+        });
 
         dataHandler = new DataHandler();
         dataHandler.createPlayer(player.getName(), player.getName() + "@gmail.com");
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setSelectedItemId(R.id.scan_nav);
@@ -120,14 +138,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.profile_nav:
                 // goes to UserProfile activity
                 Intent profileIntent = new Intent(MainActivity.this, UserProfileActivity.class);
-                profileIntent.putExtra("playerProfile", player);
                 startActivity(profileIntent);
             
                 return true;
 
             case R.id.scan_nav:
                 Intent scanningIntent = new Intent(this, ScanningPageActivity.class);
-                scanningIntent.putExtra("playerProfile", player);
                 scannerLauncher.launch(scanningIntent);
                 return true;
 
@@ -159,7 +175,7 @@ public class MainActivity extends AppCompatActivity
      * Get the username
      * @return username as String
      */
-    public PlayerProfile getPlayer() {
+    public static PlayerProfile getPlayer() {
         return player;
     }
 
@@ -173,11 +189,94 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void processQR(GameCode code) {
-        dataHandler.uploadImage(code, player.getName());
-        dataHandler.updatePts(player.getName(),code.getScore());
-        player.addCode(code);
-        saveData();
-        updateStrings();
+    public void processQR(GameCode code, Boolean recordLocation) {
+
+        if (recordLocation) {
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+            fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+                @NonNull
+                @Override
+                public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
+                    return null;
+                }
+
+                @Override
+                public boolean isCancellationRequested() {
+                    return false;
+                }
+            }).addOnSuccessListener(this, location -> {
+                if (location != null) {
+                    code.setLocation(location);
+                    dataHandler.addQR(code, player.getName());
+                    dataHandler.updatePts(player.getName(),code.getScore());
+                    player.addCode(code);
+                    saveData();
+                    updateStrings();
+                }
+            }).addOnFailureListener(e -> {
+                Toast.makeText(MainActivity.this, "Location not recorded",
+                Toast.LENGTH_SHORT).show();
+                dataHandler.addQR(code, player.getName());
+                dataHandler.updatePts(player.getName(),code.getScore());
+                player.addCode(code);
+                saveData();
+                updateStrings();
+
+            });
+
+        }
+        else {
+            dataHandler.addQR(code, player.getName());
+            dataHandler.updatePts(player.getName(),code.getScore());
+            player.addCode(code);
+            saveData();
+            updateStrings();
+        }
+    }
+
+    /**
+     * requestPermission result
+     * If add permission not add successfully, show the text
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode== REQUEST_PERMISSIONS_REQUEST_CODE &&grantResults.length>0){
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(MainActivity.this,"Permission denied",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    /**
+     * request permission
+     * @param permissions
+     */
+    public void requestPermissionsIfNecessary(String[] permissions) {
+        ArrayList<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                // Permission is not granted
+                permissionsToRequest.add(permission);
+            }
+        }
+        // more than one permission is not granted
+        if (permissionsToRequest.size() > 0) {
+            ActivityCompat.requestPermissions(this, permissionsToRequest
+                    .toArray(new String[0]),REQUEST_PERMISSIONS_REQUEST_CODE);
+        }  // all are granted
+
     }
 }

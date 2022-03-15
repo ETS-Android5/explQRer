@@ -1,5 +1,16 @@
 package com.example.explqrer;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.Image;
+import android.os.Bundle;
+import android.util.Size;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
@@ -11,18 +22,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.media.Image;
-import android.os.Bundle;
-import android.util.Size;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -74,7 +73,7 @@ public class ScanningPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scanning_page_show);
 
         // get the player from main activity
-        playerProfile = (PlayerProfile) getIntent().getSerializableExtra("playerProfile");
+        playerProfile = MainActivity.getPlayer();
         dataHandler = new DataHandler();
         // get ImageView and Textview for later use
         alreadyScanned = findViewById(R.id.already_scanned_text);
