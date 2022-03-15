@@ -42,7 +42,7 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
         setContentView(R.layout.activity_user_profile);
 
         // get the player from main activity
-        player= (PlayerProfile) getIntent().getSerializableExtra("playerProfile");
+        player = MainActivity.getPlayer();
 
         Spinner spinner = findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(UserProfileActivity.this, android.R.layout.simple_spinner_item, paths);
@@ -88,7 +88,7 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
         ArrayList<String> banner = new ArrayList<>();
 
         //get the Total points
-        Long playerTotalPoints =  player.getPoints();
+        long playerTotalPoints =  player.getPoints();
         //get the Total scanned
         int playerTotalScanned = player.getNumCodes();
         //format the string to display total points in the banner

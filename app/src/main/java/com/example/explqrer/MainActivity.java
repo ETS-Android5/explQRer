@@ -5,10 +5,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -18,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
@@ -26,8 +30,9 @@ public class MainActivity extends AppCompatActivity
 
     // DATA
     private static final String SHARED_PREFS_PLAYER_KEY = "Player";
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     // Data
-    private PlayerProfile player;
+    private static PlayerProfile player;
     private ActivityResultLauncher<Intent> scannerLauncher;
     private DataHandler dataHandler;
     // Views
@@ -120,14 +125,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.profile_nav:
                 // goes to UserProfile activity
                 Intent profileIntent = new Intent(MainActivity.this, UserProfileActivity.class);
-                profileIntent.putExtra("playerProfile", player);
                 startActivity(profileIntent);
             
                 return true;
 
             case R.id.scan_nav:
                 Intent scanningIntent = new Intent(this, ScanningPageActivity.class);
-                scanningIntent.putExtra("playerProfile", player);
                 scannerLauncher.launch(scanningIntent);
                 return true;
 
@@ -159,7 +162,7 @@ public class MainActivity extends AppCompatActivity
      * Get the username
      * @return username as String
      */
-    public PlayerProfile getPlayer() {
+    public static PlayerProfile getPlayer() {
         return player;
     }
 
@@ -179,5 +182,46 @@ public class MainActivity extends AppCompatActivity
         player.addCode(code);
         saveData();
         updateStrings();
+    }
+
+    /**
+     * requestPermission result
+     * If add permission not add successfully, show the text
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode== REQUEST_PERMISSIONS_REQUEST_CODE &&grantResults.length>0){
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(MainActivity.this,"Permission denied",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    /**
+     * request permission
+     * @param permissions
+     */
+    public void requestPermissionsIfNecessary(String[] permissions) {
+        ArrayList<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                // Permission is not granted
+                permissionsToRequest.add(permission);
+            }
+        }
+        // more than one permission is not granted
+        if (permissionsToRequest.size() > 0) {
+            ActivityCompat.requestPermissions(this, permissionsToRequest
+                    .toArray(new String[0]),REQUEST_PERMISSIONS_REQUEST_CODE);
+        }  // all are granted
+
     }
 }
