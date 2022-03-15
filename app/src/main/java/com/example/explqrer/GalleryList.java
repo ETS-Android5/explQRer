@@ -15,7 +15,7 @@ public class GalleryList {
 
         //creating an object of type DataHandler to access the data base
         DataHandler dataHandler = new DataHandler();
-
+        System.out.println("Here");
         ArrayList<String> userQRs = dataHandler.userQrs(playerName);
         System.out.println("size of userQRs: "+ userQRs.size());
         //to store all the images the users has

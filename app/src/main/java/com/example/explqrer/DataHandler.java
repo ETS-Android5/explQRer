@@ -29,6 +29,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +103,7 @@ public class DataHandler {
         CollectionReference cr = db.collection("qrbase");
 
         // Get the documents
-        Map<String,Object> qrs = new HashMap<>();
+        Map<String,Object> qrs[] = new Map[]{new HashMap<>()};
 
         cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -109,12 +112,12 @@ public class DataHandler {
                     for(QueryDocumentSnapshot doc: task.getResult()){
                         String qr = doc.getId();
                         ArrayList<String> usernames = (ArrayList<String>) doc.getData().get("users");
-                        qrs.put(qr,usernames);
+                        qrs[0].put(qr,usernames);
                     }
                 }
             }
         });
-        return qrs;
+        return qrs[0];
     }
 
     // Function to get the qrs of a specific user
@@ -128,11 +131,15 @@ public class DataHandler {
      */
     public ArrayList<String> userQrs(String username){
         ArrayList<String> qrs = new ArrayList<>();
-        Map<String,Object> map = this.getQR();
-
+        Map<String,Object> map = null;
+        map = this.getQR();
+        System.out.println("in userqrs");
+        System.out.println(map.keySet());
         for(String hash: map.keySet()){
+            System.out.println(hash);
             ArrayList<String> users = (ArrayList<String>) map.get(hash);
             for(String user: users) {
+                System.out.println(user);
                 if (user.equals(username)) {
                     qrs.add(hash);
                 }
