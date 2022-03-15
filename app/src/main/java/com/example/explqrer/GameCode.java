@@ -113,7 +113,7 @@ public class GameCode implements Serializable {
      * @return
      */
     public Bitmap getPhoto() {
-        return photo.getBitmap();
+        return photo == null ? null : photo.getBitmap();
     }
 
     /**
