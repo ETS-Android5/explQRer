@@ -501,7 +501,7 @@ public class DataHandler {
      * @return
      *  The position of the user on the leaderboard
      */
-    public long getUniqueL(String username){
+    public void getUniqueL(String username, OnGetUniqueLListener listener){
         // Collection Reference
         CollectionReference cr = db.collection("player");
 
@@ -509,21 +509,23 @@ public class DataHandler {
         DocumentReference dr = cr.document(username);
 
         // Get the ptsL and store it
-        final long[] qrL = {0};
-
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
+                    long qrL = 0;
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        qrL[0] = (long) doc.getData().get("uniqueL");
+                        qrL = (long) doc.getData().get("uniqueL");
                     }
+                    listener.getUniqueLListener(qrL);
+                }
+                else{
+                    //If there is error
+                    listener.getUniqueLListener(-1);
                 }
             }
         });
-
-        return qrL[0];
     }
 
     /**
