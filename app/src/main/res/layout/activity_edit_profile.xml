@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditProfileActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="136dp"
+        android:gravity="center_horizontal"
+        android:text="Edit Profile"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/username_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:background="#00000000"
+        android:gravity="center"
+        android:hint="Username"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textColorHint="#808080"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <EditText
+        android:id="@+id/contact_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="#00000000"
+        android:gravity="center"
+        android:hint="Contact"
+        android:inputType="phone"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textColorHint="#808080"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_text"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/save_text"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:background="@color/lightgreen"
+        android:elevation="2dp"
+        android:text="Save"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contact_text"
+        app:layout_constraintVertical_bias="0.121"
+        app:layout_constraintWidth_percent="0.7"
+        android:onClick="performEditProfile"
+        tools:ignore="MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
