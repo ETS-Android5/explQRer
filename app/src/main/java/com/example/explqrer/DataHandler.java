@@ -40,6 +40,7 @@ import java.util.Map;
 public class DataHandler {
     final private FirebaseFirestore db;
     final private FirebaseStorage storage;
+
     public DataHandler(){
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -99,11 +100,11 @@ public class DataHandler {
      * @return
      *  Hashmap with string as a key and arraylist that has the names of all the users.
      */
-    public Map<String,Object> getQR(){
+    public void getQR(OnGetQrsListener listener){
         CollectionReference cr = db.collection("qrbase");
 
         // Get the documents
-        Map<String,Object> qrs[] = new Map[]{new HashMap<>()};
+        Map<String,Object> qrs = new HashMap<>();
 
         cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -112,12 +113,14 @@ public class DataHandler {
                     for(QueryDocumentSnapshot doc: task.getResult()){
                         String qr = doc.getId();
                         ArrayList<String> usernames = (ArrayList<String>) doc.getData().get("users");
-                        qrs[0].put(qr,usernames);
+                        qrs.put(qr,usernames);
                     }
+                    listener.onQrFilled(qrs);
+                } else {
+                    listener.onError(task.getException());
                 }
             }
         });
-        return qrs[0];
     }
 
     // Function to get the qrs of a specific user
@@ -129,23 +132,31 @@ public class DataHandler {
      * @return
      *  Arraylist with all the hashes of the QR codes
      */
-    public ArrayList<String> userQrs(String username){
-        ArrayList<String> qrs = new ArrayList<>();
-        Map<String,Object> map = null;
-        map = this.getQR();
-        System.out.println("in userqrs");
-        System.out.println(map.keySet());
-        for(String hash: map.keySet()){
-            System.out.println(hash);
-            ArrayList<String> users = (ArrayList<String>) map.get(hash);
-            for(String user: users) {
-                System.out.println(user);
-                if (user.equals(username)) {
-                    qrs.add(hash);
+    public void userQrs(String username, OnUserQrsListener listener){
+        this.getQR(new OnGetQrsListener() {
+            @Override
+            public void onQrFilled(Map<String,Object> map) {
+                ArrayList<String> qrs = new ArrayList<>();
+                System.out.println("in userqrs");
+                System.out.println(map.keySet());
+                for(String hash: map.keySet()){
+                    System.out.println(hash);
+                    ArrayList<String> users = (ArrayList<String>) map.get(hash);
+                    for(String user: users) {
+                        System.out.println(user);
+                        if (user.equals(username)) {
+                            qrs.add(hash);
+                        }
+                    }
                 }
+                listener.onUserQrsFilled(qrs);
             }
-        }
-        return qrs;
+
+            @Override
+            public void onError(Exception taskException) {
+                // Handle error
+            }
+        });
     }
 
     // Player Info database
@@ -664,17 +675,18 @@ public class DataHandler {
     public Bitmap downloadImage(String hash){
         StorageReference storageReference = storage.getReference();
         StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
-        final byte[][] data = new byte[1][1];
-        final long ONE_MEGABYTE = 1024 * 1024;
+        byte[] data = new byte[1];
+        long ONE_MEGABYTE = 1024 * 1024;
         imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 // Data for "images/island.jpg" is returns, use this as needed
-                data[0] = bytes.clone();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                // TODO: store the images to local stor.age
             }
         });
 
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data[0], 0, data[0].length);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
         return bitmap;
     }
 }
