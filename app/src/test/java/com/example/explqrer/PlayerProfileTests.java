@@ -46,8 +46,8 @@ public class PlayerProfileTests {
     public void getCodes() {
         assertTrue("List is not empty", player.getCodes().isEmpty());
         player.addCode(code);
-        assertTrue("Hashes not equal", player.getCodes().contains(code));
-        assertFalse("Unexpected item in set", player.getCodes().contains(new GameCode("123@teleworm.us")));
+        assertTrue("Hashes not equal", player.getCodes().equals(code));
+        assertFalse("Unexpected item in set", player.getCodes().containsValue(new GameCode("123@teleworm.us")));
     }
 
     @Test
