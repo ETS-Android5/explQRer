@@ -132,6 +132,7 @@ public class DataHandler {
      * @return
      *  Arraylist with all the hashes of the QR codes
      */
+    //TODO: Sorted lists
     public void userQrs(String username, OnUserQrsListener listener){
         this.getQR(new OnGetQrsListener() {
             @Override
@@ -140,7 +141,6 @@ public class DataHandler {
                 System.out.println("in userqrs");
                 System.out.println(map.keySet());
                 for(String hash: map.keySet()){
-                    System.out.println(hash);
                     ArrayList<String> users = (ArrayList<String>) map.get(hash);
                     for(String user: users) {
                         System.out.println(user);
@@ -180,8 +180,7 @@ public class DataHandler {
     }
 
     // Function to get a specific player info
-    // Will throw error if player doesnt exist
-    // TODO: handle error part
+    // Will return null if player doesnt exist
 
     /**
      * This function returns all the data that is stored about a user
@@ -192,31 +191,30 @@ public class DataHandler {
      *  If it returns null that means the player doesnt exist, this can be used to check if
      *  the player exists or not.
      */
-    public Map<String,Object> getPlayer(String username){
+    public void getPlayer(String username, OnGetPlayerListener listener){
         // Collection reference
         CollectionReference cr = db.collection("player");
 
         //Get the data of the specific player
-        final Map<String, Object>[] data = new Map[]{new HashMap<>()};
+
 
         DocumentReference dr = cr.document(username);
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
+                    Map<String, Object> data = new HashMap<>();
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        data[0] = doc.getData();
+                        data = doc.getData();
                     }
                     else{
-                        data[0] = null;
+                        data = null;
                     }
+                    listener.getPlayerListener(data);
                 }
             }
         });
-
-        // Return the hashmap
-        return data[0];
     }
 
     // Function to update the pts
