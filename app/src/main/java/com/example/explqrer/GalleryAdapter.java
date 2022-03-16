@@ -1,5 +1,6 @@
 package com.example.explqrer;
 
+
 import static com.example.explqrer.R.id.image;
 
 import android.content.Context;
@@ -61,7 +62,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override
     public void onBindViewHolder(GalleryAdapter.ViewHolder viewHolder, int i) {
         viewHolder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        viewHolder.image.setImageBitmap(galleryList.get(i).getImage());
+        Bitmap b = BitmapFactory.decodeResource(context.getResources(), R.drawable.nature1);
+        viewHolder.image.setImageBitmap(b);
+
+        //viewHolder.image.setImageBitmap(galleryList.get(i).getImage());
     }
 
     /**
