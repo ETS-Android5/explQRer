@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity
     }
     private void saveData() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         String json = gson.toJson(player);
         editor.putString(SHARED_PREFS_PLAYER_KEY, json);
         editor.apply();
