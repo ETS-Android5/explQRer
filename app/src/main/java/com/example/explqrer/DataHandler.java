@@ -316,7 +316,7 @@ public class DataHandler {
      * @return
      *  The position of the user on the leaderboard
      */
-    public long getPtsL(String username){
+    public void getPtsL(String username, OnGetPtsLListener listener){
         // Collection Reference
         CollectionReference cr = db.collection("player");
 
@@ -324,21 +324,21 @@ public class DataHandler {
         DocumentReference dr = cr.document(username);
 
         // Get the ptsL and store it
-        final long[] ptsL = {0};
+
 
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
+                    long ptsL = 0;
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        ptsL[0] = (long) doc.getData().get("ptsL");
+                        ptsL = (long) doc.getData().get("ptsL");
                     }
+                    listener.getPtsLListener(ptsL);
                 }
             }
         });
-
-        return ptsL[0];
     }
 
     /**
