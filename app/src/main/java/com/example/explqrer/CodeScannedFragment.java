@@ -1,24 +1,19 @@
 package com.example.explqrer;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -26,8 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
-import com.google.mlkit.vision.barcode.common.Barcode;
-import java.io.Serializable;
 
 public class CodeScannedFragment extends DialogFragment {
     private CodeScannerFragmentListener listener;
@@ -39,8 +32,7 @@ public class CodeScannedFragment extends DialogFragment {
 
 
     public interface CodeScannerFragmentListener {
-        void processQR(GameCode code);
-        void dismissed();
+        void processQR(GameCode code, Boolean recordLocation);
     }
 
     public static CodeScannedFragment newInstance(String code, String username) {
@@ -93,11 +85,10 @@ public class CodeScannedFragment extends DialogFragment {
                     }
                 });
         takePictureButton.setOnClickListener(view1 -> {
-            Toast.makeText(getContext(), "Pictures currently disabled.", Toast.LENGTH_SHORT).show();
-//            Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            try {
-//                pictureActivityResultLauncher.launch(intentCapture);
-//            } catch (ActivityNotFoundException ignored){ }
+            Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            try {
+                pictureActivityResultLauncher.launch(intentCapture);
+            } catch (ActivityNotFoundException ignored){ }
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -108,14 +99,8 @@ public class CodeScannedFragment extends DialogFragment {
                     }else{
                         code.setDescription(description.getText().toString());
                     }
-/*
-                    if (locationToggle.isChecked()) {
-                        // TODO: Record Location
-                    }
-*/
-                    listener.processQR(code);
+                    listener.processQR(code, locationToggle.isChecked());
                 })
-                .setOnDismissListener(dialogInterface -> listener.dismissed())
                 .setTitle("Code worth: " + code.getScore() + " points!")
                 .create();
 

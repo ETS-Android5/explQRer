@@ -1,7 +1,17 @@
 package com.example.explqrer;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.Image;
+import android.os.Bundle;
+import android.util.Size;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
@@ -12,19 +22,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.media.Image;
-import android.os.Bundle;
-import android.util.Size;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -48,8 +45,7 @@ import java.util.concurrent.Executors;
  * Citation 2: https://developers.google.com/ml-kit/vision/barcode-scanning/android
  */
 
-public class ScanningPageShow extends AppCompatActivity
-        implements CodeScannedFragment.CodeScannerFragmentListener {
+public class ScanningPageActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -77,7 +73,7 @@ public class ScanningPageShow extends AppCompatActivity
         setContentView(R.layout.activity_scanning_page_show);
 
         // get the player from main activity
-        playerProfile = (PlayerProfile) getIntent().getSerializableExtra("playerProfile");
+        playerProfile = MainActivity.getPlayer();
         dataHandler = new DataHandler();
         // get ImageView and Textview for later use
         alreadyScanned = findViewById(R.id.already_scanned_text);
@@ -92,15 +88,15 @@ public class ScanningPageShow extends AppCompatActivity
         this.getWindow().setFlags(1024,1024);
 
         cameraExecutor = Executors.newSingleThreadExecutor();
-        cameraProviderFuture = ProcessCameraProvider.getInstance(ScanningPageShow.this);
+        cameraProviderFuture = ProcessCameraProvider.getInstance(ScanningPageActivity.this);
         imageAnalyzer = new MyImageAnalyzer(alreadyScanned);
 
 
         cameraProviderFuture.addListener(() -> {
             try {
-                if ( ActivityCompat.checkSelfPermission( ScanningPageShow.this,
+                if ( ActivityCompat.checkSelfPermission( ScanningPageActivity.this,
                         Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(ScanningPageShow.this,
+                    ActivityCompat.requestPermissions(ScanningPageActivity.this,
                             new String[]{Manifest.permission.CAMERA}, 1);
                 }
                 ProcessCameraProvider processCameraProvider =
@@ -110,7 +106,7 @@ public class ScanningPageShow extends AppCompatActivity
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
-        }, ContextCompat.getMainExecutor(ScanningPageShow.this));
+        }, ContextCompat.getMainExecutor(ScanningPageActivity.this));
 
         goBack.setOnClickListener(view -> finish());
     }
@@ -139,25 +135,6 @@ public class ScanningPageShow extends AppCompatActivity
         processCameraProvider.unbindAll();
         processCameraProvider.bindToLifecycle(this, cameraSelector, preview,imageCapture, imageAnalysis);
     }
-
-    @Override
-    public void processQR(GameCode code) {
-        cameraExecutor.shutdown();
-        dataHandler.uploadImage(code, playerProfile.getName());
-        dataHandler.addQR(code,playerProfile.getName());
-        dataHandler.updatePts(playerProfile.getName(),code.getScore());
-
-        Intent intent = new Intent();
-        intent.putExtra("Code", code);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    @Override
-    public void dismissed() {
-        isScanning = false;
-    }
-
 
     public class MyImageAnalyzer implements ImageAnalysis.Analyzer{
         TextView textView;
@@ -214,12 +191,10 @@ public class ScanningPageShow extends AppCompatActivity
             if (rawValue == null || playerProfile.hasCode(rawValue)) {
                 continue;
             }
-            alreadyScanned.setVisibility(View.INVISIBLE);
-            CodeScannedFragment codeScannedFragment = CodeScannedFragment
-                    .newInstance(rawValue, playerProfile.getName());
-            codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
-            isScanning = true;
-            break;
+            Intent intent = new Intent();
+            intent.putExtra("Code", rawValue);
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
@@ -237,7 +212,7 @@ public class ScanningPageShow extends AppCompatActivity
 
         if (requestCode== REQUEST_PERMISSIONS_REQUEST_CODE &&grantResults.length>0){
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-              Toast.makeText(ScanningPageShow.this,"Permission denied",
+              Toast.makeText(ScanningPageActivity.this,"Permission denied",
                       Toast.LENGTH_LONG).show();
             }
         }

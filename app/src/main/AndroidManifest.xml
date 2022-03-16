@@ -2,9 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.explqrer">
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
+
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+
 
     <application
         android:allowBackup="true"
@@ -13,13 +19,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ExplQRer">
+        <activity
+            android:name=".ProfileQr"
+            android:parentActivityName=".UserProfileActivity"/>
+        <activity
+            android:name=".EditProfileActivity"
+            android:parentActivityName=".UserProfileActivity" />
 
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="barcode" />
 
         <activity
-            android:name=".ScanningPageShow"
+            android:name=".ScanningPageActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -30,7 +42,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UserProfileActivity"/>
+        <activity android:name=".UserProfileActivity" />
     </application>
 
 </manifest>

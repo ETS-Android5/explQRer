@@ -1,22 +1,17 @@
 package com.example.explqrer;
 
-import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 import com.robotium.solo.Solo;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.w3c.dom.Text;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -44,7 +39,7 @@ public class ScanningActivityTest {
 
     @Test
     public void checkActivityChange(){
-        solo.assertCurrentActivity("Wrong Activity",ScanningPageShow.class);
+        solo.assertCurrentActivity("Wrong Activity", ScanningPageActivity.class);
     }
 
     //TODO: test camera open

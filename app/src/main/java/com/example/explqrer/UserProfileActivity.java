@@ -6,16 +6,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-
-import com.google.gson.Gson;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -24,9 +23,9 @@ import java.util.TimerTask;
 /**
  * all the methods to create the User Profile
  */
-public class UserProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class UserProfileActivity extends AppCompatActivity{
 
-    private static final String[] paths = {"Edit Profile", "Scan to sign-in", "Select to delete QR"};
+    private static final String[] paths = {"Select to delete QR", "Scan to sign-in", "Edit Profile"};
 
     private PlayerProfile player;
 
@@ -37,47 +36,57 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
          * Author: https://stackoverflow.com/users/3681880/suragch
          *  * Link: https://stackoverflow.com/a/56872365
          * Author: https://stackoverflow.com/users/6842344/parsa
+         * Site: geeksforgeeks.org
+         *  * Link: https://www.geeksforgeeks.org/popup-menu-in-android-with-example/
+         * Author: https://auth.geeksforgeeks.org/user/ankur035/articles
          */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
         // get the player from main activity
-        player= (PlayerProfile) getIntent().getSerializableExtra("playerProfile");
+        player = MainActivity.getPlayer();
 
-        Spinner spinner = findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(UserProfileActivity.this, android.R.layout.simple_spinner_item, paths);
+        // Referencing and Initializing the button
+        ImageButton button = (ImageButton) findViewById(R.id.settings);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        // Setting onClick behavior to the button
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Initializing the popup menu and giving the reference as current context
+                PopupMenu popupMenu = new PopupMenu(UserProfileActivity.this, button);
 
+                // Inflating popup menu from popup_menu.xml file
+                popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        switch(id) {
+                            case R.id.edit_profile:
+                                // Edit profile
+                                Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
+                                startActivity(intent);
+                                break;
+                            case R.id.scan_sign_in:
+                                // Scan to sign in
+                                Intent myIntent = new Intent(getApplicationContext(), ProfileQr.class);
+                                startActivity(myIntent);
+                              break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                // Showing the popup menu
+                popupMenu.show();
+            }
+        });
         this.populateBanner(player.getName()); //calls populateBanner to put points and scans in in banner recycler view
-        this.populateGallery(player.getName()); //calls populateGallery to put images in the gallery recycler view and provides name of player as parameter
+        this.populateGallery(player); //calls populateGallery to put images in the gallery recycler view and provides name of player as parameter
 
     }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-
-        switch (position) {
-            case 0:
-                // Edit player profile
-                break;
-            case 1:
-                // Scan to sign in
-                break;
-            case 2:
-                // Select to delete QR
-                break;
-
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
-
     /**
      * populates the Banner with the total points and the total scanned
      * @param playerName
@@ -88,7 +97,7 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
         ArrayList<String> banner = new ArrayList<>();
 
         //get the Total points
-        Long playerTotalPoints =  player.getPoints();
+        long playerTotalPoints =  player.getPoints();
         //get the Total scanned
         int playerTotalScanned = player.getNumCodes();
         //format the string to display total points in the banner
@@ -141,7 +150,7 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
      *  Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
      *  Author: Adam Sinicki
      */
-    private void populateGallery(String playerName){
+    private void populateGallery(PlayerProfile player){
 
         //set up the RecyclerView for the gallery
         RecyclerView galleryRecyclerView = findViewById(R.id.image_gallery);
@@ -149,7 +158,7 @@ public class UserProfileActivity extends AppCompatActivity implements AdapterVie
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),4);
         galleryRecyclerView.setLayoutManager(gridLayoutManager);
 
-        ArrayList<GalleryListItem> listOfImages = GalleryList.updateGallery(playerName);
+        ArrayList<GalleryListItem> listOfImages = GalleryList.updateGallery(player);
 
         GalleryAdapter galleryListAdapter = new GalleryAdapter(getApplicationContext(),listOfImages);
         galleryRecyclerView.setAdapter(galleryListAdapter);
