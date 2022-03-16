@@ -213,6 +213,9 @@ public class DataHandler {
                     }
                     listener.getPlayerListener(data);
                 }
+                else{
+                    listener.getPlayerListener(null);
+                }
             }
         });
     }
@@ -337,6 +340,10 @@ public class DataHandler {
                     }
                     listener.getPtsLListener(ptsL);
                 }
+                else {
+                    // if the task is unsuccessful
+                    listener.getPtsLListener(-1);
+                }
             }
         });
     }
@@ -360,6 +367,9 @@ public class DataHandler {
                         leaderboard.add(doc.getId());
                     }
                     listener.getPtsLeaderBoardListener(leaderboard);
+                }
+                else {
+                    listener.getPtsLeaderBoardListener(null);
                 }
             }
         });
@@ -399,7 +409,7 @@ public class DataHandler {
      * @return
      *  The position of the user on the leaderboard
      */
-    public long getQrL(String username){
+    public void getQrL(String username, OnGetQrLListener listener){
         // Collection Reference
         CollectionReference cr = db.collection("player");
 
@@ -407,21 +417,25 @@ public class DataHandler {
         DocumentReference dr = cr.document(username);
 
         // Get the ptsL and store it
-        final long[] qrL = {0};
+
 
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
+                    long qrL = 0;
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        qrL[0] = (long) doc.getData().get("qrL");
+                        qrL = (long) doc.getData().get("qrL");
                     }
+                    listener.getQrLListener(qrL);
+                }
+                else {
+                    // if there is error
+                    listener.getQrLListener(-1);
                 }
             }
         });
-
-        return qrL[0];
     }
 
     /**
