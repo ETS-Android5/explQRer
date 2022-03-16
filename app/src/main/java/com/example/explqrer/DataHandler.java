@@ -533,9 +533,7 @@ public class DataHandler {
      * @return
      *  It returns an arraylist with the usernames of the users which represents the leaderboard
      */
-    public ArrayList<String> getUniqueLeaderBoard(){
-        // Hashmap to return
-        ArrayList<String> leaderboard = new ArrayList<>();
+    public void getUniqueLeaderBoard(OnGetUniqueLeaderBoardListener listener){
 
         // Collection reference
         CollectionReference cr = db.collection("player");
@@ -544,14 +542,18 @@ public class DataHandler {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
+                    ArrayList<String> leaderboard = new ArrayList<>();
                     for(QueryDocumentSnapshot doc: task.getResult()){
                         leaderboard.add(doc.getId());
                     }
+                    listener.getUniqueLeaderBoardListener(leaderboard);
+                }
+                else{
+                    // Error
+                    listener.getUniqueLeaderBoardListener(null);
                 }
             }
         });
-
-        return leaderboard;
     }
 
     /**
