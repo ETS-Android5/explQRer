@@ -688,7 +688,7 @@ public class DataHandler {
 
     // Method to download the image
     // The method returns null if the image doesnt exist
-    public void downloadImage(String hash){
+    public File downloadImage(String hash){
         StorageReference storageReference = storage.getReference();
         StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
 //        byte[] data = new byte[1];
@@ -706,12 +706,15 @@ public class DataHandler {
 //        return bitmap;
 
         // https://firebase.google.com/docs/storage/android/download-files
-
+        
+        File localFile = null;
         try {
-            File localFile = File.createTempFile(hash, "jpg");
+            localFile = File.createTempFile(hash, "jpg");
             imageRef.getFile(localFile);
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return localFile;
     }
 }
