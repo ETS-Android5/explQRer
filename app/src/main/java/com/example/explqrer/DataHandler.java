@@ -701,8 +701,9 @@ public class DataHandler {
         // https://firebase.google.com/docs/storage/android/download-files
 
         try {
-            File localFile = File.createTempFile(hash, "jpg");
+            File localFile = File.createTempFile(hash, ".jpg");
             imageRef.getFile(localFile);
+            System.out.println("local file: "+ localFile.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
         }

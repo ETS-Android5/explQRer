@@ -36,6 +36,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     public GalleryAdapter(Context context, ArrayList<GalleryListItem> galleryList) {
         this.galleryList = galleryList;
         this.context = context;
+        System.out.println("in adapter");
     }
 
     /**
@@ -62,8 +63,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override
     public void onBindViewHolder(GalleryAdapter.ViewHolder viewHolder, int i) {
         viewHolder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        Bitmap b = BitmapFactory.decodeResource(context.getResources(), R.drawable.nature1);
-        viewHolder.image.setImageBitmap(b);
+        System.out.println("user holder: "+ galleryList);
+        System.out.println(galleryList.get(i).getImage());
+        viewHolder.image.setImageBitmap(galleryList.get(i).getImage());
 
         //viewHolder.image.setImageBitmap(galleryList.get(i).getImage());
     }

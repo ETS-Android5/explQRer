@@ -161,6 +161,7 @@ public class UserProfileActivity extends AppCompatActivity{
         ArrayList<GalleryListItem> listOfImages = GalleryList.updateGallery(player);
 
         GalleryAdapter galleryListAdapter = new GalleryAdapter(getApplicationContext(),listOfImages);
+        System.out.println("before adapter");
         galleryRecyclerView.setAdapter(galleryListAdapter);
     }
 }
