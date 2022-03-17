@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class GalleryListItem {
 
     private Long imagePoints;
-    private Bitmap image;
+    private String image;
 
     /**
      * This gets the points of the ImageListItem object
@@ -39,16 +39,16 @@ public class GalleryListItem {
      * @return imageId
      *      Which is the ID stored in the ImageListItem of an image
      */
-    public Bitmap getImage(){
+    public String getImage(){
         return image;
     }
 
     /**
      * This sets the image ID into the ImageListItem object
-     * @param actualImage
+     * @param imagePath
      *      Which is the URL of an image
      */
-    public void setImageId(Bitmap actualImage){
-        this.image = actualImage;
+    public void setImageId(String imagePath){
+        this.image = imagePath;
     }
 }

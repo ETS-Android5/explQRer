@@ -35,20 +35,17 @@ public class GalleryList extends AppCompatActivity {
         ArrayList<Long> imagePoints = new ArrayList<>();
         //loops through the userQRs and populates images array list and image points with the same position
 
-        for (GameCode qr : qrCodesSet){
-            //System.out.println(dataHandler.downloadImage(qr.getSha256hex()));
-            System.out.println("user QR: "+ qr.getSha256hex());
-            dataHandler.downloadImage(qr.getSha256hex());
-        }
-
         //loop through all the imagePoints and imageIds populate galleryListItem objects with the image's point value and the image
         ArrayList<GalleryListItem> listOfImages = new ArrayList<>();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
         for(GameCode qr : qrCodesSet ){
-            File img = new File(qr.getSha256hex() + ".jpg");
+            File img = dataHandler.downloadImage(qr.getSha256hex());
             GalleryListItem galleryListItem = new GalleryListItem();
-            Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath());
-            System.out.println("user bitmap: "+ bitmap);
-            galleryListItem.setImageId(bitmap);
+            System.out.println("path: "+ img.getAbsolutePath());
+
+            galleryListItem.setImageId(img.getAbsolutePath());
             listOfImages.add(galleryListItem);
         }
         System.out.println("before listof images");

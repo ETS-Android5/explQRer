@@ -702,12 +702,16 @@ public class DataHandler {
         
         File localFile = null;
         try {
-            localFile = File.createTempFile(hash, "jpg");
+            localFile = File.createTempFile(hash, ".jpg");
             imageRef.getFile(localFile);
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("path: "+ localFile);
+        System.out.println("before return localfile");
+        System.out.println("path: "+ localFile.getAbsolutePath());
+        System.out.println("before return localfile path");
         return localFile;
     }
 }

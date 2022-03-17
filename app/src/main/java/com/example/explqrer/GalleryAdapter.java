@@ -6,6 +6,7 @@ import static com.example.explqrer.R.id.image;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -65,9 +67,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         viewHolder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         System.out.println("user holder: "+ galleryList);
         System.out.println(galleryList.get(i).getImage());
-        viewHolder.image.setImageBitmap(galleryList.get(i).getImage());
-
-        //viewHolder.image.setImageBitmap(galleryList.get(i).getImage());
+        //viewHolder.image.setImageBitmap(Bitmap.createBitmap(context.getResources(),R.drawable.nature2);
+        Uri image = Uri.fromFile(new File(galleryList.get(i).getImage()));
+        System.out.println(image);
+        viewHolder.image.setImageURI(image);
     }
 
     /**
