@@ -688,21 +688,30 @@ public class DataHandler {
 
     // Method to download the image
     // The method returns null if the image doesnt exist
-    public Bitmap downloadImage(String hash){
+    public void downloadImage(String hash){
         StorageReference storageReference = storage.getReference();
         StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
-        byte[] data = new byte[1];
-        long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                // Data for "images/island.jpg" is returns, use this as needed
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                // TODO: store the images to local stor.age
-            }
-        });
+//        byte[] data = new byte[1];
+//        long ONE_MEGABYTE = 1024 * 1024;
+//        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//                // Data for "images/island.jpg" is returns, use this as needed
+//                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                // TODO: store the images to local stor.age
+//            }
+//        });
+//
+//        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+//        return bitmap;
 
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        return bitmap;
+        // https://firebase.google.com/docs/storage/android/download-files
+
+        try {
+            File localFile = File.createTempFile(hash, "jpg");
+            imageRef.getFile(localFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
