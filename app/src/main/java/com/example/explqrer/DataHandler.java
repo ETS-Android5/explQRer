@@ -2,8 +2,11 @@ package com.example.explqrer;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -24,6 +27,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -93,8 +98,7 @@ public class DataHandler {
 
     /**
      * Method to get all the qr hashes and the users that scanned that qr code
-     * @return
-     *  Hashmap with string as a key and arraylist that has the names of all the users.
+     *
      */
     public void getQR(OnGetQrsListener listener){
         CollectionReference cr = db.collection("qrbase");
@@ -702,8 +706,10 @@ public class DataHandler {
         
         File localFile = null;
         try {
-            localFile = File.createTempFile(hash, ".jpg");
+            localFile = File.createTempFile(hash, ".jpg");;
             imageRef.getFile(localFile);
+            System.out.println("ref: "+ imageRef);
+
 
         } catch (IOException e) {
             e.printStackTrace();
