@@ -7,22 +7,27 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.errorprone.annotations.Var;
+
 public class IsPlayerQrFragment extends DialogFragment {
     private IsPlayerQrFragmentListener listener;
 
-    static enum RETURNS {SCAN, SEE_PROFILE, LOG_IN}
+    private Button scanButton, profileButton, loginButton;
+
+
     public interface IsPlayerQrFragmentListener {
-        void processDecision(RETURNS value);
+        void processDecision(ScanningPageActivity.RETURNS value, String rawValue);
     }
     
-    public static IsPlayerQrFragment newInstance(String username) {
+    public static IsPlayerQrFragment newInstance(String rawValue) {
         Bundle args = new Bundle();
-        args.putSerializable("Name", username);
+        args.putSerializable("Value", rawValue);
 
         IsPlayerQrFragment fragment = new IsPlayerQrFragment();
         fragment.setArguments(args);
@@ -45,6 +50,21 @@ public class IsPlayerQrFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity())
                 .inflate(R.layout.is_player_qr_fragment_layout, null);
+        scanButton = view.findViewById(R.id.player_qr_alert_scan_button);
+        scanButton.setOnClickListener(view1 -> {
+            listener.processDecision(ScanningPageActivity.RETURNS.SCAN);
+            getParentFragmentManager().beginTransaction().remove(IsPlayerQrFragment.this);
+        });
+        profileButton = view.findViewById(R.id.player_qr_alert_view_button);
+        profileButton.setOnClickListener(view1 -> {
+            listener.processDecision(ScanningPageActivity.RETURNS.SEE_PROFILE);
+            getParentFragmentManager().beginTransaction().remove(IsPlayerQrFragment.this);
+        });
+        loginButton = view.findViewById(R.id.player_qr_alert_log_in_button);
+        loginButton.setOnClickListener(view1 -> {
+            listener.processDecision(ScanningPageActivity.RETURNS.LOG_IN);
+            getParentFragmentManager().beginTransaction().remove(IsPlayerQrFragment.this);
+        });
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

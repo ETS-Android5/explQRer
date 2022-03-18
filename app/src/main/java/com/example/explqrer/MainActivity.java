@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
                     if (result.getResultCode() != RESULT_OK) { return; }
                     assert result.getData() != null;
                     CodeScannedFragment codeScannedFragment = CodeScannedFragment
-                            .newInstance((String) result.getData().getStringExtra("Code"),
+                            .newInstance(result.getData().getStringExtra("Code"),
                                     player.getName());
                     codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
 
@@ -213,31 +213,34 @@ public class MainActivity extends AppCompatActivity
             }).addOnSuccessListener(this, location -> {
                 if (location != null) {
                     code.setLocation(location);
-                    dataHandler.addQR(code, player.getName());
-                    dataHandler.updatePts(player.getName(),code.getScore());
-                    player.addCode(code);
-                    saveData();
-                    updateStrings();
+                } else {
+                    Toast.makeText(MainActivity.this, "Location not recorded",
+                            Toast.LENGTH_SHORT).show();
                 }
+                addQR(code);
             }).addOnFailureListener(e -> {
                 Toast.makeText(MainActivity.this, "Location not recorded",
                 Toast.LENGTH_SHORT).show();
-                dataHandler.addQR(code, player.getName());
-                dataHandler.updatePts(player.getName(),code.getScore());
-                player.addCode(code);
-                saveData();
-                updateStrings();
+                addQR(code);
 
             });
 
         }
         else {
-            dataHandler.addQR(code, player.getName());
-            dataHandler.updatePts(player.getName(),code.getScore());
-            player.addCode(code);
-            saveData();
-            updateStrings();
+            addQR(code);
         }
+    }
+
+    /**
+     * Call all the methods needed to add a code to the database and update the UI
+     * @param code
+     */
+    private void addQR(GameCode code) {
+        dataHandler.addQR(code, player.getName());
+        dataHandler.updatePts(player.getName(),code.getScore());
+        player.addCode(code);
+        saveData();
+        updateStrings();
     }
 
     /**

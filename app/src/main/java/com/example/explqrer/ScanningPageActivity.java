@@ -45,7 +45,9 @@ import java.util.concurrent.Executors;
  * Citation 2: https://developers.google.com/ml-kit/vision/barcode-scanning/android
  */
 
-public class ScanningPageActivity extends AppCompatActivity {
+public class ScanningPageActivity extends AppCompatActivity
+        implements IsPlayerQrFragment.IsPlayerQrFragmentListener {
+    enum RETURNS {SCAN, SEE_PROFILE, LOG_IN}
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -137,6 +139,22 @@ public class ScanningPageActivity extends AppCompatActivity {
         processCameraProvider.bindToLifecycle(this, cameraSelector, preview,imageCapture, imageAnalysis);
     }
 
+    @Override
+    public void processDecision(RETURNS value, String rawValue) {
+        switch (value) {
+            case SCAN:
+                Intent intent = new Intent();
+                intent.putExtra("Code", rawValue);
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+            case LOG_IN:
+                break;
+            case SEE_PROFILE:
+                break;
+        }
+    }
+
     public class MyImageAnalyzer implements ImageAnalysis.Analyzer{
         TextView textView;
         public MyImageAnalyzer(TextView textView){
@@ -195,10 +213,7 @@ public class ScanningPageActivity extends AppCompatActivity {
             if (rawValue.startsWith("PlayQR: ")) {
                 isPlayerQR = true;
             }
-            Intent intent = new Intent();
-            intent.putExtra("Code", rawValue);
-            setResult(RESULT_OK, intent);
-            finish();
+
         }
     }
 
