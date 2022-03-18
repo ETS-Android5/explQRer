@@ -48,22 +48,22 @@ public class EditProfileActivity extends AppCompatActivity {
         return true;
     }
 
-    public void performEditProfile(View v) {
-        if (validateInput()) {
-
-            // Input is valid, send data to the server
-
-            String user_name = userName.getText().toString();
-            String user_contact = userContact.getText().toString();
-
-            DataHandler dh = new DataHandler();
-            if (dh.getPlayer(user_name) == null)
-                try {
-                    dh.createPlayer(user_name, user_contact);
-                } catch (Exception e) {
-                    System.out.println("Warning: This username is taken");
-                }
-        }
-        super.finish();
-    }
+//    public void performEditProfile(View v) {
+//        if (validateInput()) {
+//
+//            // Input is valid, send data to the server
+//
+//            String user_name = userName.getText().toString();
+//            String user_contact = userContact.getText().toString();
+//
+//            DataHandler dh = new DataHandler();
+//            if (dh.getPlayer(user_name) == null)
+//                try {
+//                    dh.createPlayer(user_name, user_contact);
+//                } catch (Exception e) {
+//                    System.out.println("Warning: This username is taken");
+//                }
+//        }
+//        super.finish();
+//    }
 }

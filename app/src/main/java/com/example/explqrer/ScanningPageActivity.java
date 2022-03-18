@@ -66,6 +66,7 @@ public class ScanningPageActivity extends AppCompatActivity {
 
     private DataHandler dataHandler;
     private boolean isScanning = false;
+    private boolean isPlayerQR = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,8 +189,11 @@ public class ScanningPageActivity extends AppCompatActivity {
     private void readerBarcodeData( List<Barcode> barcodes) {
         for (Barcode barcode : barcodes) {
             String rawValue = barcode.getRawValue();
-            if (rawValue == null || playerProfile.hasCode(rawValue)) {
+            if (rawValue == null) {
                 continue;
+            }
+            if (rawValue.startsWith("PlayQR: ")) {
+                isPlayerQR = true;
             }
             Intent intent = new Intent();
             intent.putExtra("Code", rawValue);

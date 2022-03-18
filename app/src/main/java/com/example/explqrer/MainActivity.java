@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity
      * @param player the new username
      */
     public void setPlayer(PlayerProfile player) {
-        this.player = player;
+        MainActivity.player = player;
         saveData();
     }
 
