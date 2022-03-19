@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toolbar;
 
+import java.util.Map;
+
 public class EditProfileActivity extends AppCompatActivity {
 
     /* Site: handyopinion.com
@@ -53,17 +55,25 @@ public class EditProfileActivity extends AppCompatActivity {
 
             // Input is valid, send data to the server
 
-            String user_name = userName.getText().toString();
-            String user_contact = userContact.getText().toString();
+            String user = userName.getText().toString();
+            String contact = userContact.getText().toString();
 
             DataHandler dh = new DataHandler();
-            if (dh.getPlayer(user_name) == null)
-                try {
-                    dh.createPlayer(user_name, user_contact);
-                } catch (Exception e) {
-                    System.out.println("Warning: This username is taken");
+            dh.getPlayer(user, new OnGetPlayerListener() {
+                @Override
+                public void getPlayerListener(Map<String, Object> player) {
+                    if (player == null) {
+                        try {
+                            dh.createPlayer(user, contact);
+                        } catch (Exception e) {
+                            System.out.println("Warning: This username is taken");
+                        }
+                    }
+
                 }
+            });
+
+            super.finish();
         }
-        super.finish();
     }
 }
