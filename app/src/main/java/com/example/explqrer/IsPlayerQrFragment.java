@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,10 +20,11 @@ public class IsPlayerQrFragment extends DialogFragment {
     private IsPlayerQrFragmentListener listener;
 
     private Button scanButton, profileButton, loginButton;
+    private TextView usernameText;
 
 
     public interface IsPlayerQrFragmentListener {
-        void processDecision(ScanningPageActivity.RETURNS value, String rawValue);
+        void processDecision(ScanningPageActivity.RETURNS value);
     }
     
     public static IsPlayerQrFragment newInstance(String rawValue) {
@@ -53,18 +55,21 @@ public class IsPlayerQrFragment extends DialogFragment {
         scanButton = view.findViewById(R.id.player_qr_alert_scan_button);
         scanButton.setOnClickListener(view1 -> {
             listener.processDecision(ScanningPageActivity.RETURNS.SCAN);
-            getParentFragmentManager().beginTransaction().remove(IsPlayerQrFragment.this);
+            getParentFragmentManager().beginTransaction().remove(IsPlayerQrFragment.this).commit();
         });
         profileButton = view.findViewById(R.id.player_qr_alert_view_button);
         profileButton.setOnClickListener(view1 -> {
             listener.processDecision(ScanningPageActivity.RETURNS.SEE_PROFILE);
-            getParentFragmentManager().beginTransaction().remove(IsPlayerQrFragment.this);
+            getParentFragmentManager().beginTransaction().remove(IsPlayerQrFragment.this).commit();
         });
         loginButton = view.findViewById(R.id.player_qr_alert_log_in_button);
         loginButton.setOnClickListener(view1 -> {
             listener.processDecision(ScanningPageActivity.RETURNS.LOG_IN);
-            getParentFragmentManager().beginTransaction().remove(IsPlayerQrFragment.this);
+            getParentFragmentManager().beginTransaction().remove(IsPlayerQrFragment.this).commit();
         });
+        usernameText = view.findViewById(R.id.player_qr_alert_username);
+        usernameText.setText(getArguments().get("Value").toString());
+
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

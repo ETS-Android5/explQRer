@@ -69,6 +69,7 @@ public class ScanningPageActivity extends AppCompatActivity
     private DataHandler dataHandler;
     private boolean isScanning = false;
     private boolean isPlayerQR = false;
+    private static String rawValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,17 +141,21 @@ public class ScanningPageActivity extends AppCompatActivity
     }
 
     @Override
-    public void processDecision(RETURNS value, String rawValue) {
+    public void processDecision(RETURNS value) {
         switch (value) {
             case SCAN:
-                Intent intent = new Intent();
-                intent.putExtra("Code", rawValue);
-                setResult(RESULT_OK, intent);
-                finish();
+                if (!playerProfile.hasCode(rawValue)) {
+                    Intent intent = new Intent();
+                    intent.putExtra("Code", rawValue);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
                 break;
             case LOG_IN:
+                Toast.makeText(this, "Log In", Toast.LENGTH_SHORT).show();
                 break;
             case SEE_PROFILE:
+                Toast.makeText(this, "See Profile", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -205,15 +210,21 @@ public class ScanningPageActivity extends AppCompatActivity
      * @param barcodes
      */
     private void readerBarcodeData( List<Barcode> barcodes) {
+        // TODO: Set up check if the dialogue is cancelled
+        // so that the camera can start scanning again.
         for (Barcode barcode : barcodes) {
-            String rawValue = barcode.getRawValue();
+            rawValue = barcode.getRawValue();
             if (rawValue == null) {
                 continue;
             }
-            if (rawValue.startsWith("PlayQR: ")) {
-                isPlayerQR = true;
+            if (rawValue.startsWith("Player QR: ")) {
+                IsPlayerQrFragment isPlayerQrFragment = IsPlayerQrFragment.newInstance(rawValue);
+                isPlayerQrFragment.show(getSupportFragmentManager(), "PLAYER_QR");
+                isScanning = true;
+                break;
+            } else {
+                processDecision(RETURNS.SCAN);
             }
-
         }
     }
 
