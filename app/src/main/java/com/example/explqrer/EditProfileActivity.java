@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import java.util.Map;
@@ -19,11 +20,15 @@ public class EditProfileActivity extends AppCompatActivity {
      */
 
     EditText userName, userContact;
+    private PlayerProfile player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        // get the player from main activity
+        player = MainActivity.getPlayer();
 
         viewInitializations();
     }
@@ -43,7 +48,7 @@ public class EditProfileActivity extends AppCompatActivity {
             return false;
         }
         if (userContact.getText().toString().equals("")) {
-            userContact.setError("Please Enter Contact");
+            userContact.setError("Please Enter Email");
             return false;
         }
 
@@ -55,18 +60,19 @@ public class EditProfileActivity extends AppCompatActivity {
 
             // Input is valid, send data to the server
 
-            String user = userName.getText().toString();
-            String contact = userContact.getText().toString();
+            String newUserName = userName.getText().toString();
+            String newContactEmail = userContact.getText().toString();
 
             DataHandler dh = new DataHandler();
-            dh.getPlayer(user, new OnGetPlayerListener() {
+            dh.getPlayer(newUserName, new OnGetPlayerListener() {
                 @Override
-                public void getPlayerListener(Map<String, Object> player) {
-                    if (player == null) {
+                public void getPlayerListener(Map<String, Object> dataBasePlayer) {
+                    if (dataBasePlayer == null) {
                         try {
-                            dh.createPlayer(user, contact);
+                            updateSharePreferences(newUserName,newContactEmail);
                         } catch (Exception e) {
                             System.out.println("Warning: This username is taken");
+                            Toast.makeText(EditProfileActivity.this, newUserName+ " is taken, please try another username", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -75,5 +81,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
             super.finish();
         }
+    }
+
+    public void updateSharePreferences(String newUserName, String newContactEmail){
+        System.out.println(player.getName());
+        player.setName(newUserName);
+        player.setContact(newContactEmail);
+        System.out.println(player.getName());
     }
 }
