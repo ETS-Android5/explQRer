@@ -76,12 +76,21 @@ public class DataHandler {
                 // Check if the document exists, add username if it does
                 if(documentSnapshot.exists()){
                     docRef.update("users", FieldValue.arrayUnion(username));
+                    if(documentSnapshot.getData().get("location") == null){
+                        docRef.update("location",code.getLocation().getProvider());
+                    }
                 }
                 else{
                     Map<String,Object> data = new HashMap<>();
                     ArrayList<String> usernames = new ArrayList<>();
                     usernames.add(username);
                     data.put("users", usernames);
+                    if (code.getLocation() == null){
+                        data.put("location",code.getLocation());
+                    }
+                    else{
+                        data.put("location",code.getLocation().getProvider());
+                    }
                     docRef.set(data)
                             .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
                             .addOnFailureListener(e -> Log.d(TAG, "Failure"));
@@ -91,6 +100,8 @@ public class DataHandler {
         if (code.getPhoto() != null) {
             uploadImage(code, username);
         }
+
+        //Todo: update player json
 
     }
 
@@ -688,19 +699,6 @@ public class DataHandler {
     public File downloadImage(String hash){
         StorageReference storageReference = storage.getReference();
         StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
-//        byte[] data = new byte[1];
-//        long ONE_MEGABYTE = 1024 * 1024;
-//        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                // Data for "images/island.jpg" is returns, use this as needed
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                // TODO: store the images to local stor.age
-//            }
-//        });
-//
-//        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-//        return bitmap;
 
         // https://firebase.google.com/docs/storage/android/download-files
         
