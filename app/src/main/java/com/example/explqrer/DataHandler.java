@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -36,6 +38,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataHandler {
+
+    // Firestore Objects
     final private FirebaseFirestore db;
     final private FirebaseStorage storage;
 
@@ -61,7 +65,7 @@ public class DataHandler {
      * @param username
      *  This is the username of the user that has scanned the QRcode
      */
-    public void addQR(GameCode code, String username){
+    public void addQR(GameCode code, String username, PlayerProfile playerProfile){
         // Check if it exists if it does add username or add qr and username
 
         String hash = code.getSha256hex();
@@ -113,7 +117,8 @@ public class DataHandler {
             }
         });
 
-        //Todo: update player json
+        //update player json
+        updatePlayerJson(playerProfile);
 
     }
 
@@ -185,23 +190,34 @@ public class DataHandler {
     // Player Info database
 
     // Function to create new player
-    public void createPlayer(String username, String contact){
+    public void createPlayer(PlayerProfile playerProfile){
         // Collection reference
         CollectionReference cr = db.collection("player");
 
         // Create hash map and add to document
         Map<String,Object> data = new HashMap<>();
-        data.put("contact",contact);
+        data.put("contact",playerProfile.getContact());
         data.put("pts",0);
         data.put("scanned",0);
         data.put("uniqueScanned",0);
         data.put("ptsL",-1);
         data.put("qrL",-1);
         data.put("uniqueL", -1);
-
-        cr.document(username).set(data);
+        Gson gson = new Gson();
+        data.put("json", gson.toJson(playerProfile));
+        cr.document(playerProfile.getName()).set(data);
     }
 
+    public void updatePlayerJson(PlayerProfile playerProfile){
+        // Collection Reference
+        CollectionReference cr = db.collection("player");
+
+        // Document reference
+        DocumentReference docRef = cr.document(playerProfile.getName());
+
+        Gson gson = new Gson();
+        docRef.update("json", gson.toJson(playerProfile);
+    }
     // Function to get a specific player info
     // Will return null if player doesnt exist
 
