@@ -1,2 +1,5 @@
-package com.example.explqrer;public interface OnHasScannedBeforeListener {
+package com.example.explqrer;
+
+public interface OnHasScannedBeforeListener {
+    void hasScannedBeforeListener(boolean flag);
 }

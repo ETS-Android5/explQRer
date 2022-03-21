@@ -97,9 +97,21 @@ public class DataHandler {
                 }
             }
         });
-        if (code.getPhoto() != null) {
-            uploadImage(code, username);
-        }
+        // No need to upload photos anymore
+//        if (code.getPhoto() != null) {
+//            uploadImage(code, username);
+//        }
+        // Update the points
+        updatePts(username,code.getScore());
+        updateScanned(username,1);
+        hasScannedBefore(code.getSha256hex(), username, new OnHasScannedBeforeListener() {
+            @Override
+            public void hasScannedBeforeListener(boolean flag) {
+                if(!flag){
+                    updateUniqueScanned(username,1);
+                }
+            }
+        });
 
         //Todo: update player json
 
@@ -577,7 +589,7 @@ public class DataHandler {
      *  It returns true if a given user has scanned the qr code before or false if the
      *  user didn't scanned the qr before
      */
-    public Boolean hasScannedBefore(String hash, String username){
+    public void hasScannedBefore(String hash, String username, OnHasScannedBeforeListener listener){
         // Connect to collection
         CollectionReference cr = db.collection("qrbase");
 
@@ -585,24 +597,26 @@ public class DataHandler {
         DocumentReference docRef = cr.document(hash);
 
         // Set the flag to false by default
-        final boolean[] flag = {false};
+
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                boolean flag = false;
                 if(task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
                         ArrayList<String> usernames = (ArrayList<String>) doc.getData().get("users");
                         for(String user: usernames){
-                            if(user.equals(username)){
-                                flag[0] = true;
+                            if (user.equals(username)) {
+                                flag = true;
+                                break;
                             }
                         }
                     }
                 }
+                listener.hasScannedBeforeListener(flag);
             }
         });
-        return  flag[0];
     }
 
     /**
@@ -612,6 +626,7 @@ public class DataHandler {
      * @return
      *  Returns true if the qr code is being scanned for the first time else returns false
      */
+    @Deprecated
     public Boolean firstScan(String hash){
         // Connect to collection
         CollectionReference cr = db.collection("qrbase");
@@ -636,6 +651,7 @@ public class DataHandler {
     }
 
     // Image upload
+    @Deprecated
     public void uploadImage(GameCode code, String username){
         // Connect to collection
         CollectionReference collectionReference = db.collection("images");
@@ -667,6 +683,7 @@ public class DataHandler {
     }
 
     // Method to get the point of a specific hash
+    @Deprecated
     public long hashPts(String hash){
         // TODO: REMOVE
         // Connect to collection
@@ -696,6 +713,7 @@ public class DataHandler {
 
     // Method to download the image
     // The method returns null if the image doesnt exist
+    @Deprecated
     public File downloadImage(String hash){
         StorageReference storageReference = storage.getReference();
         StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
