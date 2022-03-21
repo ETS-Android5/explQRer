@@ -3,6 +3,7 @@ package com.example.explqrer;
 import static com.google.common.math.IntMath.pow;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -43,7 +45,7 @@ public class GameCode implements Serializable {
         score = calculateScore(barcode);
         this.location = location;
         if (photo != null) {
-            this.photo = new ProxyBitmap(photo);
+            setPhoto(photo);
         }
     }
   
@@ -129,7 +131,9 @@ public class GameCode implements Serializable {
      * @param photo
      */
     public void setPhoto(Bitmap photo) {
-        this.photo = new ProxyBitmap(photo);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+        this.photo = new ProxyBitmap(BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size()));
     }
 
     public String getDescription() {
