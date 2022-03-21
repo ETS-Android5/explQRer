@@ -2,8 +2,11 @@ package com.example.explqrer;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -23,6 +26,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +38,7 @@ import java.util.Map;
 public class DataHandler {
     final private FirebaseFirestore db;
     final private FirebaseStorage storage;
+
     public DataHandler(){
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -89,10 +98,9 @@ public class DataHandler {
 
     /**
      * Method to get all the qr hashes and the users that scanned that qr code
-     * @return
-     *  Hashmap with string as a key and arraylist that has the names of all the users.
+     *
      */
-    public Map<String,Object> getQR(){
+    public void getQR(OnGetQrsListener listener){
         CollectionReference cr = db.collection("qrbase");
 
         // Get the documents
@@ -107,10 +115,12 @@ public class DataHandler {
                         ArrayList<String> usernames = (ArrayList<String>) doc.getData().get("users");
                         qrs.put(qr,usernames);
                     }
+                    listener.onQrFilled(qrs);
+                } else {
+                    listener.onError(task.getException());
                 }
             }
         });
-        return qrs;
     }
 
     // Function to get the qrs of a specific user
@@ -122,19 +132,31 @@ public class DataHandler {
      * @return
      *  Arraylist with all the hashes of the QR codes
      */
-    public ArrayList<String> userQrs(String username){
-        ArrayList<String> qrs = new ArrayList<>();
-        Map<String,Object> map = this.getQR();
-
-        for(String hash: map.keySet()){
-            ArrayList<String> users = (ArrayList<String>) map.get(hash);
-            for(String user: users) {
-                if (user.equals(username)) {
-                    qrs.add(hash);
+    //TODO: Sorted lists
+    public void userQrs(String username, OnUserQrsListener listener){
+        this.getQR(new OnGetQrsListener() {
+            @Override
+            public void onQrFilled(Map<String,Object> map) {
+                ArrayList<String> qrs = new ArrayList<>();
+                System.out.println("in userqrs");
+                System.out.println(map.keySet());
+                for(String hash: map.keySet()){
+                    ArrayList<String> users = (ArrayList<String>) map.get(hash);
+                    for(String user: users) {
+                        System.out.println(user);
+                        if (user.equals(username)) {
+                            qrs.add(hash);
+                        }
+                    }
                 }
+                listener.onUserQrsFilled(qrs);
             }
-        }
-        return qrs;
+
+            @Override
+            public void onError(Exception taskException) {
+                // Handle error
+            }
+        });
     }
 
     // Player Info database
@@ -158,8 +180,7 @@ public class DataHandler {
     }
 
     // Function to get a specific player info
-    // Will throw error if player doesnt exist
-    // TODO: handle error part
+    // Will return null if player doesnt exist
 
     /**
      * This function returns all the data that is stored about a user
@@ -170,31 +191,33 @@ public class DataHandler {
      *  If it returns null that means the player doesnt exist, this can be used to check if
      *  the player exists or not.
      */
-    public Map<String,Object> getPlayer(String username){
+    public void getPlayer(String username, OnGetPlayerListener listener){
         // Collection reference
         CollectionReference cr = db.collection("player");
 
         //Get the data of the specific player
-        final Map<String, Object>[] data = new Map[]{new HashMap<>()};
+
 
         DocumentReference dr = cr.document(username);
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
+                    Map<String, Object> data = new HashMap<>();
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        data[0] = doc.getData();
+                        data = doc.getData();
                     }
                     else{
-                        data[0] = null;
+                        data = null;
                     }
+                    listener.getPlayerListener(data);
+                }
+                else{
+                    listener.getPlayerListener(null);
                 }
             }
         });
-
-        // Return the hashmap
-        return data[0];
     }
 
     // Function to update the pts
@@ -296,7 +319,7 @@ public class DataHandler {
      * @return
      *  The position of the user on the leaderboard
      */
-    public long getPtsL(String username){
+    public void getPtsL(String username, OnGetPtsLListener listener){
         // Collection Reference
         CollectionReference cr = db.collection("player");
 
@@ -304,21 +327,25 @@ public class DataHandler {
         DocumentReference dr = cr.document(username);
 
         // Get the ptsL and store it
-        final long[] ptsL = {0};
+
 
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
+                    long ptsL = 0;
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        ptsL[0] = (long) doc.getData().get("ptsL");
+                        ptsL = (long) doc.getData().get("ptsL");
                     }
+                    listener.getPtsLListener(ptsL);
+                }
+                else {
+                    // if the task is unsuccessful
+                    listener.getPtsLListener(-1);
                 }
             }
         });
-
-        return ptsL[0];
     }
 
     /**
@@ -326,9 +353,7 @@ public class DataHandler {
      * @return
      *  It returns an arraylist with the usernames of the users which represents the leaderboard
      */
-    public ArrayList<String> getPtsLeaderBoard(){
-        // Hashmap to return
-        ArrayList<String> leaderboard = new ArrayList<>();
+    public void getPtsLeaderBoard(OnGetPtsLeaderBoardListener listener){
 
         // Collection reference
         CollectionReference cr = db.collection("player");
@@ -337,14 +362,17 @@ public class DataHandler {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
+                    ArrayList<String> leaderboard = new ArrayList<>();
                     for(QueryDocumentSnapshot doc: task.getResult()){
                         leaderboard.add(doc.getId());
                     }
+                    listener.getPtsLeaderBoardListener(leaderboard);
+                }
+                else {
+                    listener.getPtsLeaderBoardListener(null);
                 }
             }
         });
-
-        return leaderboard;
     }
 
 
@@ -381,7 +409,7 @@ public class DataHandler {
      * @return
      *  The position of the user on the leaderboard
      */
-    public long getQrL(String username){
+    public void getQrL(String username, OnGetQrLListener listener){
         // Collection Reference
         CollectionReference cr = db.collection("player");
 
@@ -389,21 +417,25 @@ public class DataHandler {
         DocumentReference dr = cr.document(username);
 
         // Get the ptsL and store it
-        final long[] qrL = {0};
+
 
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
+                    long qrL = 0;
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        qrL[0] = (long) doc.getData().get("qrL");
+                        qrL = (long) doc.getData().get("qrL");
                     }
+                    listener.getQrLListener(qrL);
+                }
+                else {
+                    // if there is error
+                    listener.getQrLListener(-1);
                 }
             }
         });
-
-        return qrL[0];
     }
 
     /**
@@ -411,9 +443,7 @@ public class DataHandler {
      * @return
      *  It returns an arraylist with the usernames of the users which represents the leaderboard
      */
-    public ArrayList<String> getQrLeaderBoard(){
-        // Hashmap to return
-        ArrayList<String> leaderboard = new ArrayList<>();
+    public void getQrLeaderBoard(OnGetQrLeaderBoardListener listener){
 
         // Collection reference
         CollectionReference cr = db.collection("player");
@@ -422,14 +452,18 @@ public class DataHandler {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
+                    ArrayList<String> leaderboard = new ArrayList<>();
                     for(QueryDocumentSnapshot doc: task.getResult()){
                         leaderboard.add(doc.getId());
                     }
+                    listener.getQrLeaderBoardListener(leaderboard);
+                }
+                else{
+                    // if error
+                    listener.getQrLeaderBoardListener(null);
                 }
             }
         });
-
-        return leaderboard;
     }
 
 
@@ -467,7 +501,7 @@ public class DataHandler {
      * @return
      *  The position of the user on the leaderboard
      */
-    public long getUniqueL(String username){
+    public void getUniqueL(String username, OnGetUniqueLListener listener){
         // Collection Reference
         CollectionReference cr = db.collection("player");
 
@@ -475,21 +509,23 @@ public class DataHandler {
         DocumentReference dr = cr.document(username);
 
         // Get the ptsL and store it
-        final long[] qrL = {0};
-
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
+                    long qrL = 0;
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        qrL[0] = (long) doc.getData().get("uniqueL");
+                        qrL = (long) doc.getData().get("uniqueL");
                     }
+                    listener.getUniqueLListener(qrL);
+                }
+                else{
+                    //If there is error
+                    listener.getUniqueLListener(-1);
                 }
             }
         });
-
-        return qrL[0];
     }
 
     /**
@@ -497,9 +533,7 @@ public class DataHandler {
      * @return
      *  It returns an arraylist with the usernames of the users which represents the leaderboard
      */
-    public ArrayList<String> getUniqueLeaderBoard(){
-        // Hashmap to return
-        ArrayList<String> leaderboard = new ArrayList<>();
+    public void getUniqueLeaderBoard(OnGetUniqueLeaderBoardListener listener){
 
         // Collection reference
         CollectionReference cr = db.collection("player");
@@ -508,14 +542,18 @@ public class DataHandler {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
+                    ArrayList<String> leaderboard = new ArrayList<>();
                     for(QueryDocumentSnapshot doc: task.getResult()){
                         leaderboard.add(doc.getId());
                     }
+                    listener.getUniqueLeaderBoardListener(leaderboard);
+                }
+                else{
+                    // Error
+                    listener.getUniqueLeaderBoardListener(null);
                 }
             }
         });
-
-        return leaderboard;
     }
 
     /**
@@ -647,20 +685,39 @@ public class DataHandler {
 
     // Method to download the image
     // The method returns null if the image doesnt exist
-    public Bitmap downloadImage(String hash){
+    public File downloadImage(String hash){
         StorageReference storageReference = storage.getReference();
         StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
-        final byte[][] data = new byte[1][1];
-        final long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                // Data for "images/island.jpg" is returns, use this as needed
-                data[0] = bytes.clone();
-            }
-        });
+//        byte[] data = new byte[1];
+//        long ONE_MEGABYTE = 1024 * 1024;
+//        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//                // Data for "images/island.jpg" is returns, use this as needed
+//                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                // TODO: store the images to local stor.age
+//            }
+//        });
+//
+//        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+//        return bitmap;
 
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data[0], 0, data[0].length);
-        return bitmap;
+        // https://firebase.google.com/docs/storage/android/download-files
+        
+        File localFile = null;
+        try {
+            localFile = File.createTempFile(hash, ".jpg");;
+            imageRef.getFile(localFile);
+            System.out.println("ref: "+ imageRef);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("path: "+ localFile);
+        System.out.println("before return localfile");
+        System.out.println("path: "+ localFile.getAbsolutePath());
+        System.out.println("before return localfile path");
+        return localFile;
     }
 }

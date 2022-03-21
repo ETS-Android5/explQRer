@@ -6,6 +6,8 @@ import static com.example.explqrer.R.id.image;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,12 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
@@ -36,13 +43,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     public GalleryAdapter(Context context, ArrayList<GalleryListItem> galleryList) {
         this.galleryList = galleryList;
         this.context = context;
+        System.out.println("in adapter");
     }
 
     /**
      *sets up the ViewHolder for the recycler View
      * @param viewGroup
      *    where the viewHolder will be grouped
-     * @param i
+     * @param viewGroup object and int i
      * @return ViewHolder with the defined view parameters
      */
     @NonNull
@@ -56,16 +64,16 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
      *
      * @param viewHolder
      *      The ViewHolder to hold the
+     * @param viewHolder
+     *       What holds the images in the layout
      * @param i
-     *      The number of items per row
+     *      The index of the view
+     *
      */
     @Override
     public void onBindViewHolder(GalleryAdapter.ViewHolder viewHolder, int i) {
         viewHolder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        Bitmap b = BitmapFactory.decodeResource(context.getResources(), R.drawable.nature1);
-        viewHolder.image.setImageBitmap(b);
-
-        //viewHolder.image.setImageBitmap(galleryList.get(i).getImage());
+        viewHolder.image.setImageBitmap(galleryList.get(i).getImage());
     }
 
     /**
