@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -236,21 +237,23 @@ public class DataHandler {
 
         //Get the data of the specific player
 
-
         DocumentReference dr = cr.document(username);
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
-                    Map<String, Object> data = new HashMap<>();
+                    Gson gson = new Gson();
+                    PlayerProfile playerProfile;
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        data = doc.getData();
+//                        data = doc.getData().get("json");
+                        String json = (String) doc.getData().get("json");
+                        playerProfile = gson.fromJson(json, PlayerProfile.class)
                     }
                     else{
-                        data = null;
+                        playerProfile = null;
                     }
-                    listener.getPlayerListener(data);
+                    listener.getPlayerListener(playerProfile);
                 }
                 else{
                     listener.getPlayerListener(null);
