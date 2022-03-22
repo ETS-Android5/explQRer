@@ -50,27 +50,20 @@ public class DataHandler {
         storage = FirebaseStorage.getInstance();
     }
 
-    /*
-     * # of QRs scanned leaderboard
-     * pts leaderboard
-     * Highest Unique QRs scanned leader board
-     * Player info database
-     * QR code database
-     */
-
-    // QR code database
 
     /**
-     * Method to add the user to the QRcode when a user scans it
+     * Method to add the user and location of the qr code to the
+     * qrbase database when a user scans it
      * @param code
-     *  This is the hash of the QRcode
-     * @param username
-     *  This is the username of the user that has scanned the QRcode
+     *  This is the Gamecode object of the QRcode
+     * @param playerProfile
+     *  This is the Player profile object of the player
      */
-    public void addQR(GameCode code, String username, PlayerProfile playerProfile){
+    public void addQR(GameCode code, PlayerProfile playerProfile){
         // Check if it exists if it does add username or add qr and username
 
         String hash = code.getSha256hex();
+        String username = playerProfile.getName();
         // Connect to collection
         CollectionReference cr = db.collection("qrbase");
 
@@ -103,10 +96,7 @@ public class DataHandler {
                 }
             }
         });
-        // No need to upload photos anymore
-//        if (code.getPhoto() != null) {
-//            uploadImage(code, username);
-//        }
+
         // Update the points
         updatePts(username,code.getScore());
         updateScanned(username,1);
@@ -124,11 +114,8 @@ public class DataHandler {
 
     }
 
-    // Function to get all the qr codes
-
     /**
      * Method to get all the qr hashes and the users that scanned that qr code
-     *
      */
     @Deprecated
     public void getQR(OnGetQrsListener listener){
@@ -154,8 +141,6 @@ public class DataHandler {
         });
     }
 
-    // Function to get the qrs of a specific user
-
     /**
      * Method to get all the hashes of the QRs scanned by a specific user
      * @param username
@@ -163,6 +148,7 @@ public class DataHandler {
      * @param listener
      *  Contains the arraylist with all the hashes of the QR codes
      */
+    @Deprecated
     //TODO: Sorted lists
     public void userQrs(String username, OnUserQrsListener listener){
         this.getQR(new OnGetQrsListener() {
@@ -190,9 +176,11 @@ public class DataHandler {
         });
     }
 
-    // Player Info database
-
-    // Function to create new player
+    /**
+     * Function to create a new player document in the database
+     * @param playerProfile
+     *  This is the PlayerProfile object that represents the player
+     */
     public void createPlayer(PlayerProfile playerProfile){
         // Collection reference
         CollectionReference cr = db.collection("player");
@@ -211,6 +199,11 @@ public class DataHandler {
         cr.document(playerProfile.getName()).set(data);
     }
 
+    /**
+     * Function to update the json file of the player
+     * @param playerProfile
+     *  This is the PlayerProfile object that represents the player
+     */
     public void updatePlayerJson(PlayerProfile playerProfile){
         // Collection Reference
         CollectionReference cr = db.collection("player");
@@ -222,6 +215,13 @@ public class DataHandler {
         docRef.update("json", gson.toJson(playerProfile);
     }
 
+    /**
+     * Function to update the username of the player
+     * @param oldUsername
+     *  This is a String that contains the old username of the player
+     * @param newPlayerProfile
+     *  This is the new PlayerProfile object that represents the player
+     */
     public void updatePlayerUsername(String oldUsername, PlayerProfile newPlayerProfile){
         // Collection Reference
         CollectionReference cr = db.collection("player");
@@ -250,6 +250,15 @@ public class DataHandler {
 
     }
 
+    /**
+     * Function to get the nearby locations in the given radius(in meters)
+     * @param l
+     *  This is the location around which the nearby locations is found
+     * @param radius
+     *  This is the radius in meters
+     * @param listener
+     *  This is the listener that contains the arraylist of the locations
+     */
     public void getNearByQrs(Location l, float radius, OnGetNearByQrsListener listener){
         // Get all the qrs
         CollectionReference cr = db.collection("qrbase");
@@ -275,7 +284,7 @@ public class DataHandler {
      * This function returns all the data that is stored about a user
      * @param username
      *  This is the username of the user
-     * @return
+     * @param listener
      *  It return a Hashmap of all the data of the user
      *  If it returns null that means the player doesnt exist, this can be used to check if
      *  the player exists or not.
@@ -407,7 +416,7 @@ public class DataHandler {
      * Method to get the position of the user on the points leaderboard
      * @param username
      *  This is the username of the user
-     * @return
+     * @param listener
      *  The position of the user on the leaderboard
      */
     public void getPtsL(String username, OnGetPtsLListener listener){
@@ -441,7 +450,7 @@ public class DataHandler {
 
     /**
      * Method to get the points leader board
-     * @return
+     * @param listener
      *  It returns an arraylist with the usernames of the users which represents the leaderboard
      */
     public void getPtsLeaderBoard(OnGetPtsLeaderBoardListener listener){
@@ -497,7 +506,7 @@ public class DataHandler {
      * Method to get the position of the user on the qr scanned leaderboard
      * @param username
      *  This is the username of the user
-     * @return
+     * @param listener
      *  The position of the user on the leaderboard
      */
     public void getQrL(String username, OnGetQrLListener listener){
@@ -531,7 +540,7 @@ public class DataHandler {
 
     /**
      * Method to get the qr scanned leader board
-     * @return
+     * @param listener
      *  It returns an arraylist with the usernames of the users which represents the leaderboard
      */
     public void getQrLeaderBoard(OnGetQrLeaderBoardListener listener){
@@ -589,7 +598,7 @@ public class DataHandler {
      * Method to get the position of the user on the Unique scanned leaderboard
      * @param username
      *  This is the username of the user
-     * @return
+     * @param listener
      *  The position of the user on the leaderboard
      */
     public void getUniqueL(String username, OnGetUniqueLListener listener){
@@ -621,7 +630,7 @@ public class DataHandler {
 
     /**
      * Method to get the unique scanned leader board
-     * @return
+     * @param listener
      *  It returns an arraylist with the usernames of the users which represents the leaderboard
      */
     public void getUniqueLeaderBoard(OnGetUniqueLeaderBoardListener listener){
@@ -653,7 +662,7 @@ public class DataHandler {
      *  The qr hash
      * @param username
      *  The name of the user
-     * @return
+     * @param listener
      *  It returns true if a given user has scanned the qr code before or false if the
      *  user didn't scanned the qr before
      */
