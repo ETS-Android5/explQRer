@@ -66,7 +66,7 @@ public class EditProfileActivity extends AppCompatActivity {
             DataHandler dh = new DataHandler();
             dh.getPlayer(newUserName, new OnGetPlayerListener() {
                 @Override
-                public void getPlayerListener(Map<String, Object> dataBasePlayer) {
+                public void getPlayerListener(PlayerProfile dataBasePlayer) {
                     if (dataBasePlayer == null) {
                         try {
                             updateSharePreferences(newUserName,newContactEmail);
