@@ -4,8 +4,10 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Environment;
 import android.util.Log;
 
@@ -24,6 +26,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -36,6 +40,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataHandler {
+
+    // Firestore Objects
     final private FirebaseFirestore db;
     final private FirebaseStorage storage;
 
@@ -44,27 +50,20 @@ public class DataHandler {
         storage = FirebaseStorage.getInstance();
     }
 
-    /*
-     * # of QRs scanned leaderboard
-     * pts leaderboard
-     * Highest Unique QRs scanned leader board
-     * Player info database
-     * QR code database
-     */
-
-    // QR code database
 
     /**
-     * Method to add the user to the QRcode when a user scans it
+     * Method to add the user and location of the qr code to the
+     * qrbase database when a user scans it
      * @param code
-     *  This is the hash of the QRcode
-     * @param username
-     *  This is the username of the user that has scanned the QRcode
+     *  This is the Gamecode object of the QRcode
+     * @param playerProfile
+     *  This is the Player profile object of the player
      */
-    public void addQR(GameCode code, String username){
+    public void addQR(GameCode code, PlayerProfile playerProfile){
         // Check if it exists if it does add username or add qr and username
 
         String hash = code.getSha256hex();
+        String username = playerProfile.getName();
         // Connect to collection
         CollectionReference cr = db.collection("qrbase");
 
@@ -76,30 +75,49 @@ public class DataHandler {
                 // Check if the document exists, add username if it does
                 if(documentSnapshot.exists()){
                     docRef.update("users", FieldValue.arrayUnion(username));
+                    if(documentSnapshot.getData().get("location") == null){
+                        docRef.update("location",code.getLocation().getProvider());
+                    }
                 }
                 else{
                     Map<String,Object> data = new HashMap<>();
                     ArrayList<String> usernames = new ArrayList<>();
                     usernames.add(username);
                     data.put("users", usernames);
+                    if (code.getLocation() == null){
+                        data.put("location",code.getLocation());
+                    }
+                    else{
+                        data.put("location",code.getLocation());
+                    }
                     docRef.set(data)
                             .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
                             .addOnFailureListener(e -> Log.d(TAG, "Failure"));
                 }
             }
         });
-        if (code.getPhoto() != null) {
-            uploadImage(code, username);
-        }
+
+        // Update the points
+        updatePts(username,code.getScore());
+        updateScanned(username,1);
+        hasScannedBefore(code.getSha256hex(), username, new OnHasScannedBeforeListener() {
+            @Override
+            public void hasScannedBeforeListener(boolean flag) {
+                if(!flag){
+                    updateUniqueScanned(username,1);
+                }
+            }
+        });
+
+        //update player json
+        updatePlayerJson(playerProfile);
 
     }
 
-    // Function to get all the qr codes
-
     /**
      * Method to get all the qr hashes and the users that scanned that qr code
-     *
      */
+    @Deprecated
     public void getQR(OnGetQrsListener listener){
         CollectionReference cr = db.collection("qrbase");
 
@@ -123,15 +141,14 @@ public class DataHandler {
         });
     }
 
-    // Function to get the qrs of a specific user
-
     /**
      * Method to get all the hashes of the QRs scanned by a specific user
      * @param username
      *  This is the username of the user
-     * @return
-     *  Arraylist with all the hashes of the QR codes
+     * @param listener
+     *  Contains the arraylist with all the hashes of the QR codes
      */
+    @Deprecated
     //TODO: Sorted lists
     public void userQrs(String username, OnUserQrsListener listener){
         this.getQR(new OnGetQrsListener() {
@@ -159,34 +176,115 @@ public class DataHandler {
         });
     }
 
-    // Player Info database
-
-    // Function to create new player
-    public void createPlayer(String username, String contact){
+    /**
+     * Function to create a new player document in the database
+     * @param playerProfile
+     *  This is the PlayerProfile object that represents the player
+     */
+    public void createPlayer(PlayerProfile playerProfile){
         // Collection reference
         CollectionReference cr = db.collection("player");
 
         // Create hash map and add to document
         Map<String,Object> data = new HashMap<>();
-        data.put("contact",contact);
+        data.put("contact",playerProfile.getContact());
         data.put("pts",0);
         data.put("scanned",0);
         data.put("uniqueScanned",0);
         data.put("ptsL",-1);
         data.put("qrL",-1);
         data.put("uniqueL", -1);
-
-        cr.document(username).set(data);
+        Gson gson = new Gson();
+        data.put("json", gson.toJson(playerProfile));
+        cr.document(playerProfile.getName()).set(data);
     }
 
-    // Function to get a specific player info
-    // Will return null if player doesnt exist
+    /**
+     * Function to update the json file of the player
+     * @param playerProfile
+     *  This is the PlayerProfile object that represents the player
+     */
+    public void updatePlayerJson(PlayerProfile playerProfile){
+        // Collection Reference
+        CollectionReference cr = db.collection("player");
+
+        // Document reference
+        DocumentReference docRef = cr.document(playerProfile.getName());
+
+        Gson gson = new Gson();
+        docRef.update("json", gson.toJson(playerProfile);
+    }
+
+    /**
+     * Function to update the username of the player
+     * @param oldUsername
+     *  This is a String that contains the old username of the player
+     * @param newPlayerProfile
+     *  This is the new PlayerProfile object that represents the player
+     */
+    public void updatePlayerUsername(String oldUsername, PlayerProfile newPlayerProfile){
+        // Collection Reference
+        CollectionReference cr = db.collection("player");
+
+        // Document reference
+        DocumentReference docRef = cr.document(oldUsername);
+
+        // New document reference
+        DocumentReference newDocRef = cr.document(newPlayerProfile.getName());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        Map<String,Object> data = doc.getData();
+                        newDocRef.set(data);
+                        updatePlayerJson(newPlayerProfile);
+
+                        // Delete old doc
+                        docRef.delete();
+                    }
+                }
+            }
+        });
+
+    }
+
+    /**
+     * Function to get the nearby locations in the given radius(in meters)
+     * @param l
+     *  This is the location around which the nearby locations is found
+     * @param radius
+     *  This is the radius in meters
+     * @param listener
+     *  This is the listener that contains the arraylist of the locations
+     */
+    public void getNearByQrs(Location l, float radius, OnGetNearByQrsListener listener){
+        // Get all the qrs
+        CollectionReference cr = db.collection("qrbase");
+        cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    ArrayList<Location> locations = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        Location temp =(Location) doc.getData().get("location");
+                        if(l.distanceTo(temp)<=radius){
+                            locations.add(temp);
+                        }
+                    }
+                    listener.getNearbyQrs(locations);
+                }
+            }
+        });
+    }
+
 
     /**
      * This function returns all the data that is stored about a user
      * @param username
      *  This is the username of the user
-     * @return
+     * @param listener
      *  It return a Hashmap of all the data of the user
      *  If it returns null that means the player doesnt exist, this can be used to check if
      *  the player exists or not.
@@ -197,21 +295,23 @@ public class DataHandler {
 
         //Get the data of the specific player
 
-
         DocumentReference dr = cr.document(username);
         dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
-                    Map<String, Object> data = new HashMap<>();
+                    Gson gson = new Gson();
+                    PlayerProfile playerProfile;
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        data = doc.getData();
+//                        data = doc.getData().get("json");
+                        String json = (String) doc.getData().get("json");
+                        playerProfile = gson.fromJson(json, PlayerProfile.class)
                     }
                     else{
-                        data = null;
+                        playerProfile = null;
                     }
-                    listener.getPlayerListener(data);
+                    listener.getPlayerListener(playerProfile);
                 }
                 else{
                     listener.getPlayerListener(null);
@@ -316,7 +416,7 @@ public class DataHandler {
      * Method to get the position of the user on the points leaderboard
      * @param username
      *  This is the username of the user
-     * @return
+     * @param listener
      *  The position of the user on the leaderboard
      */
     public void getPtsL(String username, OnGetPtsLListener listener){
@@ -350,7 +450,7 @@ public class DataHandler {
 
     /**
      * Method to get the points leader board
-     * @return
+     * @param listener
      *  It returns an arraylist with the usernames of the users which represents the leaderboard
      */
     public void getPtsLeaderBoard(OnGetPtsLeaderBoardListener listener){
@@ -406,7 +506,7 @@ public class DataHandler {
      * Method to get the position of the user on the qr scanned leaderboard
      * @param username
      *  This is the username of the user
-     * @return
+     * @param listener
      *  The position of the user on the leaderboard
      */
     public void getQrL(String username, OnGetQrLListener listener){
@@ -440,7 +540,7 @@ public class DataHandler {
 
     /**
      * Method to get the qr scanned leader board
-     * @return
+     * @param listener
      *  It returns an arraylist with the usernames of the users which represents the leaderboard
      */
     public void getQrLeaderBoard(OnGetQrLeaderBoardListener listener){
@@ -498,7 +598,7 @@ public class DataHandler {
      * Method to get the position of the user on the Unique scanned leaderboard
      * @param username
      *  This is the username of the user
-     * @return
+     * @param listener
      *  The position of the user on the leaderboard
      */
     public void getUniqueL(String username, OnGetUniqueLListener listener){
@@ -530,7 +630,7 @@ public class DataHandler {
 
     /**
      * Method to get the unique scanned leader board
-     * @return
+     * @param listener
      *  It returns an arraylist with the usernames of the users which represents the leaderboard
      */
     public void getUniqueLeaderBoard(OnGetUniqueLeaderBoardListener listener){
@@ -562,11 +662,11 @@ public class DataHandler {
      *  The qr hash
      * @param username
      *  The name of the user
-     * @return
+     * @param listener
      *  It returns true if a given user has scanned the qr code before or false if the
      *  user didn't scanned the qr before
      */
-    public Boolean hasScannedBefore(String hash, String username){
+    public void hasScannedBefore(String hash, String username, OnHasScannedBeforeListener listener){
         // Connect to collection
         CollectionReference cr = db.collection("qrbase");
 
@@ -574,24 +674,26 @@ public class DataHandler {
         DocumentReference docRef = cr.document(hash);
 
         // Set the flag to false by default
-        final boolean[] flag = {false};
+
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                boolean flag = false;
                 if(task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
                         ArrayList<String> usernames = (ArrayList<String>) doc.getData().get("users");
                         for(String user: usernames){
-                            if(user.equals(username)){
-                                flag[0] = true;
+                            if (user.equals(username)) {
+                                flag = true;
+                                break;
                             }
                         }
                     }
                 }
+                listener.hasScannedBeforeListener(flag);
             }
         });
-        return  flag[0];
     }
 
     /**
@@ -601,6 +703,7 @@ public class DataHandler {
      * @return
      *  Returns true if the qr code is being scanned for the first time else returns false
      */
+    @Deprecated
     public Boolean firstScan(String hash){
         // Connect to collection
         CollectionReference cr = db.collection("qrbase");
@@ -625,6 +728,7 @@ public class DataHandler {
     }
 
     // Image upload
+    @Deprecated
     public void uploadImage(GameCode code, String username){
         // Connect to collection
         CollectionReference collectionReference = db.collection("images");
@@ -656,6 +760,7 @@ public class DataHandler {
     }
 
     // Method to get the point of a specific hash
+    @Deprecated
     public long hashPts(String hash){
         // TODO: REMOVE
         // Connect to collection
@@ -685,22 +790,10 @@ public class DataHandler {
 
     // Method to download the image
     // The method returns null if the image doesnt exist
+    @Deprecated
     public File downloadImage(String hash){
         StorageReference storageReference = storage.getReference();
         StorageReference imageRef = storageReference.child("images/"+hash+".jpg");
-//        byte[] data = new byte[1];
-//        long ONE_MEGABYTE = 1024 * 1024;
-//        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                // Data for "images/island.jpg" is returns, use this as needed
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                // TODO: store the images to local stor.age
-//            }
-//        });
-//
-//        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-//        return bitmap;
 
         // https://firebase.google.com/docs/storage/android/download-files
         
