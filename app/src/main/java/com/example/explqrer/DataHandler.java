@@ -158,8 +158,8 @@ public class DataHandler {
      * Method to get all the hashes of the QRs scanned by a specific user
      * @param username
      *  This is the username of the user
-     * @return
-     *  Arraylist with all the hashes of the QR codes
+     * @param listener
+     *  Contains the arraylist with all the hashes of the QR codes
      */
     //TODO: Sorted lists
     public void userQrs(String username, OnUserQrsListener listener){
@@ -219,8 +219,6 @@ public class DataHandler {
         Gson gson = new Gson();
         docRef.update("json", gson.toJson(playerProfile);
     }
-    // Function to get a specific player info
-    // Will return null if player doesnt exist
 
     public void updatePlayerUsername(String oldUsername, PlayerProfile newPlayerProfile){
         // Collection Reference
