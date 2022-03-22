@@ -7,6 +7,7 @@ import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Environment;
 import android.util.Log;
 
@@ -94,7 +95,7 @@ public class DataHandler {
                         data.put("location",code.getLocation());
                     }
                     else{
-                        data.put("location",code.getLocation().getProvider());
+                        data.put("location",code.getLocation());
                     }
                     docRef.set(data)
                             .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
@@ -129,6 +130,7 @@ public class DataHandler {
      * Method to get all the qr hashes and the users that scanned that qr code
      *
      */
+    @Deprecated
     public void getQR(OnGetQrsListener listener){
         CollectionReference cr = db.collection("qrbase");
 
@@ -229,7 +231,6 @@ public class DataHandler {
 
         // New document reference
         DocumentReference newDocRef = cr.document(newPlayerProfile.getName());
-
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -239,15 +240,36 @@ public class DataHandler {
                         Map<String,Object> data = doc.getData();
                         newDocRef.set(data);
                         updatePlayerJson(newPlayerProfile);
+
+                        // Delete old doc
+                        docRef.delete();
                     }
                 }
             }
         });
 
-        // Delete old doc
-        docRef.delete();
-
     }
+
+    public void getNearByQrs(Location l, float radius, OnGetNearByQrsListener listener){
+        // Get all the qrs
+        CollectionReference cr = db.collection("qrbase");
+        cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    ArrayList<Location> locations = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        Location temp =(Location) doc.getData().get("location");
+                        if(l.distanceTo(temp)<=radius){
+                            locations.add(temp);
+                        }
+                    }
+                    listener.getNearbyQrs(locations);
+                }
+            }
+        });
+    }
+
 
     /**
      * This function returns all the data that is stored about a user
