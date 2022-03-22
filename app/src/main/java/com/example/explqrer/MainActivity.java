@@ -65,12 +65,6 @@ public class MainActivity extends AppCompatActivity
 
 
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-        loadData();
-        requestPermissionsIfNecessary(new String[] {
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.CAMERA
-        });
 
         dataHandler = new DataHandler();
         dataHandler.createPlayer(player.getName(), player.getName() + "@gmail.com");
@@ -82,7 +76,13 @@ public class MainActivity extends AppCompatActivity
         usernameText = findViewById(R.id.username_text);
         highestText = findViewById(R.id.highest_qr_display_main);
         lowestText = findViewById(R.id.lowest_qr_display_main);
-        updateStrings();
+        loadData();
+        saveData();
+        requestPermissionsIfNecessary(new String[] {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.CAMERA
+        });
 
         scannerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity
             // Random 6 digit number
             player = new PlayerProfile(String.format(Locale.US,"%06d",
                     (int) Math.floor(Math.random() * 1000000)), "");
-            saveData();
         }
     }
     private void saveData() {
@@ -120,6 +119,7 @@ public class MainActivity extends AppCompatActivity
         String json = gson.toJson(player);
         editor.putString(SHARED_PREFS_PLAYER_KEY, json);
         editor.apply();
+        updateStrings();
     }
     // end reference
 
@@ -240,7 +240,6 @@ public class MainActivity extends AppCompatActivity
         dataHandler.updatePts(player.getName(),code.getScore());
         player.addCode(code);
         saveData();
-        updateStrings();
     }
 
     /**

@@ -33,6 +33,7 @@ import com.google.mlkit.vision.common.InputImage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -46,7 +47,8 @@ import java.util.concurrent.Executors;
  */
 
 public class ScanningPageActivity extends AppCompatActivity
-        implements IsPlayerQrFragment.IsPlayerQrFragmentListener {
+        implements IsPlayerQrFragment.IsPlayerQrFragmentListener, OnGetPlayerListener {
+
     enum RETURNS {SCAN, SEE_PROFILE, LOG_IN}
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private final int REQUEST_IMAGE_CAPTURE = 1;
@@ -140,26 +142,6 @@ public class ScanningPageActivity extends AppCompatActivity
         processCameraProvider.bindToLifecycle(this, cameraSelector, preview,imageCapture, imageAnalysis);
     }
 
-    @Override
-    public void processDecision(RETURNS value) {
-        switch (value) {
-            case SCAN:
-                if (!playerProfile.hasCode(rawValue)) {
-                    Intent intent = new Intent();
-                    intent.putExtra("Code", rawValue);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-                break;
-            case LOG_IN:
-                Toast.makeText(this, "Log In", Toast.LENGTH_SHORT).show();
-                break;
-            case SEE_PROFILE:
-                Toast.makeText(this, "See Profile", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
     public class MyImageAnalyzer implements ImageAnalysis.Analyzer{
         TextView textView;
         public MyImageAnalyzer(TextView textView){
@@ -228,6 +210,35 @@ public class ScanningPageActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void processDecision(RETURNS value) {
+        switch (value) {
+            case SCAN:
+                if (!playerProfile.hasCode(rawValue)) {
+                    Intent intent = new Intent();
+                    intent.putExtra("Code", rawValue);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+                break;
+            case LOG_IN:
+                Toast.makeText(this, "Log In", Toast.LENGTH_SHORT).show();
+                dataHandler.getPlayer(rawValue.substring(10), this);
+                break;
+            case SEE_PROFILE:
+                Toast.makeText(this, "See Profile", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    @Override
+    public void getPlayerListener(Map<String, Object> player) {
+        Intent intent = new Intent();
+        intent.putExtra("Player", player);
+        setResult(2, intent);
+        finish();
+    }
+
     /**
      * requestPermission result
      * If add permission not add successfully, show the text
@@ -240,7 +251,7 @@ public class ScanningPageActivity extends AppCompatActivity
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode== REQUEST_PERMISSIONS_REQUEST_CODE &&grantResults.length>0){
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE && grantResults.length>0){
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
               Toast.makeText(ScanningPageActivity.this,"Permission denied",
                       Toast.LENGTH_LONG).show();
