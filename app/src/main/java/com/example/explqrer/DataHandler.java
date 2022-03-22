@@ -222,6 +222,35 @@ public class DataHandler {
     // Function to get a specific player info
     // Will return null if player doesnt exist
 
+    public void updatePlayerUsername(String oldUsername, PlayerProfile newPlayerProfile){
+        // Collection Reference
+        CollectionReference cr = db.collection("player");
+
+        // Document reference
+        DocumentReference docRef = cr.document(oldUsername);
+
+        // New document reference
+        DocumentReference newDocRef = cr.document(newPlayerProfile.getName());
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        Map<String,Object> data = doc.getData();
+                        newDocRef.set(data);
+                        updatePlayerJson(newPlayerProfile);
+                    }
+                }
+            }
+        });
+
+        // Delete old doc
+        docRef.delete();
+
+    }
+
     /**
      * This function returns all the data that is stored about a user
      * @param username
