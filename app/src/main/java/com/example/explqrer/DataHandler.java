@@ -212,7 +212,7 @@ public class DataHandler {
         DocumentReference docRef = cr.document(playerProfile.getName());
 
         Gson gson = new Gson();
-        docRef.update("json", gson.toJson(playerProfile);
+        docRef.update("json", gson.toJson(playerProfile));
     }
 
     /**
@@ -306,7 +306,7 @@ public class DataHandler {
                     if(doc.exists()){
 //                        data = doc.getData().get("json");
                         String json = (String) doc.getData().get("json");
-                        playerProfile = gson.fromJson(json, PlayerProfile.class)
+                        playerProfile = gson.fromJson(json, PlayerProfile.class);
                     }
                     else{
                         playerProfile = null;
