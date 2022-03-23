@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.leaderboard_nav:
-                Toast.makeText(this, "Leaderboard not yet available.", Toast.LENGTH_SHORT).show();
-                // TODO: add leaderboard activity
+                Intent leaderboardIntent = new Intent(this, ScannedRank.class);
+                startActivity(leaderboardIntent);
                 return true;
 
         }

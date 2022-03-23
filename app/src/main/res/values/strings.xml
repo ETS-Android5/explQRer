@@ -18,4 +18,37 @@
     <string name="banner">Banner</string>
     <string name="already_scanned">Already Scanned!</string>
     <string name="preview">Preview</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="player_rank_txt">
+        <item>1st</item>
+        <item>2nd</item>
+        <item>3rd</item>
+        <item>4th</item>
+        <item>5th</item>
+        <item>6th</item>
+        <item>7th</item>
+        <item>8th</item>
+        <item>9th</item>
+        <item>10th</item>
+        <item>11th</item>
+        <item>12th</item>
+    </string-array>
+
+    <string-array name="player_name_txt">
+        <item>Edmonton</item>
+        <item>Calgary</item>
+        <item>Toronto</item>
+        <item>Vancouver</item>
+        <item>Jasper</item>
+        <item>Banff</item>
+        <item>Bangalore</item>
+        <item>Delhi</item>
+        <item>Mumbai</item>
+        <item>Tokyo</item>
+        <item>Amsterdam</item>
+        <item>Berlin</item>
+    </string-array>
+
 </resources>
