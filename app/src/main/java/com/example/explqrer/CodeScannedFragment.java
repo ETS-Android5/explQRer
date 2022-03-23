@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -29,6 +30,7 @@ public class CodeScannedFragment extends DialogFragment {
     private SwitchCompat locationToggle;
     private Button takePictureButton;
     private ImageView pictureTaken;
+    private TextView rawText;
 
 
     public interface CodeScannerFragmentListener {
@@ -65,8 +67,14 @@ public class CodeScannedFragment extends DialogFragment {
         locationToggle = view.findViewById(R.id.code_scanned_record_location);
         takePictureButton = view.findViewById(R.id.code_scanned_take_picture);
         pictureTaken = view.findViewById(R.id.code_scanned_image_taken);
+        rawText = view.findViewById(R.id.scanned_raw_value_text);
 
         String barcode = (String) getArguments().get("Code");
+        if (barcode.length() > 35) {
+            rawText.setText("Contents: " + barcode.substring(0,34)+ "...");
+        } else {
+            rawText.setText("Contents: " + barcode);
+        }
         String username = (String) getArguments().get("Name");
         GameCode code = new GameCode(barcode, username, null,null);
 

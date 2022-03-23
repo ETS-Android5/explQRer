@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.ByteArrayOutputStream;
@@ -76,7 +77,8 @@ public class DataHandler {
                 if(documentSnapshot.exists()){
                     docRef.update("users", FieldValue.arrayUnion(username));
                     if(documentSnapshot.getData().get("location") == null){
-                        docRef.update("location",code.getLocation().getProvider());
+                        double[] location = {code.getLocation().getLatitude(), code.getLocation().getLongitude()};
+                        docRef.update("location",location);
                     }
                 }
                 else{
@@ -88,7 +90,8 @@ public class DataHandler {
                         data.put("location",code.getLocation());
                     }
                     else{
-                        data.put("location",code.getLocation());
+                        double[] location = {code.getLocation().getLatitude(), code.getLocation().getLongitude()};
+                        data.put("location",location);
                     }
                     docRef.set(data)
                             .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
@@ -187,14 +190,14 @@ public class DataHandler {
 
         // Create hash map and add to document
         Map<String,Object> data = new HashMap<>();
-        data.put("contact",playerProfile.getContact());
+        data.put("contact", playerProfile.getContact());
         data.put("pts",0);
         data.put("scanned",0);
         data.put("uniqueScanned",0);
         data.put("ptsL",-1);
         data.put("qrL",-1);
         data.put("uniqueL", -1);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         data.put("json", gson.toJson(playerProfile));
         cr.document(playerProfile.getName()).set(data);
     }
@@ -211,7 +214,7 @@ public class DataHandler {
         // Document reference
         DocumentReference docRef = cr.document(playerProfile.getName());
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         docRef.update("json", gson.toJson(playerProfile));
     }
 
@@ -268,7 +271,10 @@ public class DataHandler {
                 if(task.isSuccessful()) {
                     ArrayList<Location> locations = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        Location temp =(Location) doc.getData().get("location");
+                        double[] location =(double[]) doc.getData().get("location");
+                        Location temp = new Location(l);
+                        temp.setLatitude(location[0]);
+                        temp.setLatitude(location[1]);
                         if(l.distanceTo(temp)<=radius){
                             locations.add(temp);
                         }
