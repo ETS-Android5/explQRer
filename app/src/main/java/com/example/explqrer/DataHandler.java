@@ -76,9 +76,9 @@ public class DataHandler {
                 // Check if the document exists, add username if it does
                 if(documentSnapshot.exists()){
                     docRef.update("users", FieldValue.arrayUnion(username));
-                    if(documentSnapshot.getData().get("location") == null){
-                        docRef.update("location",code.getLocation().getProvider());
-                    }
+//                    if(documentSnapshot.getData().get("location") == null){
+//                        docRef.update("location",code.getLocation().getProvider());
+//                    }
                 }
                 else{
                     Map<String,Object> data = new HashMap<>();
@@ -89,7 +89,8 @@ public class DataHandler {
                         data.put("location",code.getLocation());
                     }
                     else{
-                        data.put("location",code.getLocation());
+                        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+                        data.put("location",gson.toJson(code.getLocation()));
                     }
                     docRef.set(data)
                             .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
@@ -269,7 +270,8 @@ public class DataHandler {
                 if(task.isSuccessful()) {
                     ArrayList<Location> locations = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        Location temp =(Location) doc.getData().get("location");
+                        Gson gson = new Gson();
+                        Location temp = gson.fromJson(doc.getData().get("location").toString(), Location.class);
                         if(l.distanceTo(temp)<=radius){
                             locations.add(temp);
                         }

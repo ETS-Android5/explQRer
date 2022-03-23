@@ -1,16 +1,16 @@
 package com.example.explqrer;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -19,29 +19,22 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
-import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.geojson.Point;
 import com.mapbox.maps.CameraOptions;
-import com.mapbox.maps.FreeCameraOptions;
 import com.mapbox.maps.MapView;
-import com.mapbox.maps.MapboxMap;
 import com.mapbox.maps.Style;
-import com.mapbox.maps.plugin.LocationPuck;
 import com.mapbox.maps.plugin.LocationPuck2D;
 import com.mapbox.maps.plugin.Plugin;
+import com.mapbox.maps.plugin.annotation.AnnotationConfig;
+import com.mapbox.maps.plugin.annotation.AnnotationPluginImpl;
+import com.mapbox.maps.plugin.annotation.AnnotationType;
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager;
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions;
 import com.mapbox.maps.plugin.locationcomponent.LocationComponentPluginImpl;
-import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener;
-import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener;
-import com.mapbox.maps.plugin.locationcomponent.generated.LocationComponentSettings;
-import com.mapbox.maps.plugin.viewport.ViewportPlugin;
-import com.mapbox.maps.plugin.viewport.ViewportPluginImpl;
-import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
-import kotlin.jvm.internal.FunctionImpl;
+import java.util.ArrayList;
 
-public class MapActivity extends AppCompatActivity {
+public class MapActivity extends AppCompatActivity implements OnGetNearByQrsListener {
 
     private MapView mapView;
 
@@ -64,14 +57,8 @@ public class MapActivity extends AppCompatActivity {
         LocationComponentPluginImpl locationComponentPlugin = mapView.getPlugin(Plugin.MAPBOX_LOCATION_COMPONENT_PLUGIN_ID);
         locationComponentPlugin.setEnabled(true);
         locationComponentPlugin.setLocationPuck(new LocationPuck2D());
-        locationComponentPlugin.addOnIndicatorPositionChangedListener(new OnIndicatorPositionChangedListener() {
-            @Override
-            public void onIndicatorPositionChanged(@NonNull Point point) {
-                mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point).build());
-            }
-        });
-
-
+        locationComponentPlugin.addOnIndicatorPositionChangedListener(point ->
+                mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point).build()));
 
 
         locationRequest = LocationRequest.create();
@@ -115,14 +102,33 @@ public class MapActivity extends AppCompatActivity {
 //                    updateLocation(new Point);
                     longitude = location.getLongitude();
                     latitude = location.getLatitude();
+                    refreshNearby(latitude,longitude);
                 }
             }
         }, getMainLooper());
-
     }
 
+    private void refreshNearby(double latitude, double longitude) {
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        new DataHandler().getNearByQrs(location, 1000, this);
+    }
 
     private void updateLocation(double longitude, double latitude) {
     }
 
+    @Override
+    public void getNearbyQrs(ArrayList<Location> locations) {
+        AnnotationPluginImpl annotationPlugin = mapView.getPlugin(Plugin.MAPBOX_ANNOTATION_PLUGIN_ID);
+        PointAnnotationManager pointAnnotationManager = (PointAnnotationManager)
+                annotationPlugin.createAnnotationManager(mapView, AnnotationType.PointAnnotation, new AnnotationConfig());
+        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.red_marker);
+
+        for (Location location: locations) {
+            PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withPoint(
+                    Point.fromLngLat(location.getLongitude(), location.getLatitude())).withIconImage(image);
+            pointAnnotationManager.create(pointAnnotationOptions);
+        }
+    }
 }
