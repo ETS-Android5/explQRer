@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity
      * @param code
      */
     private void addQR(GameCode code) {
-        dataHandler.addQR(code, player.getName());
+        dataHandler.addQR(code, player);
         dataHandler.updatePts(player.getName(),code.getScore());
         player.addCode(code);
         saveData();
