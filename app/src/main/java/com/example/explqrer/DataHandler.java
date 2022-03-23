@@ -76,9 +76,10 @@ public class DataHandler {
                 // Check if the document exists, add username if it does
                 if(documentSnapshot.exists()){
                     docRef.update("users", FieldValue.arrayUnion(username));
-//                    if(documentSnapshot.getData().get("location") == null){
-//                        docRef.update("location",code.getLocation().getProvider());
-//                    }
+                    if(documentSnapshot.getData().get("location") == null){
+                        double[] location = {code.getLocation().getLatitude(), code.getLocation().getLongitude()};
+                        docRef.update("location",location);
+                    }
                 }
                 else{
                     Map<String,Object> data = new HashMap<>();
@@ -89,8 +90,8 @@ public class DataHandler {
                         data.put("location",code.getLocation());
                     }
                     else{
-                        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
-                        data.put("location",gson.toJson(code.getLocation()));
+                        double[] location = {code.getLocation().getLatitude(), code.getLocation().getLongitude()};
+                        data.put("location",location);
                     }
                     docRef.set(data)
                             .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
@@ -270,8 +271,10 @@ public class DataHandler {
                 if(task.isSuccessful()) {
                     ArrayList<Location> locations = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        Gson gson = new Gson();
-                        Location temp = gson.fromJson(doc.getData().get("location").toString(), Location.class);
+                        double[] location =(double[]) doc.getData().get("location");
+                        Location temp = new Location(l);
+                        temp.setLatitude(location[0]);
+                        temp.setLatitude(location[1]);
                         if(l.distanceTo(temp)<=radius){
                             locations.add(temp);
                         }
