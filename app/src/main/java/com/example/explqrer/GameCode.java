@@ -79,6 +79,9 @@ public class GameCode implements Serializable {
         if (repeats > 0) {
             ret += Integer.parseInt(String.valueOf(prevChar), 16);
         }
+        if (ret == 0) {
+            ret = 1;
+        }
         return ret;
     }
 
