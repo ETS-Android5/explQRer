@@ -4,12 +4,17 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.Locale;
 import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -21,6 +26,10 @@ public class EditProfileActivity extends AppCompatActivity {
 
     EditText userName, userContact;
     private PlayerProfile player;
+    // Shared Preferences
+    private SharedPreferences sharedPreferences;
+    // DATA
+    private static final String SHARED_PREFS_PLAYER_KEY = "Player";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +42,6 @@ public class EditProfileActivity extends AppCompatActivity {
         viewInitializations();
     }
 
-    private void setSupportActionBar(Toolbar toolbar) {
-    }
-
     void viewInitializations() {
         userName = findViewById(R.id.username_text);
         userContact = findViewById(R.id.contact_text);
@@ -44,7 +50,7 @@ public class EditProfileActivity extends AppCompatActivity {
     // Checking if the input in form is valid
     boolean validateInput() {
         if (userName.getText().toString().equals("")) {
-            userName.setError("Please Enter Username");
+            userName.setError("Please Enter Username With Only Letters and Numbers Cannot be Empty");
             return false;
         }
         if (userContact.getText().toString().equals("")) {
@@ -68,13 +74,13 @@ public class EditProfileActivity extends AppCompatActivity {
                 @Override
                 public void getPlayerListener(PlayerProfile dataBasePlayer) {
                     if (dataBasePlayer == null) {
-                        try {
-                            updateSharePreferences(newUserName,newContactEmail);
-                        } catch (Exception e) {
-                            Toast.makeText(EditProfileActivity.this, newUserName+ " is taken, please try another username", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                        System.out.println("update");
+                        updatePlayerInfo(newUserName,newContactEmail);
 
+                    }else{
+                        System.out.println("toast");
+                        Toast.makeText(EditProfileActivity.this, newUserName+ " is taken, please try another username", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -82,8 +88,22 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    public void updateSharePreferences(String newUserName, String newContactEmail){
+    public void updatePlayerInfo(String newUserName, String newContactEmail){
+        System.out.println("in update");
         player.setName(newUserName);
         player.setContact(newContactEmail);
+        saveData();
     }
+
+    private void saveData() {
+        System.out.println("in save data in edit profile");
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+        String json = gson.toJson(player);
+        editor.putString(SHARED_PREFS_PLAYER_KEY, json);
+        System.out.println("before apply");
+        editor.apply();
+
+    }
+
 }
