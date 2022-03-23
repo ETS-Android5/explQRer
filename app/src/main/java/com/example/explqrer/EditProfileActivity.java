@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.Toolbar;
+
+import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -17,11 +20,15 @@ public class EditProfileActivity extends AppCompatActivity {
      */
 
     EditText userName, userContact;
+    private PlayerProfile player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        // get the player from main activity
+        player = MainActivity.getPlayer();
 
         viewInitializations();
     }
@@ -41,29 +48,45 @@ public class EditProfileActivity extends AppCompatActivity {
             return false;
         }
         if (userContact.getText().toString().equals("")) {
-            userContact.setError("Please Enter Contact");
+            userContact.setError("Please Enter Email");
             return false;
         }
 
         return true;
     }
 
-//    public void performEditProfile(View v) {
-//        if (validateInput()) {
-//
-//            // Input is valid, send data to the server
-//
-//            String user_name = userName.getText().toString();
-//            String user_contact = userContact.getText().toString();
-//
-//            DataHandler dh = new DataHandler();
-//            if (dh.getPlayer(user_name) == null)
-//                try {
-//                    dh.createPlayer(user_name, user_contact);
-//                } catch (Exception e) {
-//                    System.out.println("Warning: This username is taken");
-//                }
-//        }
-//        super.finish();
-//    }
+    public void performEditProfile(View v) {
+        if (validateInput()) {
+
+            // Input is valid, send data to the server
+
+            String newUserName = userName.getText().toString();
+            String newContactEmail = userContact.getText().toString();
+
+            DataHandler dh = new DataHandler();
+            dh.getPlayer(newUserName, new OnGetPlayerListener() {
+                @Override
+                public void getPlayerListener(PlayerProfile dataBasePlayer) {
+                    if (dataBasePlayer == null) {
+                        try {
+                            updateSharePreferences(newUserName,newContactEmail);
+                        } catch (Exception e) {
+                            System.out.println("Warning: This username is taken");
+                            Toast.makeText(EditProfileActivity.this, newUserName+ " is taken, please try another username", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }
+            });
+
+            super.finish();
+        }
+    }
+
+    public void updateSharePreferences(String newUserName, String newContactEmail){
+        System.out.println(player.getName());
+        player.setName(newUserName);
+        player.setContact(newContactEmail);
+        System.out.println(player.getName());
+    }
 }

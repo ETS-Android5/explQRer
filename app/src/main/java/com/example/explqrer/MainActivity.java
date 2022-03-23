@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
 
         dataHandler = new DataHandler();
-        dataHandler.createPlayer(player.getName(), player.getName() + "@gmail.com");
+        dataHandler.createPlayer(player);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);

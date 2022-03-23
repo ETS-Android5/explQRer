@@ -1,5 +1,6 @@
 package com.example.explqrer;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +17,9 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,10 +27,10 @@ import java.util.TimerTask;
 /**
  * all the methods to create the User Profile
  */
-public class UserProfileActivity extends AppCompatActivity{
+public class UserProfileActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener{
 
     private static final String[] paths = {"Select to delete QR", "Scan to sign-in", "Edit Profile"};
-
+    private BottomNavigationView bottomNavigationView;
     private PlayerProfile player;
 
     @Override
@@ -48,6 +52,9 @@ public class UserProfileActivity extends AppCompatActivity{
 
         // Referencing and Initializing the button
         ImageButton button = (ImageButton) findViewById(R.id.settings);
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation_profile);
+        bottomNavigationView.setOnItemSelectedListener((NavigationBarView.OnItemSelectedListener) this);
 
         // Setting onClick behavior to the button
         button.setOnClickListener(new View.OnClickListener() {
@@ -83,10 +90,51 @@ public class UserProfileActivity extends AppCompatActivity{
                 popupMenu.show();
             }
         });
+
         this.populateBanner(player.getName()); //calls populateBanner to put points and scans in in banner recycler view
         this.populateGallery(player); //calls populateGallery to put images in the gallery recycler view and provides name of player as parameter
-
     }
+
+
+    /**
+     * Called when a navigation item is selected
+     * @param item the selected item
+     * @return True if the selection was processed successfully
+     */
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.map_nav:
+                Toast.makeText(this, "Map not yet available.", Toast.LENGTH_SHORT).show();
+                // TODO: add map activity
+                return true;
+
+            case R.id.profile_qr_nav:
+                // goes to UserProfile activity
+                Intent profileIntent = new Intent(this, ProfileQr.class);
+                startActivity(profileIntent);
+
+                return true;
+
+            case R.id.scan_nav:
+                Intent scanningIntent= new Intent(this, ScanningPageActivity.class);
+                startActivity(scanningIntent);
+                return true;
+
+            case R.id.search_nav:
+                Toast.makeText(this, "Search not yet available.", Toast.LENGTH_SHORT).show();
+                // TODO: add search activity
+                return true;
+
+            case R.id.leaderboard_nav:
+                Toast.makeText(this, "Leaderboard not yet available.", Toast.LENGTH_SHORT).show();
+                // TODO: add leaderboard activity
+                return true;
+
+        }
+        return false;
+    }
+
     /**
      * populates the Banner with the total points and the total scanned
      * @param playerName
@@ -161,6 +209,7 @@ public class UserProfileActivity extends AppCompatActivity{
         ArrayList<GalleryListItem> listOfImages = GalleryList.updateGallery(player);
 
         GalleryAdapter galleryListAdapter = new GalleryAdapter(getApplicationContext(),listOfImages);
+        System.out.println("before adapter");
         galleryRecyclerView.setAdapter(galleryListAdapter);
     }
 }
