@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -29,11 +30,25 @@ public class PointsRank extends AppCompatActivity implements NavigationBarView.O
 
         RecyclerView recyclerView = findViewById(R.id.PR_recyclerView);
 
-        setUpScannedRankLeaderboard();
-
-        RecyclerViewAdapterLeaderBoard adapter = new RecyclerViewAdapterLeaderBoard(this, scannedRankLeaderboards);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Context context = this;
+        DataHandler dh = new DataHandler();
+        dh.getPtsLeaderBoard(new OnGetPtsLeaderBoardListener() {
+            @Override
+            public void getPtsLeaderBoardListener(ArrayList<String> leaderboard) {
+                ArrayList<ScannedRankLeaderboard> scannedRankLeaderboards = new ArrayList<>();
+                int rank = 1;
+                System.out.println(leaderboard.toArray());
+                for(String name : leaderboard){
+                    System.out.println(name);
+                    String rankString = rank++ +"";
+                    scannedRankLeaderboards.add(new ScannedRankLeaderboard(rankString, name));
+                }
+//                setUpScannedRankLeaderboard(leaderboard);
+                RecyclerViewAdapterLeaderBoard adapter = new RecyclerViewAdapterLeaderBoard(context, scannedRankLeaderboards);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            }
+        });
     }
 
     private void setUpScannedRankLeaderboard(){

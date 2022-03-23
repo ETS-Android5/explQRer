@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class ScannedRank extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
-    ArrayList<ScannedRankLeaderboard> scannedRankLeaderboards = new ArrayList<>();
+
 
 
     @Override
@@ -42,6 +42,7 @@ public class ScannedRank extends AppCompatActivity implements NavigationBarView.
         dh.getQrLeaderBoard(new OnGetQrLeaderBoardListener() {
             @Override
             public void getQrLeaderBoardListener(ArrayList<String> leaderboard) {
+                ArrayList<ScannedRankLeaderboard> scannedRankLeaderboards = new ArrayList<>();
                 int rank = 1;
                 System.out.println(leaderboard.toArray());
                 for(String name : leaderboard){
