@@ -77,7 +77,7 @@ public class DataHandler {
                 if(documentSnapshot.exists()){
                     docRef.update("users", FieldValue.arrayUnion(username));
                     if(documentSnapshot.getData().get("location") == null){
-                        double location = new double[]{code.getLocation().getLatitude(), code.getLocation().getLongitude()}
+                        double[] location = {code.getLocation().getLatitude(), code.getLocation().getLongitude()};
                         docRef.update("location",location);
                     }
                 }
@@ -90,7 +90,7 @@ public class DataHandler {
                         data.put("location",code.getLocation());
                     }
                     else{
-                        double location = new double[]{code.getLocation().getLatitude(), code.getLocation().getLongitude()}
+                        double[] location = {code.getLocation().getLatitude(), code.getLocation().getLongitude()};
                         data.put("location",location);
                     }
                     docRef.set(data)
@@ -271,7 +271,10 @@ public class DataHandler {
                 if(task.isSuccessful()) {
                     ArrayList<Location> locations = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        Location temp =(Location) doc.getData().get("location");
+                        double[] location =(double[]) doc.getData().get("location");
+                        Location temp = new Location(l);
+                        temp.setLatitude(location[0]);
+                        temp.setLatitude(location[1]);
                         if(l.distanceTo(temp)<=radius){
                             locations.add(temp);
                         }
