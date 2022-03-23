@@ -3,6 +3,7 @@ package com.example.explqrer;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // get the player from main activity
         player = MainActivity.getPlayer();
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
 
         viewInitializations();
     }
@@ -69,13 +71,13 @@ public class EditProfileActivity extends AppCompatActivity {
             String newUserName = userName.getText().toString();
             String newContactEmail = userContact.getText().toString();
 
-            DataHandler dh = new DataHandler();
-            dh.getPlayer(newUserName, new OnGetPlayerListener() {
+            DataHandler dataHandler = new DataHandler();
+            dataHandler.getPlayer(newUserName, new OnGetPlayerListener() {
                 @Override
                 public void getPlayerListener(PlayerProfile dataBasePlayer) {
                     if (dataBasePlayer == null) {
                         System.out.println("update");
-                        updatePlayerInfo(newUserName,newContactEmail);
+                        updatePlayerInfo(newUserName,newContactEmail,dataHandler);
 
                     }else{
                         System.out.println("toast");
@@ -88,10 +90,12 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    public void updatePlayerInfo(String newUserName, String newContactEmail){
+    public void updatePlayerInfo(String newUserName, String newContactEmail, DataHandler dataHandler){
         System.out.println("in update");
+        String oldUserName = player.getName();
         player.setName(newUserName);
         player.setContact(newContactEmail);
+        dataHandler.updatePlayerUsername(oldUserName,player);
         saveData();
     }
 
