@@ -18,4 +18,8 @@
     <string name="banner">Banner</string>
     <string name="already_scanned">Already Scanned!</string>
     <string name="preview">Preview</string>
+    <string name="log_in">Log In</string>
+    <string name="view_profile">View Profile</string>
+    <string name="scan_for_points">Scan for Points</string>
+    <string name="player_qr_alert_description_text">This is a player code. You can scan it for points, see the user\'s profile, or log in to this account.</string>
 </resources>
