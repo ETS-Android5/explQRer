@@ -65,16 +65,7 @@ public class MainActivity extends AppCompatActivity
 
 
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-        loadData();
-        requestPermissionsIfNecessary(new String[] {
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.CAMERA
-        });
 
-        dataHandler = new DataHandler();
-        player.setContact(player.getName() + "@gmail.com");
-        dataHandler.createPlayer(player);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
@@ -83,19 +74,38 @@ public class MainActivity extends AppCompatActivity
         usernameText = findViewById(R.id.username_text);
         highestText = findViewById(R.id.highest_qr_display_main);
         lowestText = findViewById(R.id.lowest_qr_display_main);
-        updateStrings();
+        loadData();
+        saveData();
+        requestPermissionsIfNecessary(new String[] {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.CAMERA
+        });
 
         scannerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() != RESULT_OK) { return; }
+                    if (result.getResultCode() != RESULT_OK && result.getResultCode() != 2) { return; }
                     assert result.getData() != null;
-                    CodeScannedFragment codeScannedFragment = CodeScannedFragment
-                            .newInstance((String) result.getData().getStringExtra("Code"),
-                                    player.getName());
-                    codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
+                    if (result.getResultCode() == RESULT_OK) {
+                        CodeScannedFragment codeScannedFragment = CodeScannedFragment
+                                .newInstance(result.getData().getStringExtra("Code"),
+                                        player.getName());
+                        codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
+                    } else {
+                        Gson gson = new Gson();
+                        setPlayer(gson.fromJson(result.getData().getStringExtra("Player"),
+                                PlayerProfile.class));
+                    }
 
                 });
+        dataHandler = new DataHandler();
+        dataHandler.createPlayer(player);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        saveData();
     }
 
     /* Adapted from:
@@ -112,7 +122,6 @@ public class MainActivity extends AppCompatActivity
             // Random 6 digit number
             player = new PlayerProfile(String.format(Locale.US,"%06d",
                     (int) Math.floor(Math.random() * 1000000)), "");
-            saveData();
         }
     }
     private void saveData() {
@@ -121,6 +130,7 @@ public class MainActivity extends AppCompatActivity
         String json = gson.toJson(player);
         editor.putString(SHARED_PREFS_PLAYER_KEY, json);
         editor.apply();
+        updateStrings();
     }
     // end reference
 
@@ -174,19 +184,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Get the username
-     * @return username as String
+     * Get the player
+     * @return
      */
     public static PlayerProfile getPlayer() {
         return player;
     }
 
     /**
-     * Update the username
-     * @param player the new username
+     * Update the player
+     * @param player the new player
      */
     public void setPlayer(PlayerProfile player) {
-        this.player = player;
+        MainActivity.player = player;
         saveData();
     }
 
@@ -214,31 +224,33 @@ public class MainActivity extends AppCompatActivity
             }).addOnSuccessListener(this, location -> {
                 if (location != null) {
                     code.setLocation(location);
-                    dataHandler.addQR(code, player);
-                    dataHandler.updatePts(player.getName(),code.getScore());
-                    player.addCode(code);
-                    saveData();
-                    updateStrings();
+                } else {
+                    Toast.makeText(MainActivity.this, "Location not recorded",
+                            Toast.LENGTH_SHORT).show();
                 }
+                addQR(code);
             }).addOnFailureListener(e -> {
                 Toast.makeText(MainActivity.this, "Location not recorded",
                 Toast.LENGTH_SHORT).show();
-                dataHandler.addQR(code, player);
-                dataHandler.updatePts(player.getName(),code.getScore());
-                player.addCode(code);
-                saveData();
-                updateStrings();
+                addQR(code);
 
             });
 
         }
         else {
-            dataHandler.addQR(code, player);
-            dataHandler.updatePts(player.getName(),code.getScore());
-            player.addCode(code);
-            saveData();
-            updateStrings();
+            addQR(code);
         }
+    }
+
+    /**
+     * Call all the methods needed to add a code to the database and update the UI
+     * @param code
+     */
+    private void addQR(GameCode code) {
+        dataHandler.addQR(code, player);
+        dataHandler.updatePts(player.getName(),code.getScore());
+        player.addCode(code);
+        saveData();
     }
 
     /**

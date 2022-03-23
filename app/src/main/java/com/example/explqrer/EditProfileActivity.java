@@ -66,12 +66,11 @@ public class EditProfileActivity extends AppCompatActivity {
             DataHandler dh = new DataHandler();
             dh.getPlayer(newUserName, new OnGetPlayerListener() {
                 @Override
-                public void getPlayerListener(Map<String, Object> dataBasePlayer) {
+                public void getPlayerListener(PlayerProfile dataBasePlayer) {
                     if (dataBasePlayer == null) {
                         try {
                             updateSharePreferences(newUserName,newContactEmail);
                         } catch (Exception e) {
-                            System.out.println("Warning: This username is taken");
                             Toast.makeText(EditProfileActivity.this, newUserName+ " is taken, please try another username", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -84,9 +83,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     public void updateSharePreferences(String newUserName, String newContactEmail){
-        System.out.println(player.getName());
         player.setName(newUserName);
         player.setContact(newContactEmail);
-        System.out.println(player.getName());
     }
 }

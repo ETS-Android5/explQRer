@@ -32,7 +32,7 @@ public class ProfileQr extends AppCompatActivity {
 
 
         try {
-            Bitmap bitmap = TextToImageEncode("Player QR:" + player.getName());
+            Bitmap bitmap = TextToImageEncode("Player QR: " + player.getName());
             System.out.println(player.getName());
 
             imageView.setImageBitmap(bitmap);
