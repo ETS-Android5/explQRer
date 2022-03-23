@@ -77,7 +77,8 @@ public class DataHandler {
                 if(documentSnapshot.exists()){
                     docRef.update("users", FieldValue.arrayUnion(username));
                     if(documentSnapshot.getData().get("location") == null){
-                        docRef.update("location",code.getLocation().getProvider());
+                        double location = new double[]{code.getLocation().getLatitude(), code.getLocation().getLongitude()}
+                        docRef.update("location",location);
                     }
                 }
                 else{
@@ -89,7 +90,8 @@ public class DataHandler {
                         data.put("location",code.getLocation());
                     }
                     else{
-                        data.put("location",code.getLocation());
+                        double location = new double[]{code.getLocation().getLatitude(), code.getLocation().getLongitude()}
+                        data.put("location",location);
                     }
                     docRef.set(data)
                             .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
