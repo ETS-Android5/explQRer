@@ -10,6 +10,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -56,7 +57,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
 
         LocationComponentPluginImpl locationComponentPlugin = mapView.getPlugin(Plugin.MAPBOX_LOCATION_COMPONENT_PLUGIN_ID);
         locationComponentPlugin.setEnabled(true);
-        locationComponentPlugin.setLocationPuck(new LocationPuck2D());
+        locationComponentPlugin.setLocationPuck(new LocationPuck2D(AppCompatResources.getDrawable(MapActivity.this, R.drawable.blue_circle)));
         locationComponentPlugin.addOnIndicatorPositionChangedListener(point ->
                 mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point).build()));
 
