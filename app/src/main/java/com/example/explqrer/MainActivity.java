@@ -84,12 +84,18 @@ public class MainActivity extends AppCompatActivity
 
         scannerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() != RESULT_OK) { return; }
+                    if (result.getResultCode() != RESULT_OK && result.getResultCode() != 2) { return; }
                     assert result.getData() != null;
-                    CodeScannedFragment codeScannedFragment = CodeScannedFragment
-                            .newInstance(result.getData().getStringExtra("Code"),
-                                    player.getName());
-                    codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
+                    if (result.getResultCode() == RESULT_OK) {
+                        CodeScannedFragment codeScannedFragment = CodeScannedFragment
+                                .newInstance(result.getData().getStringExtra("Code"),
+                                        player.getName());
+                        codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
+                    } else {
+                        Gson gson = new Gson();
+                        setPlayer(gson.fromJson(result.getData().getStringExtra("Player"),
+                                PlayerProfile.class));
+                    }
 
                 });
         dataHandler = new DataHandler();
@@ -178,16 +184,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Get the username
-     * @return username as String
+     * Get the player
+     * @return
      */
     public static PlayerProfile getPlayer() {
         return player;
     }
 
     /**
-     * Update the username
-     * @param player the new username
+     * Update the player
+     * @param player the new player
      */
     public void setPlayer(PlayerProfile player) {
         MainActivity.player = player;

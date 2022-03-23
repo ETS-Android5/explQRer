@@ -224,8 +224,7 @@ public class ScanningPageActivity extends AppCompatActivity
                 }
                 break;
             case LOG_IN:
-                Toast.makeText(this, "Log In", Toast.LENGTH_SHORT).show();
-                dataHandler.getPlayer(rawValue.substring(10), this);
+                dataHandler.getPlayer(rawValue.substring(11), this);
                 break;
             case SEE_PROFILE:
                 Toast.makeText(this, "See Profile", Toast.LENGTH_SHORT).show();
