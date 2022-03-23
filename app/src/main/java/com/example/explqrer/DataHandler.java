@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.ByteArrayOutputStream;
@@ -187,14 +188,14 @@ public class DataHandler {
 
         // Create hash map and add to document
         Map<String,Object> data = new HashMap<>();
-        data.put("contact",playerProfile.getContact());
+        data.put("contact", playerProfile.getContact());
         data.put("pts",0);
         data.put("scanned",0);
         data.put("uniqueScanned",0);
         data.put("ptsL",-1);
         data.put("qrL",-1);
         data.put("uniqueL", -1);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         data.put("json", gson.toJson(playerProfile));
         cr.document(playerProfile.getName()).set(data);
     }
@@ -211,7 +212,7 @@ public class DataHandler {
         // Document reference
         DocumentReference docRef = cr.document(playerProfile.getName());
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         docRef.update("json", gson.toJson(playerProfile));
     }
 

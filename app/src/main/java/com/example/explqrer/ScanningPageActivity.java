@@ -25,6 +25,8 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
@@ -232,12 +234,15 @@ public class ScanningPageActivity extends AppCompatActivity
     }
 
     @Override
-    public void getPlayerListener(Map<String, Object> player) {
+    public void getPlayerListener(PlayerProfile player) {
         Intent intent = new Intent();
-        intent.putExtra("Player", player);
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+        String json = gson.toJson(player);
+        intent.putExtra("Player", json);
         setResult(2, intent);
         finish();
     }
+
 
     /**
      * requestPermission result

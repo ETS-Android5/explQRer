@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity
 
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
 
-        dataHandler = new DataHandler();
-        dataHandler.createPlayer(player);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
@@ -94,7 +92,14 @@ public class MainActivity extends AppCompatActivity
                     codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
 
                 });
+        dataHandler = new DataHandler();
+        dataHandler.createPlayer(player);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        saveData();
     }
 
     /* Adapted from:
