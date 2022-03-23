@@ -73,7 +73,8 @@ public class MainActivity extends AppCompatActivity
         });
 
         dataHandler = new DataHandler();
-        dataHandler.createPlayer(player.getName(), player.getName() + "@gmail.com");
+        player.setContact(player.getName() + "@gmail.com");
+        dataHandler.createPlayer(player);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity
             }).addOnSuccessListener(this, location -> {
                 if (location != null) {
                     code.setLocation(location);
-                    dataHandler.addQR(code, player.getName());
+                    dataHandler.addQR(code, player);
                     dataHandler.updatePts(player.getName(),code.getScore());
                     player.addCode(code);
                     saveData();
@@ -222,7 +223,7 @@ public class MainActivity extends AppCompatActivity
             }).addOnFailureListener(e -> {
                 Toast.makeText(MainActivity.this, "Location not recorded",
                 Toast.LENGTH_SHORT).show();
-                dataHandler.addQR(code, player.getName());
+                dataHandler.addQR(code, player);
                 dataHandler.updatePts(player.getName(),code.getScore());
                 player.addCode(code);
                 saveData();
@@ -232,7 +233,7 @@ public class MainActivity extends AppCompatActivity
 
         }
         else {
-            dataHandler.addQR(code, player.getName());
+            dataHandler.addQR(code, player);
             dataHandler.updatePts(player.getName(),code.getScore());
             player.addCode(code);
             saveData();
