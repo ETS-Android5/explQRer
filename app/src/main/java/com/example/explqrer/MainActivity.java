@@ -143,8 +143,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.map_nav:
-                Toast.makeText(this, "Map not yet available.", Toast.LENGTH_SHORT).show();
-                // TODO: add map activity
+                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                startActivity(intent);
                 return true;
 
             case R.id.profile_nav:
