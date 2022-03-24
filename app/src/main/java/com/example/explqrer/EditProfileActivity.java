@@ -27,6 +27,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     EditText userName, userContact;
     private PlayerProfile player;
+
     // Shared Preferences
     private SharedPreferences sharedPreferences;
     // DATA
@@ -49,7 +50,13 @@ public class EditProfileActivity extends AppCompatActivity {
         userContact = findViewById(R.id.contact_text);
     }
 
-    // Checking if the input in form is valid
+    /**
+     * Checking if the input in form is valid
+     * @return true
+     *     When username or email entered is not empty
+     * @return false
+     *     When username or email entered is not an empty space
+     */
     boolean validateInput() {
         if (userName.getText().toString().equals("")) {
             userName.setError("Please Enter Username With Only Letters and Numbers Cannot be Empty");
@@ -63,6 +70,11 @@ public class EditProfileActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * preform actions to update information in the app
+     * @param v
+     *   Takens in a view
+     */
     public void performEditProfile(View v) {
         if (validateInput()) {
 
@@ -72,11 +84,14 @@ public class EditProfileActivity extends AppCompatActivity {
             String newContactEmail = userContact.getText().toString();
 
             DataHandler dataHandler = new DataHandler();
+            //get player with the newUserName inputed from the data base
             dataHandler.getPlayer(newUserName, new OnGetPlayerListener() {
+
                 @Override
                 public void getPlayerListener(PlayerProfile dataBasePlayer) {
                     if (dataBasePlayer == null) {
                         System.out.println("update");
+                        //updates information in the data base and locally in shared preferences
                         updatePlayerInfo(newUserName,newContactEmail,dataHandler);
 
                     }else{
@@ -90,15 +105,28 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * updates the username and email of object player profile
+     * @param newUserName
+     *    takes in a new username
+     * @param newContactEmail
+     *    takes in new contact email
+     * @param dataHandler
+     *    takes in a data handler
+     */
     public void updatePlayerInfo(String newUserName, String newContactEmail, DataHandler dataHandler){
-        System.out.println("in update");
         String oldUserName = player.getName();
         player.setName(newUserName);
         player.setContact(newContactEmail);
+        //call to update the player info in the dataBase
         dataHandler.updatePlayerUsername(oldUserName,player);
+        //call to update the player info in the shared preferences
         saveData();
     }
 
+    /**
+     * saves data to shared preferences
+     */
     private void saveData() {
         System.out.println("in save data in edit profile");
         SharedPreferences.Editor editor = sharedPreferences.edit();
