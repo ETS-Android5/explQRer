@@ -51,14 +51,6 @@ public class UniqueRank extends AppCompatActivity implements NavigationBarView.O
         });
     }
 
-    private void setUpScannedRankLeaderboard(){
-        String[] playerRank = getResources().getStringArray(R.array.player_rank_txt);
-        String[] playerName = getResources().getStringArray(R.array.player_name_txt);
-
-        for (int i = 0; i < playerRank.length; i++){
-            scannedRankLeaderboards.add(new ScannedRankLeaderboard(playerRank[i], playerName[i]));
-        }
-    }
 
     /**
      * Called when a navigation item is selected
