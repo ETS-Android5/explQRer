@@ -326,7 +326,26 @@ public class DataHandler {
         });
     }
 
-    // Function to update the pts
+    public void searchPlayers(String searchText, OnSearchPlayersListener listener){
+        // Collection ref
+        CollectionReference cr = db.collection("player");
+
+        cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    ArrayList<String> players = new ArrayList<>();
+                    for(QueryDocumentSnapshot doc: task.getResult()){
+                        if(doc.getId().contains(searchText)){
+                            players.add(doc.getId());
+                        }
+                    }
+                    listener.searchPlayersListener(players);
+                }
+            }
+        });
+
+    }
 
     /**
      * Method to update the points of a specific player

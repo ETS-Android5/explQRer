@@ -8,7 +8,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/PR_recyclerView"
+        android:id="@+id/user_recyclerview"
         android:layout_width="409dp"
         android:layout_height="560dp"
         android:layout_marginTop="92dp"
@@ -19,13 +19,13 @@
 
 
     <Button
-        android:id="@+id/search_button"
+        android:id="@+id/search_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="28dp"
         android:text="Search"
-        app:layout_constraintBottom_toTopOf="@+id/PR_recyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/user_recyclerview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.316"
         app:layout_constraintStart_toEndOf="@+id/search_bar"
@@ -33,7 +33,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/search_bar"
+        android:id="@+id/search_Bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
