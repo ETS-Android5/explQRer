@@ -42,6 +42,7 @@
         android:inputType="textPersonName"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
+        android:backgroundTint="@color/design_default_color_surface"
         android:hint="Username"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
