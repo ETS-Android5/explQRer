@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MapActivity">
+
+
     <com.mapbox.maps.MapView
         android:id="@+id/map"
         android:layout_width="match_parent"
@@ -13,6 +15,51 @@
         mapbox:mapbox_cameraTargetLat="40.7128"
         mapbox:mapbox_cameraTargetLng="-74.0060"
         mapbox:mapbox_cameraZoom="9.0"
-        />
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4"
+            >
+            <EditText
+                android:id="@+id/search_location"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/search_border"
+                android:layout_weight="3"
+                >
+            </EditText>
+
+            <ImageButton
+                android:id="@+id/search_location_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_weight="0"
+                android:padding="8dp"
+                android:background="@color/transparent"
+                android:src="@drawable/location_search">
+
+            </ImageButton>
+
+
+        </LinearLayout>
+
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/update_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            mapbox:srcCompat="@android:drawable/ic_input_add"
+            android:layout_marginLeft="330dp"
+            android:layout_marginTop="650dp"/>
+    </com.mapbox.maps.MapView>
 
 </LinearLayout>

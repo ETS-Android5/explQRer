@@ -56,6 +56,10 @@ dependencies {
     // for map
     implementation 'com.mapbox.maps:android:10.3.0'
     implementation 'com.mapbox.plugin:maps-viewport:10.4.0-rc.1'
+//    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+//    implementation 'com.google.android.gms:play-services-location:19.0.1'
+
+
     // for scanning
     implementation 'com.google.mlkit:barcode-scanning:17.0.2'
     //implementation 'com.google.mlkit:barcode-scanning:16.0.3'
