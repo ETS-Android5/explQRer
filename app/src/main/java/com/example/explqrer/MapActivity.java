@@ -198,47 +198,47 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             pointAnnotationManager.create(pointAnnotationOptions);
         }
     }
-
-    /**
-     * requestPermission result
-     * If add permission not add successfully, show the text
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode== REQUEST_PERMISSIONS_REQUEST_CODE &&grantResults.length>0){
-            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(MapActivity.this,"Permission denied",
-                        Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    /**
-     * request permission
-     * @param permissions
-     */
-    public void requestPermissionsIfNecessary(String[] permissions) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) !=
-                    PackageManager.PERMISSION_GRANTED) {
-                // Permission is not granted
-                permissionsToRequest.add(permission);
-            }
-        }
-        // more than one permission is not granted
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(this, permissionsToRequest
-                    .toArray(new String[0]),REQUEST_PERMISSIONS_REQUEST_CODE);
-        }  // all are granted
-
-    }
+//
+//    /**
+//     * requestPermission result
+//     * If add permission not add successfully, show the text
+//     * @param requestCode
+//     * @param permissions
+//     * @param grantResults
+//     */
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+//                                           @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        if (requestCode== REQUEST_PERMISSIONS_REQUEST_CODE &&grantResults.length>0){
+//            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+//                Toast.makeText(MapActivity.this,"Permission denied",
+//                        Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    }
+//
+//    /**
+//     * request permission
+//     * @param permissions
+//     */
+//    public void requestPermissionsIfNecessary(String[] permissions) {
+//        ArrayList<String> permissionsToRequest = new ArrayList<>();
+//        for (String permission : permissions) {
+//            if (ContextCompat.checkSelfPermission(this, permission) !=
+//                    PackageManager.PERMISSION_GRANTED) {
+//                // Permission is not granted
+//                permissionsToRequest.add(permission);
+//            }
+//        }
+//        // more than one permission is not granted
+//        if (permissionsToRequest.size() > 0) {
+//            ActivityCompat.requestPermissions(this, permissionsToRequest
+//                    .toArray(new String[0]),REQUEST_PERMISSIONS_REQUEST_CODE);
+//        }  // all are granted
+//
+//    }
 
 
 
