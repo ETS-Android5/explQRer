@@ -160,8 +160,9 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.search_nav:
-                Toast.makeText(this, "Search not yet available.", Toast.LENGTH_SHORT).show();
-                // TODO: add search activity
+                // goes to search activity
+                Intent searchIntent = new Intent(this, SearchActivity.class);
+                startActivity(searchIntent);
                 return true;
 
             case R.id.leaderboard_nav:
