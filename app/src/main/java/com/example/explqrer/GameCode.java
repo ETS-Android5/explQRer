@@ -164,4 +164,14 @@ public class GameCode implements Serializable {
     public int hashCode() {
         return Objects.hash(sha256hex);
     }
+
+    public static class CodeLocation {
+        public String hash;
+        public Location location;
+
+        public CodeLocation(String hash, Location location) {
+            this.hash = hash;
+            this.location = location;
+        }
+    }
 }

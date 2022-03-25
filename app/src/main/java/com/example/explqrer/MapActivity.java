@@ -124,6 +124,8 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         AnnotationPluginImpl annotationPlugin = mapView.getPlugin(Plugin.MAPBOX_ANNOTATION_PLUGIN_ID);
         PointAnnotationManager pointAnnotationManager = (PointAnnotationManager)
                 annotationPlugin.createAnnotationManager(mapView, AnnotationType.PointAnnotation, new AnnotationConfig());
+
+        // Pin icon by Icons8 https://icons8.com/icon/qYund0sKw42x/pin" https://icons8.com"
         Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.red_marker);
 
         for (Location location: locations) {
