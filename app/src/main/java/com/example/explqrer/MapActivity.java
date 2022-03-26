@@ -122,7 +122,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             }
         }).addOnSuccessListener(this, location -> {
             if (location != null) {
-                //Log.d("TAG", "Location = " +location.toString());  location could not use toString()
+                Log.d("TAG", "Location = " +location.toString());
             } else {
                 Log.d("TAG", "Null?");
             }
@@ -149,20 +149,27 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             @Override
             public void onClick(View view) {
                 String searchInputString = locationSearch.getText().toString();
+                Address address1 = null;
 
                 Locale locale = new Locale("","CANADA");
                 Geocoder geocoder = new Geocoder(MapActivity.this,locale);
                 try {
                     // An array of address that user search ( maximum = 10)
-                    searchAddresses= (ArrayList<Address>) geocoder.getFromLocationName(searchInputString,10);
+                    searchAddresses= (ArrayList<Address>) geocoder.getFromLocationName(searchInputString,100);
 
+
+                    if (searchAddresses == null) {  // No search result find
+                        Toast.makeText(MapActivity.this, "No search result find", Toast.LENGTH_SHORT).show();
+                    }else{ // find search result
+                        Toast.makeText(MapActivity.this, "Total "+searchAddresses.size()+" results finded", Toast.LENGTH_SHORT).show();
+                        address1 = searchAddresses.get(0);
+                        Toast.makeText(MapActivity.this, "address is "+ address1.getCountryName() + address1.getLongitude()+address1.getLatitude(), Toast.LENGTH_SHORT).show();
+
+
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
-
-
 
             }
         });
