@@ -1,6 +1,7 @@
 package com.example.explqrer;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,19 +10,18 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -32,19 +32,20 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.api.Endpoint;
-import com.mapbox.android.core.location.LocationEngine;
-import com.mapbox.geojson.Geometry;
 import com.mapbox.geojson.Point;
 import com.mapbox.maps.CameraOptions;
 import com.mapbox.maps.MapView;
 import com.mapbox.maps.Style;
+import com.mapbox.maps.ViewAnnotationAnchor;
 import com.mapbox.maps.ViewAnnotationOptions;
+import com.mapbox.maps.extension.style.layers.properties.generated.IconAnchor;
 import com.mapbox.maps.plugin.LocationPuck2D;
 import com.mapbox.maps.plugin.Plugin;
+import com.mapbox.maps.plugin.annotation.Annotation;
 import com.mapbox.maps.plugin.annotation.AnnotationConfig;
 import com.mapbox.maps.plugin.annotation.AnnotationPluginImpl;
 import com.mapbox.maps.plugin.annotation.AnnotationType;
+import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotation;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions;
@@ -55,7 +56,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MapActivity extends AppCompatActivity implements OnGetNearByQrsListener {
+public class MapActivity extends AppCompatActivity implements OnGetNearByQrsListener,
+        GameCodeFragment.GameCodeFragmentListener {
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
     private MapView mapView;
@@ -66,9 +68,13 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
     private LocationRequest locationRequest;
     private double longitude, latitude;
 
+    ViewAnnotationManager annotationManager;
+    PointAnnotationManager pointAnnotationManager;
+    Bitmap image;
+
     // location update-------------
     private LocationListener locationListener;
-    private ArrayList<Address> searchAddresses = new ArrayList<Address>();
+    private ArrayList<Address> searchAddresses = new ArrayList<>();
 
 
     FusedLocationProviderClient fusedLocationClient;
@@ -92,9 +98,9 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         mapView = findViewById(R.id.map);
         mapView.getMapboxMap().setCamera(new CameraOptions.Builder().zoom(14.0).build());
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS);
-        button  = (FloatingActionButton) findViewById(R.id.update_location);
-        locationSearch = (EditText) findViewById(R.id.search_location);
-        locationSearchButton = (ImageButton) findViewById(R.id.search_location_btn);
+        button  = findViewById(R.id.update_location);
+        locationSearch = findViewById(R.id.search_location);
+        locationSearchButton = findViewById(R.id.search_location_btn);
         Log.d("TAG", "onCreate:  2");
 
 
@@ -103,9 +109,17 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         locationComponentPlugin.setEnabled(true);
         locationComponentPlugin.setLocationPuck(new LocationPuck2D(AppCompatResources.getDrawable(MapActivity.this, R.drawable.blue_circle)));
         locationComponentPlugin.addOnIndicatorPositionChangedListener(point ->
-                mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point).build())
+                mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point).build()));
+        AnnotationPluginImpl annotationPlugin = mapView.getPlugin(Plugin.MAPBOX_ANNOTATION_PLUGIN_ID);
 
-        );
+        annotationManager = mapView.getViewAnnotationManager();
+
+        pointAnnotationManager = (PointAnnotationManager)
+                annotationPlugin.createAnnotationManager(mapView, AnnotationType.PointAnnotation,
+                        new AnnotationConfig());
+        // Pin icon by Icons8 https://icons8.com/icon/qYund0sKw42x/pin" https://icons8.com"
+
+        image = BitmapFactory.decodeResource(getResources(), R.drawable.red_marker);
 
         Log.d("TAG", "onCreate:  3");
 
@@ -129,7 +143,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             }
         }).addOnSuccessListener(this, location -> {
             if (location != null) {
-                Log.d("TAG", "Location = " +location.toString());
+                Log.d("TAG", "Location = " + location);
             } else {
                 Log.d("TAG", "Null?");
             }
@@ -152,33 +166,30 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         }, getMainLooper());
 
         // get address
-        locationSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String searchInputString = locationSearch.getText().toString();
-                Address address1 = null;
+        locationSearchButton.setOnClickListener(view -> {
+            String searchInputString = locationSearch.getText().toString();
+            Address address1 = null;
 
-                Locale locale = new Locale("","CANADA");
-                Geocoder geocoder = new Geocoder(MapActivity.this,locale);
-                try {
-                    // An array of address that user search ( maximum = 10)
-                    searchAddresses= (ArrayList<Address>) geocoder.getFromLocationName(searchInputString,100);
+            Locale locale = new Locale("","CANADA");
+            Geocoder geocoder = new Geocoder(MapActivity.this,locale);
+            try {
+                // An array of address that user search ( maximum = 10)
+                searchAddresses= (ArrayList<Address>) geocoder.getFromLocationName(searchInputString,10);
 
 
-                    if (searchAddresses == null) {  // No search result find
-                        Toast.makeText(MapActivity.this, "No search result find", Toast.LENGTH_SHORT).show();
-                    }else{ // find search result
-                        Toast.makeText(MapActivity.this, "Total "+searchAddresses.size()+" results finded", Toast.LENGTH_SHORT).show();
-                        address1 = searchAddresses.get(0);
-                        Toast.makeText(MapActivity.this, "address is "+ address1.getCountryName() + address1.getLongitude()+address1.getLatitude(), Toast.LENGTH_SHORT).show();
+                if (searchAddresses == null) {  // No search result find
+                    Toast.makeText(MapActivity.this, "No search result find", Toast.LENGTH_SHORT).show();
+                }else{ // find search result
+                    Toast.makeText(MapActivity.this, "Total " + searchAddresses.size() + " results finded", Toast.LENGTH_SHORT).show();
+                    address1 = searchAddresses.get(0);
+                    Toast.makeText(MapActivity.this, "address is "+ address1.getCountryName() + address1.getLongitude()+address1.getLatitude(), Toast.LENGTH_SHORT).show();
 
 
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
         });
 
         // get the center of the map
@@ -197,40 +208,47 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void getNearbyQrs(ArrayList<GameCode.CodeLocation> locations) {
-        AnnotationPluginImpl annotationPlugin = mapView.getPlugin(Plugin.MAPBOX_ANNOTATION_PLUGIN_ID);
-        ViewAnnotationManager annotationManager = mapView.getViewAnnotationManager();
+        pointAnnotationManager.deleteAll();
 
-        PointAnnotationManager pointAnnotationManager = (PointAnnotationManager)
-                annotationPlugin.createAnnotationManager(mapView, AnnotationType.PointAnnotation,
-                        new AnnotationConfig());
-
-        // Pin icon by Icons8 https://icons8.com/icon/qYund0sKw42x/pin" https://icons8.com"
-        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.red_marker);
 
         for (GameCode.CodeLocation location: locations) {
+            Point point = Point.fromLngLat(location.location.getLongitude(), location.location.getLatitude());
 
-            PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withPoint(
-                    Point.fromLngLat(location.location.getLongitude(), location.location.getLatitude()))
-                    .withIconImage(image);
+            PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
+                    .withPoint(point)
+                    .withIconImage(image)
+                    .withIconAnchor(IconAnchor.TOP);
             PointAnnotation pointAnnotation =  pointAnnotationManager.create(pointAnnotationOptions);
 
             ViewAnnotationOptions viewAnnotationOptions = new ViewAnnotationOptions.Builder()
                     .associatedFeatureId(pointAnnotation.getFeatureIdentifier())
-                    .geometry(Point.fromLngLat(location.location.getLongitude(), location.location.getLatitude()))
+                    .geometry(pointAnnotation.getPoint())
+                    .anchor(ViewAnnotationAnchor.TOP)
                     .build();
-            ImageButton button = new ImageButton(MapActivity.this);
-            button.setImageBitmap(image);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d("TAG", "WORKING!");
-                    //TODO: popup for the clicked QR
-                }
+
+            TextView pts = (TextView) annotationManager.addViewAnnotation(R.layout.map_qr, viewAnnotationOptions);
+            pts.setText(GameCode.calculateScore(location.hash) + " pts");
+            pts.setOnClickListener(view -> {
+                Log.d("TAG", "WORKING!");
+
+                GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(location);
+                gameCodeFragment.show(getSupportFragmentManager(), "GAME_CODE");
+                //TODO: popup for the clicked QR
             });
-            annotationManager.addViewAnnotation(button, viewAnnotationOptions);
         }
+    }
+
+    @Override
+    public void openLocation(GameCode.CodeLocation codeLocation) {
+
+    }
+
+    @Override
+    public void openComments(GameCode code) {
+
     }
 //
 //    /**
