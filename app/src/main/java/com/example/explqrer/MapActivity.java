@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,18 +34,22 @@ import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.api.Endpoint;
 import com.mapbox.android.core.location.LocationEngine;
+import com.mapbox.geojson.Geometry;
 import com.mapbox.geojson.Point;
 import com.mapbox.maps.CameraOptions;
 import com.mapbox.maps.MapView;
 import com.mapbox.maps.Style;
+import com.mapbox.maps.ViewAnnotationOptions;
 import com.mapbox.maps.plugin.LocationPuck2D;
 import com.mapbox.maps.plugin.Plugin;
 import com.mapbox.maps.plugin.annotation.AnnotationConfig;
 import com.mapbox.maps.plugin.annotation.AnnotationPluginImpl;
 import com.mapbox.maps.plugin.annotation.AnnotationType;
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotation;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions;
 import com.mapbox.maps.plugin.locationcomponent.LocationComponentPluginImpl;
+import com.mapbox.maps.viewannotation.ViewAnnotationManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -191,18 +198,38 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
     }
 
     @Override
-    public void getNearbyQrs(ArrayList<Location> locations) {
+    public void getNearbyQrs(ArrayList<GameCode.CodeLocation> locations) {
         AnnotationPluginImpl annotationPlugin = mapView.getPlugin(Plugin.MAPBOX_ANNOTATION_PLUGIN_ID);
+        ViewAnnotationManager annotationManager = mapView.getViewAnnotationManager();
+
         PointAnnotationManager pointAnnotationManager = (PointAnnotationManager)
-                annotationPlugin.createAnnotationManager(mapView, AnnotationType.PointAnnotation, new AnnotationConfig());
+                annotationPlugin.createAnnotationManager(mapView, AnnotationType.PointAnnotation,
+                        new AnnotationConfig());
 
         // Pin icon by Icons8 https://icons8.com/icon/qYund0sKw42x/pin" https://icons8.com"
         Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.red_marker);
 
-        for (Location location: locations) {
+        for (GameCode.CodeLocation location: locations) {
+
             PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withPoint(
-                    Point.fromLngLat(location.getLongitude(), location.getLatitude())).withIconImage(image);
-            pointAnnotationManager.create(pointAnnotationOptions);
+                    Point.fromLngLat(location.location.getLongitude(), location.location.getLatitude()))
+                    .withIconImage(image);
+            PointAnnotation pointAnnotation =  pointAnnotationManager.create(pointAnnotationOptions);
+
+            ViewAnnotationOptions viewAnnotationOptions = new ViewAnnotationOptions.Builder()
+                    .associatedFeatureId(pointAnnotation.getFeatureIdentifier())
+                    .geometry(Point.fromLngLat(location.location.getLongitude(), location.location.getLatitude()))
+                    .build();
+            ImageButton button = new ImageButton(MapActivity.this);
+            button.setImageBitmap(image);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("TAG", "WORKING!");
+                    //TODO: popup for the clicked QR
+                }
+            });
+            annotationManager.addViewAnnotation(button, viewAnnotationOptions);
         }
     }
 //

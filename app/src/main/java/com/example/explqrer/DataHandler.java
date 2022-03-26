@@ -269,15 +269,16 @@ public class DataHandler {
         CollectionReference cr = db.collection("qrbase");
         cr.get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                ArrayList<Location> locations = new ArrayList<>();
+                ArrayList<GameCode.CodeLocation> locations = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : task.getResult()) {
-                    List<Double> location =(List<Double>) doc.getData().get("location");
+                    ArrayList<Double> location =(ArrayList<Double>) doc.getData().get("location");
                     Location temp = new Location(l);
                     if (location != null && !location.isEmpty()) {
                         temp.setLatitude(location.get(0));
                         temp.setLongitude(location.get(1));
                         if (l.distanceTo(temp) <= radius) {
-                            locations.add(temp);
+                            GameCode.CodeLocation codeLocation = new GameCode.CodeLocation(doc.getId(), temp);
+                            locations.add(codeLocation);
                         }
                     }
                 }
