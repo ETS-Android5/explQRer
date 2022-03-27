@@ -15,12 +15,7 @@ import androidx.fragment.app.DialogFragment;
 public class GameCodeFragment extends DialogFragment {
     private static final String HASH = "Hash";
     private static final String LOCATION = "Location";
-    GameCodeFragmentListener listener;
 
-    public interface GameCodeFragmentListener {
-        void openLocation(GameCode.CodeLocation codeLocation);
-        void openComments(GameCode code);
-    }
 
     public static GameCodeFragment newInstance(GameCode.CodeLocation codeLocation) {
         Bundle args = new Bundle();
@@ -29,17 +24,6 @@ public class GameCodeFragment extends DialogFragment {
         GameCodeFragment fragment = new GameCodeFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof GameCodeFragmentListener) {
-            listener = (GameCodeFragmentListener) context;
-        } else {
-            throw new RuntimeException(context +
-                    " must implement GameCodeFragmentListener");
-        }
     }
 
     @NonNull
