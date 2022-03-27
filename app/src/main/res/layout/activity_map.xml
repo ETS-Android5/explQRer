@@ -16,22 +16,25 @@
         mapbox:mapbox_cameraTargetLng="-74.0060"
         mapbox:mapbox_cameraZoom="9.0"
         >
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:weightSum="4"
             >
             <EditText
                 android:id="@+id/search_location"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="44dp"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="30dp"
                 android:layout_marginTop="30dp"
                 android:inputType="text"
                 android:maxLines="1"
-                android:hint="search an address"
+                android:cursorVisible="true"
+                android:textColor="#696969"
+                android:textCursorDrawable="@color/black"
+                android:hint="   search an address"
+                android:backgroundTint="@color/white"
                 android:background="@drawable/search_border"
                 android:layout_weight="3"
                 >
@@ -41,16 +44,16 @@
                 android:id="@+id/search_location_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_marginRight="40dp"
                 android:layout_weight="0"
+                android:layout_alignRight="@+id/search_location"
+                android:layout_alignTop="@+id/search_location"
                 android:padding="8dp"
                 android:src="@drawable/location_search">
 
             </ImageButton>
 
 
-        </LinearLayout>
+        </RelativeLayout>
 
 
 
@@ -59,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
-            mapbox:srcCompat="@android:drawable/ic_input_add"
+            app:srcCompat="@drawable/location_marker"
             android:layout_marginLeft="330dp"
             android:layout_marginTop="650dp"/>
     </com.mapbox.maps.MapView>

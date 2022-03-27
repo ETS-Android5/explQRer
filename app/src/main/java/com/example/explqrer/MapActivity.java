@@ -61,7 +61,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
     private MapView mapView;
-    private FloatingActionButton button;
+    private FloatingActionButton buttonGoBack;
     private EditText locationSearch;
     private ImageButton locationSearchButton;
 
@@ -98,11 +98,12 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         mapView = findViewById(R.id.map);
         mapView.getMapboxMap().setCamera(new CameraOptions.Builder().zoom(14.0).build());
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS);
-        button  = findViewById(R.id.update_location);
+        buttonGoBack  = findViewById(R.id.update_location);
         locationSearch = findViewById(R.id.search_location);
         locationSearchButton = findViewById(R.id.search_location_btn);
+        locationSearchButton.setBackgroundResource(0);
+        locationSearch.setSelection(0);
         Log.d("TAG", "onCreate:  2");
-
 
 
         LocationComponentPluginImpl locationComponentPlugin = mapView.getPlugin(Plugin.MAPBOX_LOCATION_COMPONENT_PLUGIN_ID);
@@ -120,8 +121,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         // Pin icon by Icons8 https://icons8.com/icon/qYund0sKw42x/pin" https://icons8.com"
 
         image = BitmapFactory.decodeResource(getResources(), R.drawable.red_marker);
-
-        Log.d("TAG", "onCreate:  3");
 
 
         locationRequest = LocationRequest.create();
@@ -176,23 +175,35 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
                 // An array of address that user search ( maximum = 10)
                 searchAddresses= (ArrayList<Address>) geocoder.getFromLocationName(searchInputString,10);
 
+                if (searchAddresses.size() == 0) {  // No search result find
+                    locationSearch.setText("");
+                    Toast.makeText(MapActivity.this, "No address found", Toast.LENGTH_SHORT).show();
 
-                if (searchAddresses == null) {  // No search result find
-                    Toast.makeText(MapActivity.this, "No search result find", Toast.LENGTH_SHORT).show();
                 }else{ // find search result
-                    Toast.makeText(MapActivity.this, "Total " + searchAddresses.size() + " results finded", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MapActivity.this, "Total " + searchAddresses.size() + " results finded", Toast.LENGTH_SHORT).show();
                     address1 = searchAddresses.get(0);
-                    Toast.makeText(MapActivity.this, "address is "+ address1.getCountryName() + address1.getLongitude()+address1.getLatitude(), Toast.LENGTH_SHORT).show();
 
+                    // get the center of the map
+                    Point point2 = Point.fromLngLat(address1.getLongitude(),address1.getLatitude());
+                    locationComponentPlugin.addOnIndicatorPositionChangedListener(point ->
+                            mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point2).build()));
 
+                    locationSearch.setText("");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        });
+
+        // go back to current location
+        buttonGoBack.setOnClickListener((v) ->{
+            Point point3 = Point.fromLngLat(longitude,latitude);
+            locationComponentPlugin.addOnIndicatorPositionChangedListener(point ->
+                    mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point3).build()));
 
         });
 
-        // get the center of the map
+
 
 
         // click and update the location ( zoom in that location and see the qr code near by)
