@@ -56,8 +56,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MapActivity extends AppCompatActivity implements OnGetNearByQrsListener,
-        GameCodeFragment.GameCodeFragmentListener {
+public class MapActivity extends AppCompatActivity implements OnGetNearByQrsListener {
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
     private MapView mapView;
@@ -252,15 +251,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         }
     }
 
-    @Override
-    public void openLocation(GameCode.CodeLocation codeLocation) {
-
-    }
-
-    @Override
-    public void openComments(GameCode code) {
-
-    }
 //
 //    /**
 //     * requestPermission result
