@@ -30,6 +30,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Point;
 import com.mapbox.maps.CameraOptions;
 import com.mapbox.maps.MapView;
@@ -45,7 +46,10 @@ import com.mapbox.maps.plugin.annotation.AnnotationType;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotation;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions;
+import com.mapbox.maps.plugin.gestures.GesturesPluginImpl;
+import com.mapbox.maps.plugin.gestures.OnMoveListener;
 import com.mapbox.maps.plugin.locationcomponent.LocationComponentPluginImpl;
+import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener;
 import com.mapbox.maps.viewannotation.ViewAnnotationManager;
 
 import java.io.IOException;
@@ -56,17 +60,36 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
     private MapView mapView;
-    private FloatingActionButton buttonGoBack;
+    private FloatingActionButton recenterButton;
     private EditText locationSearch;
     private ImageButton locationSearchButton;
     private Button refreshButton;
 
     private LocationRequest locationRequest;
     private double playerLongitude, playerLatitude;
+    private Bitmap image;
 
+    private GesturesPluginImpl gesturePlugin;
+    private LocationComponentPluginImpl locationComponentPlugin;
     private ViewAnnotationManager annotationManager;
     private PointAnnotationManager pointAnnotationManager;
-    private Bitmap image;
+    private final OnIndicatorPositionChangedListener indicatorPositionChangedListener = new OnIndicatorPositionChangedListener() {
+        @Override
+        public void onIndicatorPositionChanged(@NonNull Point point) {
+            mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point).build());
+        }
+    };
+    private final OnMoveListener onMoveListener = new OnMoveListener() {
+        @Override
+        public void onMoveBegin(@NonNull MoveGestureDetector moveGestureDetector) {
+            locationComponentPlugin.removeOnIndicatorPositionChangedListener(indicatorPositionChangedListener);
+            gesturePlugin.removeOnMoveListener(onMoveListener);
+        }
+        @Override
+        public boolean onMove(@NonNull MoveGestureDetector moveGestureDetector) { return false; }
+        @Override
+        public void onMoveEnd(@NonNull MoveGestureDetector moveGestureDetector) { }
+    };
 
     // location update-------------
     private LocationListener locationListener;
@@ -93,7 +116,11 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         mapView = findViewById(R.id.map);
         mapView.getMapboxMap().setCamera(new CameraOptions.Builder().zoom(14.0).build());
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS);
-        buttonGoBack  = findViewById(R.id.update_location);
+
+
+        gesturePlugin = mapView.getPlugin(Plugin.MAPBOX_GESTURES_PLUGIN_ID);
+
+        recenterButton = findViewById(R.id.recenter_location);
         refreshButton = findViewById(R.id.map_refresh_button);
         locationSearch = findViewById(R.id.search_location);
         locationSearchButton = findViewById(R.id.search_location_btn);
@@ -102,11 +129,10 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         Log.d("TAG", "onCreate:  2");
 
 
-        LocationComponentPluginImpl locationComponentPlugin = mapView.getPlugin(Plugin.MAPBOX_LOCATION_COMPONENT_PLUGIN_ID);
+
+        locationComponentPlugin = mapView.getPlugin(Plugin.MAPBOX_LOCATION_COMPONENT_PLUGIN_ID);
         locationComponentPlugin.setEnabled(true);
         locationComponentPlugin.setLocationPuck(new LocationPuck2D(AppCompatResources.getDrawable(MapActivity.this, R.drawable.blue_circle)));
-        locationComponentPlugin.addOnIndicatorPositionChangedListener(point ->
-                mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point).build()));
         AnnotationPluginImpl annotationPlugin = mapView.getPlugin(Plugin.MAPBOX_ANNOTATION_PLUGIN_ID);
 
         annotationManager = mapView.getViewAnnotationManager();
@@ -136,6 +162,8 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             Point point = Point.fromLngLat(longitude, latitude);
             mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point).build());
         } else {
+            locationComponentPlugin.addOnIndicatorPositionChangedListener(indicatorPositionChangedListener);
+            gesturePlugin.addOnMoveListener(onMoveListener);
             fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
                 @NonNull
                 @Override
@@ -202,10 +230,12 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         });
 
         // go back to current location
-        buttonGoBack.setOnClickListener((v) ->{
+        recenterButton.setOnClickListener((v) ->{
             Point point3 = Point.fromLngLat(playerLongitude, playerLatitude);
             mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point3).build());
             refreshNearby(playerLongitude, playerLatitude);
+            locationComponentPlugin.addOnIndicatorPositionChangedListener(indicatorPositionChangedListener);
+            gesturePlugin.addOnMoveListener(onMoveListener);
 //            locationComponentPlugin.addOnIndicatorPositionChangedListener(point ->
 //                    mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point3).build()));
 
@@ -228,8 +258,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         location.setLatitude(latitude);
         location.setLongitude(longitude);
         new DataHandler().getNearByQrs(location, 1500, this);
-
-
     }
 
     @SuppressLint("SetTextI18n")

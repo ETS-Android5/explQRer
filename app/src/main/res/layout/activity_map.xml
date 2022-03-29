@@ -58,23 +58,32 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_location_btn"
                 android:layout_alignStart="@+id/search_location_btn"
-                android:layout_marginStart="-46dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="-52dp"
+                android:layout_marginTop="11dp"
                 android:text="Refresh" />
+
+            <Button
+                android:id="@+id/nearby_list_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_location"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="12dp"
+                android:text="Nearby List" />
 
 
         </RelativeLayout>
 
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/update_location"
+            android:id="@+id/recenter_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="330dp"
-            android:layout_marginTop="650dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
             android:clickable="true"
-            android:contentDescription="Recenter"
-            app:srcCompat="@drawable/location_marker" />
+            mapbox:srcCompat="@drawable/access_geolocation" />
+
 
     </com.mapbox.maps.MapView>
 
