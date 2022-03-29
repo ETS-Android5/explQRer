@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">explQRer</string>
     <string name="back_button">Back</string>
+    <string name="button">Comments</string>
     <string name="profile_page_nav">Profile</string>
     <string name="map_nav">Map</string>
     <string name="user_profile_qr">User QR</string>
