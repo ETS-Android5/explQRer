@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/scanned_rank"
+        android:icon="@drawable/ic_scanned_qrs"
+        android:title="Scanned" />
+    <item
+        android:id="@+id/points_rank"
+        android:icon="@drawable/ic_points"
+        android:title="Points" />
+    <item
+        android:id="@+id/unique_rank"
+        android:icon="@drawable/ic_unique"
+        android:title="Unique" />
+</menu>

@@ -18,6 +18,8 @@
     <string name="banner">Banner</string>
     <string name="already_scanned">Already Scanned!</string>
     <string name="preview">Preview</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="log_in">Log In</string>
     <string name="view_profile">View Profile</string>
     <string name="scan_for_points">Scan for Points</string>
