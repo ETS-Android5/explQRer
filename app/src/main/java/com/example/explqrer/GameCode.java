@@ -79,6 +79,9 @@ public class GameCode implements Serializable {
         if (repeats > 0) {
             ret += Integer.parseInt(String.valueOf(prevChar), 16);
         }
+        if (ret == 0) {
+            ret = 1;
+        }
         return ret;
     }
 
@@ -160,5 +163,15 @@ public class GameCode implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(sha256hex);
+    }
+
+    public static class CodeLocation {
+        public String hash;
+        public Location location;
+
+        public CodeLocation(String hash, Location location) {
+            this.hash = hash;
+            this.location = location;
+        }
     }
 }

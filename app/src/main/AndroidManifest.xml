@@ -30,6 +30,9 @@
             android:name=".ScannedRank"
             android:exported="false" />
         <activity
+            android:name=".MapActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProfileQr"
             android:parentActivityName=".UserProfileActivity" />
         <activity

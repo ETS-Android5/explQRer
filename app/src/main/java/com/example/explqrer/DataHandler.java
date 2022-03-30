@@ -38,6 +38,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DataHandler {
@@ -77,7 +78,9 @@ public class DataHandler {
                 if(documentSnapshot.exists()){
                     docRef.update("users", FieldValue.arrayUnion(username));
                     if(documentSnapshot.getData().get("location") == null){
-                        double[] location = {code.getLocation().getLatitude(), code.getLocation().getLongitude()};
+                        ArrayList<Double> location = new ArrayList();
+                        location.add(code.getLocation().getLatitude());
+                        location.add(code.getLocation().getLongitude());
                         docRef.update("location",location);
                     }
                 }
@@ -90,7 +93,9 @@ public class DataHandler {
                         data.put("location",code.getLocation());
                     }
                     else{
-                        double[] location = {code.getLocation().getLatitude(), code.getLocation().getLongitude()};
+                        ArrayList<Double> location = new ArrayList();
+                        location.add(code.getLocation().getLatitude());
+                        location.add(code.getLocation().getLongitude());
                         data.put("location",location);
                     }
                     docRef.set(data)
@@ -103,12 +108,9 @@ public class DataHandler {
         // Update the points
         updatePts(username,code.getScore());
         updateScanned(username,1);
-        hasScannedBefore(code.getSha256hex(), username, new OnHasScannedBeforeListener() {
-            @Override
-            public void hasScannedBeforeListener(boolean flag) {
-                if(!flag){
-                    updateUniqueScanned(username,1);
-                }
+        hasScannedBefore(code.getSha256hex(), username, flag -> {
+            if(!flag){
+                updateUniqueScanned(username,1);
             }
         });
 
@@ -265,22 +267,22 @@ public class DataHandler {
     public void getNearByQrs(Location l, float radius, OnGetNearByQrsListener listener){
         // Get all the qrs
         CollectionReference cr = db.collection("qrbase");
-        cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-                    ArrayList<Location> locations = new ArrayList<>();
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        double[] location =(double[]) doc.getData().get("location");
-                        Location temp = new Location(l);
-                        temp.setLatitude(location[0]);
-                        temp.setLatitude(location[1]);
-                        if(l.distanceTo(temp)<=radius){
-                            locations.add(temp);
+        cr.get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                ArrayList<GameCode.CodeLocation> locations = new ArrayList<>();
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    ArrayList<Double> location =(ArrayList<Double>) doc.getData().get("location");
+                    Location temp = new Location(l);
+                    if (location != null && !location.isEmpty()) {
+                        temp.setLatitude(location.get(0));
+                        temp.setLongitude(location.get(1));
+                        if (l.distanceTo(temp) <= radius) {
+                            GameCode.CodeLocation codeLocation = new GameCode.CodeLocation(doc.getId(), temp);
+                            locations.add(codeLocation);
                         }
                     }
-                    listener.getNearbyQrs(locations);
                 }
+                listener.getNearbyQrs(locations);
             }
         });
     }
