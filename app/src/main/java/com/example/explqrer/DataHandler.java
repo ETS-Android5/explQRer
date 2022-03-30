@@ -79,8 +79,10 @@ public class DataHandler {
                     docRef.update("users", FieldValue.arrayUnion(username));
                     if(documentSnapshot.getData().get("location") == null){
                         ArrayList<Double> location = new ArrayList();
-                        location.add(code.getLocation().getLatitude());
-                        location.add(code.getLocation().getLongitude());
+                        if (code.getLocation() != null){
+                            location.add(code.getLocation().getLatitude());
+                            location.add(code.getLocation().getLongitude());
+                        }
                         docRef.update("location",location);
                     }
                 }

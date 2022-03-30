@@ -52,6 +52,13 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
             super(itemView);
              playerRank = itemView.findViewById(R.id.playerRank);
              playerName = itemView.findViewById(R.id.playerName);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    playerName.setText("clicked");
+                }
+            });
         }
     }
 }
