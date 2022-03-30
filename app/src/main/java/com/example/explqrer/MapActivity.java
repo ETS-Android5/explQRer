@@ -82,13 +82,17 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
     private final OnMoveListener onMoveListener = new OnMoveListener() {
         @Override
         public void onMoveBegin(@NonNull MoveGestureDetector moveGestureDetector) {
-            locationComponentPlugin.removeOnIndicatorPositionChangedListener(indicatorPositionChangedListener);
-            gesturePlugin.removeOnMoveListener(onMoveListener);
+            stopFollow();
         }
+
         @Override
-        public boolean onMove(@NonNull MoveGestureDetector moveGestureDetector) { return false; }
+        public boolean onMove(@NonNull MoveGestureDetector moveGestureDetector) {
+            return false;
+        }
+
         @Override
-        public void onMoveEnd(@NonNull MoveGestureDetector moveGestureDetector) { }
+        public void onMoveEnd(@NonNull MoveGestureDetector moveGestureDetector) {
+        }
     };
 
     // location update-------------
@@ -103,7 +107,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         setContentView(R.layout.activity_map);
 
         if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -129,7 +133,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         Log.d("TAG", "onCreate:  2");
 
 
-
         locationComponentPlugin = mapView.getPlugin(Plugin.MAPBOX_LOCATION_COMPONENT_PLUGIN_ID);
         locationComponentPlugin.setEnabled(true);
         locationComponentPlugin.setLocationPuck(new LocationPuck2D(AppCompatResources.getDrawable(MapActivity.this, R.drawable.blue_circle)));
@@ -146,16 +149,16 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
 
 
         locationRequest = LocationRequest.create();
-        locationRequest.setInterval(4000);
-        locationRequest.setFastestInterval(2000);
+        locationRequest.setInterval(10000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         Location codeLocation = null;
 
         try {
             codeLocation = (Location) getIntent().getExtras().get("QR Location");
-        } catch (Exception ignored) { }
-        if ( codeLocation != null) {
+        } catch (Exception ignored) {
+        }
+        if (codeLocation != null) {
             double longitude = codeLocation.getLongitude();
             double latitude = codeLocation.getLatitude();
             refreshNearby(longitude, latitude);
@@ -185,7 +188,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         }
 
 
-
         fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
@@ -203,22 +205,22 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             String searchInputString = locationSearch.getText().toString();
             Address address1 = null;
 
-            Locale locale = new Locale("","CANADA");
-            Geocoder geocoder = new Geocoder(MapActivity.this,locale);
+            Locale locale = new Locale("", "CANADA");
+            Geocoder geocoder = new Geocoder(MapActivity.this, locale);
             try {
                 // An array of address that user search ( maximum = 10)
-                searchAddresses= (ArrayList<Address>) geocoder.getFromLocationName(searchInputString,10);
+                searchAddresses = (ArrayList<Address>) geocoder.getFromLocationName(searchInputString, 10);
 
                 if (searchAddresses.size() == 0) {  // No search result find
                     locationSearch.setText("");
                     Toast.makeText(MapActivity.this, "No address found", Toast.LENGTH_SHORT).show();
 
-                }else{ // find search result
+                } else { // find search result
                     //Toast.makeText(MapActivity.this, "Total " + searchAddresses.size() + " results finded", Toast.LENGTH_SHORT).show();
                     address1 = searchAddresses.get(0);
 
                     // get the center of the map
-                    Point point2 = Point.fromLngLat(address1.getLongitude(),address1.getLatitude());
+                    Point point2 = Point.fromLngLat(address1.getLongitude(), address1.getLatitude());
                     locationComponentPlugin.addOnIndicatorPositionChangedListener(point ->
                             mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point2).build()));
 
@@ -230,12 +232,11 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         });
 
         // go back to current location
-        recenterButton.setOnClickListener((v) ->{
+        recenterButton.setOnClickListener((v) -> {
             Point point3 = Point.fromLngLat(playerLongitude, playerLatitude);
             mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point3).build());
             refreshNearby(playerLongitude, playerLatitude);
-            locationComponentPlugin.addOnIndicatorPositionChangedListener(indicatorPositionChangedListener);
-            gesturePlugin.addOnMoveListener(onMoveListener);
+            followPlayer();
 //            locationComponentPlugin.addOnIndicatorPositionChangedListener(point ->
 //                    mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point3).build()));
 
@@ -253,6 +254,45 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
 
     }
 
+    private void followPlayer() {
+        locationComponentPlugin.addOnIndicatorPositionChangedListener(indicatorPositionChangedListener);
+        gesturePlugin.addOnMoveListener(onMoveListener);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                for (Location location : locationResult.getLocations()) {
+                    // update the location
+                    playerLongitude = location.getLongitude();
+                    playerLatitude = location.getLatitude();
+                    refreshNearby(playerLongitude, playerLatitude);
+                }
+            }
+        }, getMainLooper());
+    }
+
+    private void stopFollow() {
+        locationComponentPlugin.removeOnIndicatorPositionChangedListener(indicatorPositionChangedListener);
+        gesturePlugin.removeOnMoveListener(onMoveListener);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                for (Location location : locationResult.getLocations()) {
+                    // update the location
+                    playerLongitude = location.getLongitude();
+                    playerLatitude = location.getLatitude();
+                }
+            }
+        }, getMainLooper());
+    }
+
     private void refreshNearby(double longitude, double latitude) {
         Location location = new Location("");
         location.setLatitude(latitude);
@@ -266,14 +306,14 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         pointAnnotationManager.deleteAll();
 
 
-        for (GameCode.CodeLocation location: locations) {
+        for (GameCode.CodeLocation location : locations) {
             Point point = Point.fromLngLat(location.location.getLongitude(), location.location.getLatitude());
 
             PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
                     .withPoint(point)
                     .withIconImage(image)
                     .withIconAnchor(IconAnchor.TOP);
-            PointAnnotation pointAnnotation =  pointAnnotationManager.create(pointAnnotationOptions);
+            PointAnnotation pointAnnotation = pointAnnotationManager.create(pointAnnotationOptions);
 
             ViewAnnotationOptions viewAnnotationOptions = new ViewAnnotationOptions.Builder()
                     .associatedFeatureId(pointAnnotation.getFeatureIdentifier())
@@ -334,9 +374,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
 //        }  // all are granted
 //
 //    }
-
-
-
 
 
 }
