@@ -220,9 +220,9 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
                     address1 = searchAddresses.get(0);
 
                     // get the center of the map
+                    stopFollow();
                     Point point2 = Point.fromLngLat(address1.getLongitude(), address1.getLatitude());
-                    locationComponentPlugin.addOnIndicatorPositionChangedListener(point ->
-                            mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point2).build()));
+                    mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point2).build());
 
                     locationSearch.setText("");
                 }
@@ -237,9 +237,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point3).build());
             refreshNearby(playerLongitude, playerLatitude);
             followPlayer();
-//            locationComponentPlugin.addOnIndicatorPositionChangedListener(point ->
-//                    mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point3).build()));
-
         });
 
         refreshButton.setOnClickListener(view -> {
@@ -248,10 +245,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         });
 
         // click and update the location ( zoom in that location and see the qr code near by)
-    }
-
-    private void moveCamera(double longitude, double latitude) {
-
     }
 
     private void followPlayer() {
@@ -304,7 +297,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
     @Override
     public void getNearbyQrs(ArrayList<GameCode.CodeLocation> locations) {
         pointAnnotationManager.deleteAll();
-
 
         for (GameCode.CodeLocation location : locations) {
             Point point = Point.fromLngLat(location.location.getLongitude(), location.location.getLatitude());
