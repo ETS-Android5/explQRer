@@ -99,7 +99,8 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
     private LocationListener locationListener;
     private ArrayList<Address> searchAddresses = new ArrayList<>();
 
-    FusedLocationProviderClient fusedLocationClient;
+    private FusedLocationProviderClient fusedLocationClient;
+    private ArrayList<GameCode.CodeLocation> codes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -296,6 +297,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
     @SuppressLint("SetTextI18n")
     @Override
     public void getNearbyQrs(ArrayList<GameCode.CodeLocation> locations) {
+        codes = locations;
         pointAnnotationManager.deleteAll();
 
         for (GameCode.CodeLocation location : locations) {
@@ -311,6 +313,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
                     .associatedFeatureId(pointAnnotation.getFeatureIdentifier())
                     .geometry(pointAnnotation.getPoint())
                     .anchor(ViewAnnotationAnchor.TOP)
+                    .allowOverlap(true)
                     .build();
 
             TextView pts = (TextView) annotationManager.addViewAnnotation(R.layout.map_qr, viewAnnotationOptions);
