@@ -85,11 +85,13 @@ public class DataHandler {
                 // Check if the document exists, add username if it does
                 if(documentSnapshot.exists()){
                     docRef.update("users", FieldValue.arrayUnion(username));
-                    if(code.getLocation() != null){
-                        ArrayList<Double> location = new ArrayList();
-                        location.add(code.getLocation().getLatitude());
-                        location.add(code.getLocation().getLongitude());
-                        docRef.update("location",location);
+                    if(documentSnapshot.getData().get("location") == null){
+                        if (code.getLocation() != null) {
+                            ArrayList<Double> location = new ArrayList();
+                            location.add(code.getLocation().getLatitude());
+                            location.add(code.getLocation().getLongitude());
+                            docRef.update("location",location);
+                        }
                     }
                 }
                 else{
