@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity
                     }
 
                 });
-        dataHandler = new DataHandler();
+        dataHandler = DataHandler.getInstance();
         dataHandler.createPlayer(player);
     }
 
