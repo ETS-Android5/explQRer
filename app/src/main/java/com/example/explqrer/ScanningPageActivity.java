@@ -227,7 +227,10 @@ public class ScanningPageActivity extends AppCompatActivity
                 dataHandler.getPlayer(rawValue.substring(11), this);
                 break;
             case SEE_PROFILE:
-                Toast.makeText(this, "See Profile", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.putExtra("Username", rawValue.substring(11));
+                setResult(3, intent);
+                finish();
                 break;
         }
     }
