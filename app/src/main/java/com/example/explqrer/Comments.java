@@ -1,7 +1,7 @@
 package com.example.explqrer;
 
 /**
- * Class to represent the comment
+ * Class to represent the comment data
  */
 public class Comments {
     private String username;

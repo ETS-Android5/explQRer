@@ -11,12 +11,20 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * class representing comments
+ */
 public class Comment extends AppCompatActivity {
 
     Button add;
     AlertDialog dialog;
     LinearLayout layout;
 
+    /**
+     * Method for adding comments
+     * @param savedInstanceState
+     * This is the saving instance object for comment
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +43,9 @@ public class Comment extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method to show the pop up for accepting comments
+     */
     private void buildDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.dialog, null);
@@ -59,6 +70,12 @@ public class Comment extends AppCompatActivity {
         dialog = builder.create();
     }
 
+    /**
+     * Method to show and delete the comments that have
+     * already been made
+     * @param name
+     * Displaying comments
+     */
     private void addCard(String name) {
         final View view = getLayoutInflater().inflate(R.layout.card, null);
 
