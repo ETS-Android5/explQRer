@@ -21,6 +21,12 @@
             android:name=".NearbyQRListInMapShow"
             android:exported="false" />
         <activity
+            android:name=".Comment"
+            android:exported="false" />
+        <activity
+            android:name=".playerDisplay"
+            android:exported="false" />
+        <activity
             android:name=".SearchActivity"
             android:exported="false" />
         <activity

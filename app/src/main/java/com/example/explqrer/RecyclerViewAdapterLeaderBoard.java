@@ -1,6 +1,7 @@
 package com.example.explqrer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
         // This is where you inflate the layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recyclerview_leaderboard, parent, false);
-        return new RecyclerViewAdapterLeaderBoard.MyViewHolder(view);
+        return new RecyclerViewAdapterLeaderBoard.MyViewHolder(view,this.context);
     }
 
     @Override
@@ -48,10 +49,20 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
 
         TextView playerRank, playerName;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView,Context context) {
             super(itemView);
              playerRank = itemView.findViewById(R.id.playerRank);
              playerName = itemView.findViewById(R.id.playerName);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String name = playerName.getText().toString();
+                    Intent myIntent = new Intent(context,playerDisplay.class);
+                    myIntent.putExtra("playerName",name);
+                    context.startActivity(myIntent);
+                }
+            });
         }
     }
 }

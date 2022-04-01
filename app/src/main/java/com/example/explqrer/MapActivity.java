@@ -307,7 +307,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-        new DataHandler().getNearByQrs(location, 1500, this);
+        DataHandler.getInstance().getNearByQrs(location, 1500, this);
     }
 
     @SuppressLint("SetTextI18n")
