@@ -102,7 +102,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         });
 
         this.populateBanner(player.getName()); //calls populateBanner to put points and scans in in banner recycler view
-        this.populateGallery(player); //calls populateGallery to put images in the gallery recycler view and provides name of player as parameter
+        GalleryBuilder.populateGallery(player,findViewById(R.id.image_gallery),getApplicationContext()); //calls populategallery of galleryBuilder to construct and populate the gallery
     }
 
     public void openComment(){
@@ -206,25 +206,5 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         }, 0, time);
 
 
-    }
-
-    /**
-     * This populates the gallery with a GalleryAdapter
-     *  Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
-     *  Author: Adam Sinicki
-     */
-    private void populateGallery(PlayerProfile player){
-
-        //set up the RecyclerView for the gallery
-        RecyclerView galleryRecyclerView = findViewById(R.id.image_gallery);
-        galleryRecyclerView.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),4);
-        galleryRecyclerView.setLayoutManager(gridLayoutManager);
-
-        ArrayList<GalleryListItem> listOfImages = GalleryList.updateGallery(player);
-
-        GalleryAdapter galleryListAdapter = new GalleryAdapter(getApplicationContext(),listOfImages);
-        System.out.println("before adapter");
-        galleryRecyclerView.setAdapter(galleryListAdapter);
     }
 }
