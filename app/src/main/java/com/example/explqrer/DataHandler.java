@@ -129,13 +129,47 @@ public class DataHandler {
 
     }
 
-    public void addComment(GameCode code, String comment){
+    public void addComment(GameCode code,PlayerProfile player, String comment){
         // Collection reference
         CollectionReference cr = db.collection("qrbase");
+
+        // Get the info from the objects
+        String hash = code.getSha256hex();
+        String username = player.getName();
+
+        // Hash map to store the comment info
+        Map<String,String> data = new HashMap<>();
+        data.put(username,comment);
+
+        // Document Reference
+        DocumentReference docRef = cr.document(hash);
+
+        // Add the comment
+        docRef.update("comments",FieldValue.arrayUnion(data));
+    }
+
+    public void getComments(GameCode code, OnGetCommentsListener listener){
+        // Collection reference
+        CollectionReference cr = db.collection("qrbase");
+
         String hash = code.getSha256hex();
 
+        // Document Reference
         DocumentReference docRef = cr.document(hash);
-        docRef.update("comments",FieldValue.arrayUnion(comment));
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    ArrayList<Map<String,String>> comments = (ArrayList<Map<String, String>>) doc.getData().get("comments");
+                    listener.getCommentsListener(comments);
+                }
+                else{
+                    listener.getCommentsListener(null);
+                }
+            }
+        });
     }
     /**
      * Method to get all the qr hashes and the users that scanned that qr code
