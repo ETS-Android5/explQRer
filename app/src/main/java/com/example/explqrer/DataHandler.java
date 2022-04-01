@@ -129,6 +129,15 @@ public class DataHandler {
 
     }
 
+    /**
+     * Function to add the user comment to the qrbase collection on firestore
+     * @param code
+     *  This is the GameCode object on which the player has commented
+     * @param player
+     *  This is the PlayerProfile object of the player that has commented
+     * @param comment
+     *  This is the comment of the player
+     */
     public void addComment(GameCode code,PlayerProfile player, String comment){
         // Collection reference
         CollectionReference cr = db.collection("qrbase");
