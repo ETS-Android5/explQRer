@@ -1,6 +1,7 @@
 package com.example.explqrer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,5 +47,10 @@ public class GalleryBuilder {
         }
         System.out.println("before listof images");
         return listOfImages;
+    }
+
+    public void generateFragment(String codeHash, Bitmap codeImage, int codePts, String codeDescription) {
+        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(codeHash,codeImage,codePts,codeDescription);
+        gameCodeFragment.show(getSupportFragmentManager(),"GAMECODE");
     }
 }
