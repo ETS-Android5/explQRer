@@ -115,7 +115,6 @@ public class DataHandler {
                 }
             }
         });
-
         // Update the points
         updatePts(username,code.getScore());
         updateScanned(username,1);
@@ -130,6 +129,14 @@ public class DataHandler {
 
     }
 
+    public void addComment(GameCode code, String comment){
+        // Collection reference
+        CollectionReference cr = db.collection("qrbase");
+        String hash = code.getSha256hex();
+
+        DocumentReference docRef = cr.document(hash);
+        docRef.update("comments",FieldValue.arrayUnion(comment));
+    }
     /**
      * Method to get all the qr hashes and the users that scanned that qr code
      */
