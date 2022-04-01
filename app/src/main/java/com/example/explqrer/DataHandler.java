@@ -86,12 +86,13 @@ public class DataHandler {
                 if(documentSnapshot.exists()){
                     docRef.update("users", FieldValue.arrayUnion(username));
                     if(documentSnapshot.getData().get("location") == null){
-                        if (code.getLocation() != null) {
-                            ArrayList<Double> location = new ArrayList();
+                        ArrayList<Double> location = null;
+                        if (code.getLocation() != null){
+                            location = new ArrayList<>();
                             location.add(code.getLocation().getLatitude());
                             location.add(code.getLocation().getLongitude());
-                            docRef.update("location",location);
                         }
+                        docRef.update("location",location);
                     }
                 }
                 else{
