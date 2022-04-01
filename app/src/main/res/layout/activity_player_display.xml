@@ -6,4 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".playerDisplay">
 
+    <TextView
+        android:id="@+id/usernameHolder"
+        android:layout_width="228dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="30dp"
+        android:text="usernameHolder"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
