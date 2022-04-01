@@ -42,7 +42,7 @@ public class GalleryBuilder {
         for(GameCode qr : qrCodesSet ){
             GalleryListItem galleryListItem = new GalleryListItem();
             //get image of the qr scanned and set the images
-            galleryListItem.setImageId(qr.getPhoto());
+            galleryListItem.setImage(qr.getPhoto());
             listOfImages.add(galleryListItem);
         }
         System.out.println("before listof images");

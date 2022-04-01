@@ -100,7 +100,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                 Bitmap codeImage = galleryList.get(getBindingAdapterPosition()).getImage();
                 String codeDescription = galleryList.get(getBindingAdapterPosition()).getCodeDescription();
                 int codePts = galleryList.get(getBindingAdapterPosition()).getCodePts();
-                activity.generateFragment(codeHash,codeImage,codePts,codeDescription);
+                //activity.generateFragment(codeHash,codeImage,codePts,codeDescription);
             });
         }
     }
