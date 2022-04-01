@@ -2,6 +2,7 @@ package com.example.explqrer;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -63,7 +65,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
     private FloatingActionButton recenterButton;
     private EditText locationSearch;
     private ImageButton locationSearchButton;
-    private Button refreshButton;
+    private Button refreshButton, nearbyListButton;
 
     private LocationRequest locationRequest;
     private double playerLongitude, playerLatitude;
@@ -131,6 +133,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         locationSearchButton = findViewById(R.id.search_location_btn);
         locationSearchButton.setBackgroundResource(0);
         locationSearch.setSelection(0);
+        nearbyListButton = findViewById(R.id.nearby_list_button);
         Log.d("TAG", "onCreate:  2");
 
 
@@ -160,11 +163,13 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         } catch (Exception ignored) {
         }
         if (codeLocation != null) {
+            Log.d("TAG", "onCreate: return location"+ String.valueOf(codeLocation.getLongitude())+String.valueOf(codeLocation.getLatitude()));
             double longitude = codeLocation.getLongitude();
             double latitude = codeLocation.getLatitude();
             refreshNearby(longitude, latitude);
             Point point = Point.fromLngLat(longitude, latitude);
             mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point).build());
+
         } else {
             locationComponentPlugin.addOnIndicatorPositionChangedListener(indicatorPositionChangedListener);
             gesturePlugin.addOnMoveListener(onMoveListener);
@@ -245,7 +250,18 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             refreshNearby(point.longitude(), point.latitude());
         });
 
-        // click and update the location ( zoom in that location and see the qr code near by)
+        //
+        nearbyListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MapActivity.this, NearbyQRListInMapShow.class);
+                intent.putParcelableArrayListExtra("nearby_code_locations",codes);
+                intent.putExtra("player_longitude", playerLongitude);
+                intent.putExtra("player_latitude", playerLatitude);
+                startActivity(intent);
+
+            }
+        });
     }
 
     private void followPlayer() {
