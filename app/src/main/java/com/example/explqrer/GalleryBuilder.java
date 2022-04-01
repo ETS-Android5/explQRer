@@ -49,8 +49,4 @@ public class GalleryBuilder {
         return listOfImages;
     }
 
-    public void generateFragment(String codeHash, Bitmap codeImage, int codePts, String codeDescription) {
-        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(codeHash,codeImage,codePts,codeDescription);
-        gameCodeFragment.show(getSupportFragmentManager(),"GAMECODE");
-    }
 }

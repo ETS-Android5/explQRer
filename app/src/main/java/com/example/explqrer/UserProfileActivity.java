@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -206,5 +207,10 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         }, 0, time);
 
 
+    }
+
+    public void generateFragment(String codeHash, Bitmap codeImage, int codePts, String codeDescription) {
+        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(codeHash,codeImage,codePts,codeDescription);
+        gameCodeFragment.show(getSupportFragmentManager(),"GAMECODE");
     }
 }
