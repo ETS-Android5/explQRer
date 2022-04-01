@@ -210,7 +210,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     }
 
     public void generateFragment(String codeHash, Bitmap codeImage, int codePts, String codeDescription) {
-        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(codeHash,codeImage,codePts,codeDescription);
+        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCodes().get(codeHash));
         gameCodeFragment.show(getSupportFragmentManager(),"GAMECODE");
     }
 }

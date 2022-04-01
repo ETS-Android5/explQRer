@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -26,26 +27,23 @@ public class GalleryBuilder {
         ArrayList<GalleryListItem> listOfImages = updateGallery(player);
 
         GalleryAdapter galleryListAdapter = new GalleryAdapter(context,listOfImages);
-        System.out.println("before adapter");
         galleryRecyclerView.setAdapter(galleryListAdapter);
     }
 
     public static ArrayList<GalleryListItem> updateGallery(PlayerProfile player){
 
-        HashMap<GameCode,GameCode> qrCodes = player.getCodes();
-        Set<GameCode> qrCodesSet = qrCodes.keySet();
-        System.out.println("user list: "+ qrCodesSet);
+        HashMap<String,GameCode> codes = player.getCodes();
+        Collection<GameCode> qrCodes = codes.values();
 
         //loop through all the imagePoints and imageIds populate galleryListItem objects with the image's point value and the image
         ArrayList<GalleryListItem> listOfImages = new ArrayList<>();
         //loop through the QRs scanned by the player
-        for(GameCode qr : qrCodesSet ){
+        for(GameCode qr : qrCodes ){
             GalleryListItem galleryListItem = new GalleryListItem();
             //get image of the qr scanned and set the images
-            galleryListItem.setImageId(qr.getPhoto());
+            galleryListItem.setImage(qr.getPhoto());
             listOfImages.add(galleryListItem);
         }
-        System.out.println("before listof images");
         return listOfImages;
     }
 
