@@ -248,7 +248,7 @@ public class DataHandler {
             if(task.isSuccessful()){
                 DocumentSnapshot doc = task.getResult();
                 if(doc.exists()){
-                    Map<String,Object> data = doc.getData();
+                    Map<String,Object> data = (Map<String, Object>) doc.getData();
                     newDocRef.set(data);
                     updatePlayerJson(newPlayerProfile);
 
