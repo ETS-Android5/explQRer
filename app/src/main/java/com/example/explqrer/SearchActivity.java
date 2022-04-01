@@ -30,7 +30,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String searchText = searchBar.getText().toString();
-                new DataHandler().searchPlayers(searchText, new OnSearchPlayersListener() {
+                DataHandler.getInstance().searchPlayers(searchText, new OnSearchPlayersListener() {
                     @Override
                     public void searchPlayersListener(ArrayList<String> players) {
                         ArrayList<ScannedRankLeaderboard> scannedRankLeaderboards = new ArrayList<>();
