@@ -19,7 +19,6 @@
         android:theme="@style/Theme.ExplQRer">
         <activity
             android:name=".Comment"
-            android:name=".playerDisplay"
             android:exported="false" />
         <activity
             android:name=".playerDisplay"
