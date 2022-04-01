@@ -115,7 +115,6 @@ public class DataHandler {
                 }
             }
         });
-
         // Update the points
         updatePts(username,code.getScore());
         updateScanned(username,1);
@@ -130,6 +129,64 @@ public class DataHandler {
 
     }
 
+    /**
+     * Function to add the user comment to the qrbase collection on firestore
+     * @param code
+     *  This is the GameCode object on which the player has commented
+     * @param player
+     *  This is the PlayerProfile object of the player that has commented
+     * @param comment
+     *  This is the comment of the player
+     */
+    public void addComment(GameCode code,PlayerProfile player, String comment){
+        // Collection reference
+        CollectionReference cr = db.collection("qrbase");
+
+        // Get the info from the objects
+        String hash = code.getSha256hex();
+        String username = player.getName();
+
+        // Hash map to store the comment info
+        Map<String,String> data = new HashMap<>();
+        data.put(username,comment);
+
+        // Document Reference
+        DocumentReference docRef = cr.document(hash);
+
+        // Add the comment
+        docRef.update("comments",FieldValue.arrayUnion(data));
+    }
+
+    /**
+     * This function returns the list of hashmaps which contains the username and comments
+     * @param code
+     *  This is the GameCode object on which the player has commented
+     * @param listener
+     *  This is the listener has to be used to access the Arraylist of the hashmaps
+     */
+    public void getComments(GameCode code, OnGetCommentsListener listener){
+        // Collection reference
+        CollectionReference cr = db.collection("qrbase");
+
+        String hash = code.getSha256hex();
+
+        // Document Reference
+        DocumentReference docRef = cr.document(hash);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    ArrayList<Map<String,String>> comments = (ArrayList<Map<String, String>>) doc.getData().get("comments");
+                    listener.getCommentsListener(comments);
+                }
+                else{
+                    listener.getCommentsListener(null);
+                }
+            }
+        });
+    }
     /**
      * Method to get all the qr hashes and the users that scanned that qr code
      */
@@ -248,7 +305,7 @@ public class DataHandler {
             if(task.isSuccessful()){
                 DocumentSnapshot doc = task.getResult();
                 if(doc.exists()){
-                    Map<String,Object> data = doc.getData();
+                    Map<String,Object> data = (Map<String, Object>) doc.getData();
                     newDocRef.set(data);
                     updatePlayerJson(newPlayerProfile);
 
