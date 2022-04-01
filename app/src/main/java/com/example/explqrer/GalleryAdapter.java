@@ -32,6 +32,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     private ArrayList<GalleryListItem> galleryList;
     private Context context;
+    private UserProfileActivity activity;
 
     /**
      * Constructor for the class
@@ -43,7 +44,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     public GalleryAdapter(Context context, ArrayList<GalleryListItem> galleryList) {
         this.galleryList = galleryList;
         this.context = context;
-        System.out.println("in adapter");
+        this.activity = activity;
     }
 
     /**
@@ -94,6 +95,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             super(view);
 
             image = view.findViewById(R.id.image);
+            view.setOnClickListener(view1 -> {
+                String codeHash = galleryList.get(getBindingAdapterPosition()).getHashCode();
+                Bitmap codeImage = galleryList.get(getBindingAdapterPosition()).getImage();
+                String codeDescription = galleryList.get(getBindingAdapterPosition()).getCodeDescription();
+                int codePts = galleryList.get(getBindingAdapterPosition()).getCodePts();
+                activity.generateFragment(codeHash,codeImage,codePts,codeDescription);
+            });
         }
     }
 
