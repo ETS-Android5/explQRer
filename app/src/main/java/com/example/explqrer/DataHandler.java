@@ -157,6 +157,13 @@ public class DataHandler {
         docRef.update("comments",FieldValue.arrayUnion(data));
     }
 
+    /**
+     * This function returns the list of hashmaps which contains the username and comments
+     * @param code
+     *  This is the GameCode object on which the player has commented
+     * @param listener
+     *  This is the listener has to be used to access the Arraylist of the hashmaps
+     */
     public void getComments(GameCode code, OnGetCommentsListener listener){
         // Collection reference
         CollectionReference cr = db.collection("qrbase");
