@@ -207,16 +207,27 @@ public class MainActivity extends AppCompatActivity
     private void updateStrings() {
         System.out.print(player.getName());
         usernameText.setText(player.getName());
-        dataHandler.getPtsL("465282", new OnGetPtsLListener() {
+        dataHandler.getPtsL(player.getName(), new OnGetPtsLListener() {
             @Override
             public void getPtsLListener(long ptsl) {
                 String p = ptsl + "";
-//                pointsRank.setText(p);
+                pointsRank.setText(p);
             }
         });
-
-//        scannedRank.setText(player.getNumCodes());
-//        uniqueRank.setText(player.getNumCodes());
+        dataHandler.getQrL(player.getName(), new OnGetQrListener() {
+            @Override
+            public void getQrListener(long qrL) {
+                String q = qrL+"";
+                scannedRank.setText(q);
+            }
+        });
+        dataHandler.getUniqueL(player.getName(), new OnGetUniqueLListener() {
+            @Override
+            public void getUniqueLListener(long uniqueL) {
+                String u = uniqueL+"";
+                uniqueRank.setText(u);
+            }
+        });
     }
 
     @Override
