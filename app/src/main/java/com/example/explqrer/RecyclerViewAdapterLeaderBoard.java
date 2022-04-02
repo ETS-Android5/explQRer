@@ -54,13 +54,20 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
              playerRank = itemView.findViewById(R.id.playerRank);
              playerName = itemView.findViewById(R.id.playerName);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+             PlayerProfile currentPlayer = MainActivity.getPlayer();
+             currentPlayer.setAsAdmin();
+             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String name = playerName.getText().toString();
-                    Intent myIntent = new Intent(context,playerDisplay.class);
-                    myIntent.putExtra("playerName",name);
-                    context.startActivity(myIntent);
+                    if (!currentPlayer.isAdmin()){
+                        String name = playerName.getText().toString();
+                        Intent myIntent = new Intent(context,playerDisplay.class);
+                        myIntent.putExtra("playerName",name);
+                        context.startActivity(myIntent);
+                    }
+                    else{
+                        
+                    }
                 }
             });
         }

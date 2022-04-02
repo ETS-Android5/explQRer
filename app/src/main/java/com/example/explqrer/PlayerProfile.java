@@ -14,7 +14,7 @@ public class PlayerProfile implements Serializable {
     private long points;
     private GameCode highest, lowest;
     private HashMap<GameCode, GameCode> codes;
-    private final boolean isAdmin;
+    private boolean isAdmin;
 
     public PlayerProfile(String username, String Contact) {
         name = username;
@@ -172,5 +172,9 @@ public class PlayerProfile implements Serializable {
 
     public boolean isAdmin() {
         return isAdmin;
+    }
+
+    public void setAsAdmin(){
+        isAdmin = true;
     }
 }
