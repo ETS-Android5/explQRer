@@ -61,10 +61,12 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
              itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!currentPlayer.isAdmin()){
+                    if (!currentPlayer.isAdmin() || context instanceof PointsRank
+                            || context instanceof ScannedRank || context instanceof UniqueRank){
                         viewPlayer(context);
                     }
                     else{
+//                        System.out.println(context +" c");
                         // Create the object of
                         // AlertDialog Builder class
                         AlertDialog.Builder builder
