@@ -61,7 +61,7 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
                 public void onClick(View view) {
                     if (!currentPlayer.isAdmin()){
                         String name = playerName.getText().toString();
-                        Intent myIntent = new Intent(context,playerDisplay.class);
+                        Intent myIntent = new Intent(context,PlayerDisplayActivity.class);
                         myIntent.putExtra("playerName",name);
                         context.startActivity(myIntent);
                     }

@@ -2,19 +2,15 @@ package com.example.explqrer;
 
 import static android.content.ContentValues.TAG;
 
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.SharedPreferences;
+import static com.example.explqrer.GameCode.calculateScore;
+
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -23,22 +19,16 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DataHandler {
@@ -94,21 +84,30 @@ public class DataHandler {
                         }
                         docRef.update("location",location);
                     }
+                    if (code.getPhoto() != null) {
+                        docRef.update("photo", new GsonBuilder().enableComplexMapKeySerialization()
+                                .create().toJson(code.getPhoto()));
+                    }
                 }
                 else{
                     Map<String,Object> data = new HashMap<>();
                     ArrayList<String> usernames = new ArrayList<>();
                     usernames.add(username);
                     data.put("users", usernames);
-                    if (code.getLocation() == null){
-                        data.put("location",code.getLocation());
-                    }
-                    else{
-                        ArrayList<Double> location = new ArrayList();
+                    ArrayList<Double> location = null;
+                    if (code.getLocation() != null){
+                        location = new ArrayList<>();
                         location.add(code.getLocation().getLatitude());
                         location.add(code.getLocation().getLongitude());
-                        data.put("location",location);
                     }
+                    data.put("location", location);
+                    if (code.getPhoto() == null) {
+                        data.put("photo", null);
+                    } else {
+                        data.put("photo", new GsonBuilder().enableComplexMapKeySerialization()
+                                .create().toJson(code.getPhoto()));
+                    }
+
                     docRef.set(data)
                             .addOnSuccessListener(unused -> Log.d(TAG, "Success"))
                             .addOnFailureListener(e -> Log.d(TAG, "Failure"));
@@ -173,78 +172,101 @@ public class DataHandler {
         // Document Reference
         DocumentReference docRef = cr.document(hash);
 
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    DocumentSnapshot doc = task.getResult();
-                    ArrayList<Map<String,String>> comments = (ArrayList<Map<String, String>>) doc.getData().get("comments");
-                    listener.getCommentsListener(comments);
-                }
-                else{
-                    listener.getCommentsListener(null);
-                }
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                DocumentSnapshot doc = task.getResult();
+                ArrayList<Map<String,String>> comments = (ArrayList<Map<String, String>>) doc.getData().get("comments");
+                listener.getCommentsListener(comments);
+            }
+            else{
+                listener.getCommentsListener(null);
             }
         });
     }
-    /**
-     * Method to get all the qr hashes and the users that scanned that qr code
-     */
-    @Deprecated
-    public void getQR(OnGetQrsListener listener){
-        CollectionReference cr = db.collection("qrbase");
+
+    public void getCode(String hash, OnGetCodeListener listener) {
+        DocumentReference dr = db.collection("qrbase").document(hash);
 
         // Get the documents
-        Map<String,Object> qrs = new HashMap<>();
 
-        cr.get().addOnCompleteListener(task -> {
+        dr.get().addOnCompleteListener(task -> {
             if(task.isSuccessful()){
-                for(QueryDocumentSnapshot doc: task.getResult()){
-                    String qr = doc.getId();
-                    ArrayList<String> usernames = (ArrayList<String>) doc.getData().get("users");
-                    qrs.put(qr,usernames);
+                DocumentSnapshot doc = task.getResult();
+                GameCode code = new GameCode(doc.getId());
+
+                if (doc.get("location") != null) {
+                    ArrayList<Double> loc = (ArrayList<Double>) doc.get("location");
+                    Location location = new Location("");
+                    location.setLongitude(loc.get(0));
+                    location.setLatitude(loc.get(1));
+
+                    code.setLocation(location);
                 }
-                listener.onQrFilled(qrs);
-            } else {
-                listener.onError(task.getException());
+                if (doc.get("photo") != null) {
+                    code.setPhoto(new Gson().fromJson(doc.get("photo").toString(), Bitmap.class));
+                }
+                listener.onGetCode(code);
             }
         });
     }
-
-    /**
-     * Method to get all the hashes of the QRs scanned by a specific user
-     * @param username
-     *  This is the username of the user
-     * @param listener
-     *  Contains the arraylist with all the hashes of the QR codes
-     */
-    @Deprecated
-    //TODO: Sorted lists
-    public void userQrs(String username, OnUserQrsListener listener){
-        this.getQR(new OnGetQrsListener() {
-            @Override
-            public void onQrFilled(Map<String,Object> map) {
-                ArrayList<String> qrs = new ArrayList<>();
-                System.out.println("in userqrs");
-                System.out.println(map.keySet());
-                for(String hash: map.keySet()){
-                    ArrayList<String> users = (ArrayList<String>) map.get(hash);
-                    for(String user: users) {
-                        System.out.println(user);
-                        if (user.equals(username)) {
-                            qrs.add(hash);
-                        }
-                    }
-                }
-                listener.onUserQrsFilled(qrs);
-            }
-
-            @Override
-            public void onError(Exception taskException) {
-                // Handle error
-            }
-        });
-    }
+//    /**
+//     * Method to get all the qr hashes and the users that scanned that qr code
+//     */
+//    @Deprecated
+//    public void getQR(OnGetQrsListener listener){
+//        CollectionReference cr = db.collection("qrbase");
+//
+//        // Get the documents
+//        Map<String,Object> qrs = new HashMap<>();
+//
+//        cr.get().addOnCompleteListener(task -> {
+//            if(task.isSuccessful()){
+//                for(QueryDocumentSnapshot doc: task.getResult()){
+//                    String qr = doc.getId();
+//                    ArrayList<String> usernames = (ArrayList<String>) doc.getData().get("users");
+//                    qrs.put(qr,usernames);
+//                }
+//                listener.onQrFilled(qrs);
+//            } else {
+//                listener.onError(task.getException());
+//            }
+//        });
+//    }
+//
+//    /**
+//     * Method to get all the hashes of the QRs scanned by a specific user
+//     * @param username
+//     *  This is the username of the user
+//     * @param listener
+//     *  Contains the arraylist with all the hashes of the QR codes
+//     */
+//    @Deprecated
+//    //TODO: Sorted lists
+//    public void userQrs(String username, OnUserQrsListener listener){
+//        this.getQR(new OnGetQrsListener() {
+//            @Override
+//            public void onQrFilled(Map<String,Object> map) {
+//                ArrayList<String> qrs = new ArrayList<>();
+//                System.out.println("in userqrs");
+//                System.out.println(map.keySet());
+//                for(String hash: map.keySet()){
+//                    ArrayList<String> users = (ArrayList<String>) map.get(hash);
+//                    for(String user: users) {
+//                        System.out.println(user);
+//                        if (user.equals(username)) {
+//                            qrs.add(hash);
+//                        }
+//                    }
+//                }
+//                listener.onUserQrsFilled(qrs);
+//            }
+//
+//            @Override
+//            public void onError(Exception taskException) {
+//                // Handle error
+//            }
+//        });
+//    }
 
     /**
      * Function to create a new player document in the database
@@ -308,7 +330,7 @@ public class DataHandler {
             if(task.isSuccessful()){
                 DocumentSnapshot doc = task.getResult();
                 if(doc.exists()){
-                    Map<String,Object> data = (Map<String, Object>) doc.getData();
+                    Map<String,Object> data = doc.getData();
                     newDocRef.set(data);
                     updatePlayerJson(newPlayerProfile);
 
@@ -582,7 +604,7 @@ public class DataHandler {
      * @param listener
      *  The position of the user on the leaderboard
      */
-    public void getQrL(String username, OnGetQrLListener listener){
+    public void getQrL(String username, OnGetQrListener listener){
         // Collection Reference
         CollectionReference cr = db.collection("player");
 
@@ -599,11 +621,11 @@ public class DataHandler {
                 if(doc.exists()){
                     qrL = (long) doc.getData().get("qrL");
                 }
-                listener.getQrLListener(qrL);
+                listener.getQrListener(qrL);
             }
             else {
                 // if there is error
-                listener.getQrLListener(-1);
+                listener.getQrListener(-1);
             }
         });
     }
