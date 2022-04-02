@@ -62,10 +62,7 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
                 @Override
                 public void onClick(View view) {
                     if (!currentPlayer.isAdmin()){
-                        String name = playerName.getText().toString();
-                        Intent myIntent = new Intent(context,PlayerDisplayActivity.class);
-                        myIntent.putExtra("playerName",name);
-                        context.startActivity(myIntent);
+                        viewPlayer(context);
                     }
                     else{
                         // Create the object of
@@ -99,10 +96,9 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
                                             public void onClick(DialogInterface dialog,
                                                                 int which)
                                             {
-
-                                                // When the user click yes button
-                                                // then app will close
-//                                                finish();
+                                                String name = playerName.getText().toString();
+                                                DataHandler dh = DataHandler.getInstance();
+                                                dh.deletePlayer(name);
                                             }
                                         });
 
@@ -119,11 +115,7 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
                                             public void onClick(DialogInterface dialog,
                                                                 int which)
                                             {
-
-                                                String name = playerName.getText().toString();
-                                                Intent myIntent = new Intent(context,PlayerDisplayActivity.class);
-                                                myIntent.putExtra("playerName",name);
-                                                context.startActivity(myIntent);
+                                                viewPlayer(context);
                                             }
                                         });
 
@@ -135,6 +127,13 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
                     }
                 }
             });
+        }
+
+        void viewPlayer(Context context){
+            String name = playerName.getText().toString();
+            Intent myIntent = new Intent(context,PlayerDisplayActivity.class);
+            myIntent.putExtra("playerName",name);
+            context.startActivity(myIntent);
         }
     }
 }

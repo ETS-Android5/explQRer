@@ -311,6 +311,22 @@ public class DataHandler {
     }
 
     /**
+     * Function to delete the player from the player database
+     * @param username
+     *  The username of the player we want to delete
+     */
+    public void deletePlayer(String username){
+        // Collection Reference
+        CollectionReference cr = db.collection("player");
+
+        // Document reference
+        DocumentReference docRef = cr.document(username);
+
+        // Delete the doc
+        docRef.delete();
+    }
+
+    /**
      * Function to update the username of the player
      * @param oldUsername
      *  This is a String that contains the old username of the player
