@@ -71,33 +71,27 @@ public class UserProfileActivity extends AppCompatActivity
         bottomNavigationView.setOnItemSelectedListener((NavigationBarView.OnItemSelectedListener) this);
 
         // Setting onClick behavior to the button
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Initializing the popup menu and giving the reference as current context
-                PopupMenu popupMenu = new PopupMenu(UserProfileActivity.this, button);
+        button.setOnClickListener(view -> {
+            // Initializing the popup menu and giving the reference as current context
+            PopupMenu popupMenu = new PopupMenu(UserProfileActivity.this, button);
 
-                // Inflating popup menu from popup_menu.xml file
-                popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int id = item.getItemId();
-                        switch(id) {
-                            case R.id.edit_profile:
-                                // Edit profile
-                                Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
-                                startActivity(intent);
-                                break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                // Showing the popup menu
-                popupMenu.show();
-            }
+            // Inflating popup menu from popup_menu.xml file
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                switch(id) {
+                    case R.id.edit_profile:
+                        // Edit profile
+                        Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            });
+            // Showing the popup menu
+            popupMenu.show();
         });
 
         this.populateBanner(player.getName()); //calls populateBanner to put points and scans in in banner recycler view
@@ -209,5 +203,10 @@ public class UserProfileActivity extends AppCompatActivity
     public void createFragment(String hash) {
         GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCode(hash));
         gameCodeFragment.show(getSupportFragmentManager(),"GAME_CODE");
+    }
+
+    @Override
+    public PlayerProfile getPlayer() {
+        return MainActivity.getPlayer();
     }
 }

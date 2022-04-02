@@ -96,7 +96,9 @@ public class MainActivity extends AppCompatActivity
                                 PlayerProfile.class));
                     } else {
                         String username = result.getData().getStringExtra("Username");
-                        // TODO: Start player profile activity
+                        Intent intent = new Intent(this, PlayerDisplayActivity.class);
+                        intent.putExtra("playerName",username);
+                        startActivity(intent);
                     }
 
                 });

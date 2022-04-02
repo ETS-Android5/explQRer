@@ -37,6 +37,11 @@ public class PlayerDisplayActivity extends AppCompatActivity
     }
 
     @Override
+    public PlayerProfile getPlayer() {
+        return player;
+    }
+
+    @Override
     public void getPlayerListener(PlayerProfile player) {
         this.player = player;
         usernameHolder.setText(player.getName());

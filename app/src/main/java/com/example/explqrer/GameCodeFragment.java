@@ -33,6 +33,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
 
     public interface GameCodeFragmentHost {
         void createFragment(String hash);
+        PlayerProfile getPlayer();
     }
 
 
