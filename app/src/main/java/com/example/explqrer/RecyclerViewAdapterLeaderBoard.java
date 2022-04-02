@@ -57,7 +57,7 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
              playerName = itemView.findViewById(R.id.playerName);
 
              PlayerProfile currentPlayer = MainActivity.getPlayer();
-             currentPlayer.setAsAdmin();
+//             currentPlayer.setAsAdmin();
              itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
