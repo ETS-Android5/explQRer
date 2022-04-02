@@ -1,6 +1,8 @@
 package com.example.explqrer;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +57,7 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
              playerName = itemView.findViewById(R.id.playerName);
 
              PlayerProfile currentPlayer = MainActivity.getPlayer();
-//             currentPlayer.setAsAdmin();
+             currentPlayer.setAsAdmin();
              itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -66,7 +68,70 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
                         context.startActivity(myIntent);
                     }
                     else{
+                        // Create the object of
+                        // AlertDialog Builder class
+                        AlertDialog.Builder builder
+                                = new AlertDialog
+                                .Builder(context);
 
+                        // Set the message show for the Alert time
+                        builder.setMessage("Do you want to delete or view");
+
+                        // Set Alert Title
+                        builder.setTitle("Admin Function!");
+
+                        // Set Cancelable false
+                        // for when the user clicks on the outside
+                        // the Dialog Box then it will remain show
+                        builder.setCancelable(false);
+
+                        // Set the positive button with yes name
+                        // OnClickListener method is use of
+                        // DialogInterface interface.
+
+                        builder
+                                .setPositiveButton(
+                                        "Delete",
+                                        new DialogInterface
+                                                .OnClickListener() {
+
+                                            @Override
+                                            public void onClick(DialogInterface dialog,
+                                                                int which)
+                                            {
+
+                                                // When the user click yes button
+                                                // then app will close
+//                                                finish();
+                                            }
+                                        });
+
+                        // Set the Negative button with No name
+                        // OnClickListener method is use
+                        // of DialogInterface interface.
+                        builder
+                                .setNegativeButton(
+                                        "View",
+                                        new DialogInterface
+                                                .OnClickListener() {
+
+                                            @Override
+                                            public void onClick(DialogInterface dialog,
+                                                                int which)
+                                            {
+
+                                                String name = playerName.getText().toString();
+                                                Intent myIntent = new Intent(context,PlayerDisplayActivity.class);
+                                                myIntent.putExtra("playerName",name);
+                                                context.startActivity(myIntent);
+                                            }
+                                        });
+
+                        // Create the Alert dialog
+                        AlertDialog alertDialog = builder.create();
+
+                        // Show the Alert Dialog box
+                        alertDialog.show();
                     }
                 }
             });
