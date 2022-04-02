@@ -3,6 +3,7 @@ package com.example.explqrer;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -13,13 +14,15 @@ public class PlayerProfile implements Serializable {
     private String contact;
     private long points;
     private GameCode highest, lowest;
-    private HashMap<GameCode, GameCode> codes;
+    private HashMap<String, GameCode> codes;
+    private final boolean isAdmin;
 
     public PlayerProfile(String username, String Contact) {
         name = username;
         contact = Contact;
         points = 0;
         codes = new HashMap<>() ;
+        isAdmin = false;
     }
 
     /**
@@ -65,8 +68,19 @@ public class PlayerProfile implements Serializable {
      * Get the list of scanned code hashes
      * @return The scanned code hashes in an ArrayList
      */
-    public HashMap<GameCode, GameCode> getCodes() {
+    public HashMap<String, GameCode> getCodes() {
         return codes;
+    }
+
+    /**
+     * Get the game code object from a player
+     * @param hash
+     * @return
+     * Can return null
+     */
+    @Nullable
+    public GameCode getCode(String hash) {
+        return codes.get(hash);
     }
 
     /**
@@ -76,8 +90,8 @@ public class PlayerProfile implements Serializable {
      */
     public boolean addCode(@NonNull GameCode code) {
 
-        if (!codes.containsKey(code)) {
-            codes.put(code, code);
+        if (!codes.containsKey(code.getSha256hex())) {
+            codes.put(code.getSha256hex(), code);
             int score = code.getScore();
             points += score;
             if (highest == null || score > highest.getScore()) {
@@ -97,8 +111,8 @@ public class PlayerProfile implements Serializable {
      * @return true if the code was successfully removed
      */
     public boolean removeCode(GameCode code) {
-        if (codes.containsKey(code)) {
-            codes.remove(code);
+        if (codes.containsKey(code.getSha256hex())) {
+            codes.remove(code.getSha256hex());
             // TODO: add some error checking
             points -= code.getScore();
             if (code == lowest || code == highest) {
@@ -135,7 +149,7 @@ public class PlayerProfile implements Serializable {
 
         // refresh highest and lowest
         highest = lowest = null;
-        for (GameCode code : codes.keySet()) {
+        for (GameCode code : codes.values()) {
             if (highest == null || code.getScore() > highest.getScore()) {
                 highest = code;
             }
@@ -166,5 +180,9 @@ public class PlayerProfile implements Serializable {
         if (codes.containsKey(code)) {
             codes.get(code).setLocation(location);
         }
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 }

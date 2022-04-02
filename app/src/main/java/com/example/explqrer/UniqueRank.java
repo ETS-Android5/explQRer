@@ -31,7 +31,7 @@ public class UniqueRank extends AppCompatActivity implements NavigationBarView.O
         RecyclerView recyclerView = findViewById(R.id.UR_recyclerView);
 
         Context context = this;
-        DataHandler dh = new DataHandler();
+        DataHandler dh = DataHandler.getInstance();
         dh.getUniqueLeaderBoard(new OnGetUniqueLeaderBoardListener() {
             @Override
             public void getUniqueLeaderBoardListener(ArrayList<String> leaderboard) {

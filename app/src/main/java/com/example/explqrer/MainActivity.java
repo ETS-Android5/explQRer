@@ -88,8 +88,7 @@ public class MainActivity extends AppCompatActivity
                     assert result.getData() != null;
                     if (result.getResultCode() == RESULT_OK) {
                         CodeScannedFragment codeScannedFragment = CodeScannedFragment
-                                .newInstance(result.getData().getStringExtra("Code"),
-                                        player.getName());
+                                .newInstance(result.getData().getStringExtra("Code"));
                         codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
                     } else if (result.getResultCode() == 2){
                         Gson gson = new Gson();
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity
                     }
 
                 });
-        dataHandler = new DataHandler();
+        dataHandler = DataHandler.getInstance();
         dataHandler.createPlayer(player);
     }
 

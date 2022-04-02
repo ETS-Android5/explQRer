@@ -297,7 +297,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-        new DataHandler().getNearByQrs(location, 1500, this);
+        DataHandler.getInstance().getNearByQrs(location, 1500, this);
     }
 
     @SuppressLint("SetTextI18n")
@@ -326,8 +326,8 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             pts.setOnClickListener(view -> {
                 Log.d("TAG", "WORKING!");
 
-                GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(location);
-                gameCodeFragment.show(getSupportFragmentManager(), "GAME_CODE");
+//                GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(location);
+//                gameCodeFragment.show(getSupportFragmentManager(), "GAME_CODE");
                 //TODO: popup for the clicked QR
             });
         }

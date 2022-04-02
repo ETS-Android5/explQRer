@@ -31,7 +31,7 @@ public class PointsRank extends AppCompatActivity implements NavigationBarView.O
         RecyclerView recyclerView = findViewById(R.id.PR_recyclerView);
 
         Context context = this;
-        DataHandler dh = new DataHandler();
+        DataHandler dh = DataHandler.getInstance();
         dh.getPtsLeaderBoard(new OnGetPtsLeaderBoardListener() {
             @Override
             public void getPtsLeaderBoardListener(ArrayList<String> leaderboard) {
