@@ -261,12 +261,15 @@ public class DataHandler {
         data.put("pts",0);
         data.put("scanned",0);
         data.put("uniqueScanned",0);
-        data.put("ptsL",-1);
-        data.put("qrL",-1);
-        data.put("uniqueL", -1);
+        data.put("ptsL",10000);
+        data.put("qrL",10000);
+        data.put("uniqueL", 10000);
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         data.put("json", gson.toJson(playerProfile));
         cr.document(playerProfile.getName()).set(data);
+        updatePtsL();
+        updateQrL();
+        updateUniqueL();
     }
 
     /**
