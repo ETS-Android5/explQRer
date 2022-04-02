@@ -31,6 +31,10 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private int codePoints;
     private String completeDescription;
 
+    public interface GameCodeFragmentHost {
+        void createFragment(String hash);
+    }
+
 
     public static GameCodeFragment newInstance(GameCode.CodeLocation codeLocation) {
         Bundle args = new Bundle();

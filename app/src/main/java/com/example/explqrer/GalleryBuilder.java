@@ -19,7 +19,8 @@ public class GalleryBuilder {
      *  Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
      *  Author: Adam Sinicki
      */
-    public static void populateGallery(PlayerProfile player, RecyclerView galleryRecyclerView, Context context, UserProfileActivity activity){
+    public static void populateGallery(PlayerProfile player, RecyclerView galleryRecyclerView,
+                                       Context context, GameCodeFragment.GameCodeFragmentHost host){
 
         //set up the RecyclerView for the gallery
         galleryRecyclerView.setHasFixedSize(true);
@@ -28,7 +29,7 @@ public class GalleryBuilder {
 
         ArrayList<GalleryListItem> listOfImages = updateGallery(player);
 
-        GalleryAdapter galleryListAdapter = new GalleryAdapter(context,listOfImages,activity);
+        GalleryAdapter galleryListAdapter = new GalleryAdapter(context, listOfImages, host);
         galleryRecyclerView.setAdapter(galleryListAdapter);
     }
 

@@ -34,7 +34,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     private ArrayList<GalleryListItem> galleryList;
     private Context context;
-    private UserProfileActivity activity;
+    private GameCodeFragment.GameCodeFragmentHost host;
     private PlayerProfile player;
 
     /**
@@ -44,10 +44,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
      * @param galleryList
      *  galleryList is the array list for the adapter
      */
-    public GalleryAdapter(Context context, ArrayList<GalleryListItem> galleryList, UserProfileActivity activity) {
+    public GalleryAdapter(Context context, ArrayList<GalleryListItem> galleryList,
+                          GameCodeFragment.GameCodeFragmentHost host) {
         this.galleryList = galleryList;
         this.context = context;
-        this.activity = activity;
+        this.host = host;
         this.player = MainActivity.getPlayer();
 
     }
@@ -106,7 +107,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
                 GameCode code = player.getCode(codeHash);
                 System.out.println("this is the hash: "+ code);
-                activity.generateFragment(code);
+                host.createFragment(code.getSha256hex());
             });
         }
     }

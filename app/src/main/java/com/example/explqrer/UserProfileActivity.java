@@ -29,7 +29,9 @@ import java.util.TimerTask;
 /**
  * all the methods to create the User Profile
  */
-public class UserProfileActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener{
+public class UserProfileActivity extends AppCompatActivity
+        implements NavigationBarView.OnItemSelectedListener,
+        GameCodeFragment.GameCodeFragmentHost {
 
     private static final String[] paths = {"Select to delete QR", "Scan to sign-in", "Edit Profile"};
     private BottomNavigationView bottomNavigationView;
@@ -201,12 +203,11 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                 }
             }
         }, 0, time);
-
-
     }
 
-    public void generateFragment(GameCode codeHash) {
-        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCodes().get(codeHash));
-        gameCodeFragment.show(getSupportFragmentManager(),"GAMECODE");
+    @Override
+    public void createFragment(String hash) {
+        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCode(hash));
+        gameCodeFragment.show(getSupportFragmentManager(),"GAME_CODE");
     }
 }
