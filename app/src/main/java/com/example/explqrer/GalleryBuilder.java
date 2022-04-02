@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.auth.User;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,7 +19,7 @@ public class GalleryBuilder {
      *  Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
      *  Author: Adam Sinicki
      */
-    public static void populateGallery(PlayerProfile player, RecyclerView galleryRecyclerView, Context context){
+    public static void populateGallery(PlayerProfile player, RecyclerView galleryRecyclerView, Context context, UserProfileActivity activity){
 
         //set up the RecyclerView for the gallery
         galleryRecyclerView.setHasFixedSize(true);
@@ -26,7 +28,7 @@ public class GalleryBuilder {
 
         ArrayList<GalleryListItem> listOfImages = updateGallery(player);
 
-        GalleryAdapter galleryListAdapter = new GalleryAdapter(context,listOfImages);
+        GalleryAdapter galleryListAdapter = new GalleryAdapter(context,listOfImages,activity);
         galleryRecyclerView.setAdapter(galleryListAdapter);
     }
 

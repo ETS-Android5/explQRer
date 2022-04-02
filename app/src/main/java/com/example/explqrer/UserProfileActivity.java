@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -98,7 +99,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         });
 
         this.populateBanner(player.getName()); //calls populateBanner to put points and scans in in banner recycler view
-        GalleryBuilder.populateGallery(player,findViewById(R.id.image_gallery),getApplicationContext()); //calls populategallery of galleryBuilder to construct and populate the gallery
+        GalleryBuilder.populateGallery(player,findViewById(R.id.image_gallery),getApplicationContext(),this); //calls populategallery of galleryBuilder to construct and populate the gallery
     }
 
     public void openComment(){
