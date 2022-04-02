@@ -17,6 +17,18 @@
         android:textAlignment="center"
         android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/scanned_by_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:fontFamily="@font/hubballi"
+        android:gravity="center"
+        android:minHeight="48dp"
+        android:text="Scanned by: Loading..."
+        android:textAlignment="center"
+        android:textSize="16sp" />
+
     <EditText
         android:id="@+id/code_scanned_description_text"
         android:layout_width="match_parent"

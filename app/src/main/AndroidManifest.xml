@@ -18,6 +18,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ExplQRer">
         <activity
+            android:name=".Comment"
+            android:exported="false" />
+        <activity
+            android:name=".PlayerDisplayActivity"
+            android:exported="false" />
+        <activity
             android:name=".SearchActivity"
             android:exported="false" />
         <activity

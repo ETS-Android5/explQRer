@@ -1,6 +1,8 @@
 package com.example.explqrer;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<RecyclerViewAdapterLeaderBoard.MyViewHolder>{
+public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<RecyclerViewAdapterLeaderBoard.MyViewHolder> {
     Context context;
     ArrayList<ScannedRankLeaderboard> scannedRankLeaderboards;
 
-    public RecyclerViewAdapterLeaderBoard(Context context, ArrayList<ScannedRankLeaderboard> scannedRankLeaderboards){
+    public RecyclerViewAdapterLeaderBoard(Context context, ArrayList<ScannedRankLeaderboard> scannedRankLeaderboards) {
         this.context = context;
         this.scannedRankLeaderboards = scannedRankLeaderboards;
     }
@@ -26,7 +28,7 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
         // This is where you inflate the layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recyclerview_leaderboard, parent, false);
-        return new RecyclerViewAdapterLeaderBoard.MyViewHolder(view);
+        return new RecyclerViewAdapterLeaderBoard.MyViewHolder(view, this.context);
     }
 
     @Override
@@ -44,14 +46,45 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
         return scannedRankLeaderboards.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView playerRank, playerName;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
-             playerRank = itemView.findViewById(R.id.playerRank);
-             playerName = itemView.findViewById(R.id.playerName);
+            playerRank = itemView.findViewById(R.id.playerRank);
+            playerName = itemView.findViewById(R.id.playerName);
+
+            PlayerProfile currentPlayer = MainActivity.getPlayer();
+            itemView.setOnClickListener(view -> viewPlayer(context));
+            itemView.setOnLongClickListener(view -> {
+                if (!currentPlayer.isAdmin()) {
+                    return false;
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                AlertDialog alertDialog = builder.setMessage("Are you sure you want to delete this player?")
+                        .setTitle("Delete Player")
+                        .setCancelable(false)
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            String name = playerName.getText().toString();
+                            DataHandler dh = DataHandler.getInstance();
+                            dh.deletePlayer(name);
+                            SearchActivity.refresh();
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .create();
+                // Show the Alert Dialog box
+                alertDialog.show();
+                return true;
+            });
+
+        }
+
+        void viewPlayer(Context context) {
+            String name = playerName.getText().toString();
+            Intent myIntent = new Intent(context, PlayerDisplayActivity.class);
+            myIntent.putExtra("playerName", name);
+            context.startActivity(myIntent);
         }
     }
 }
