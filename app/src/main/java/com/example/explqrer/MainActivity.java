@@ -33,7 +33,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationBarView.OnItemSelectedListener,
-        CodeScannedFragment.CodeScannerFragmentListener {
+        CodeScannedFragment.CodeScannerFragmentListener,
+        OnGetPlayerListener {
 
     // DATA
     private static final String SHARED_PREFS_PLAYER_KEY = "Player";
@@ -91,9 +92,7 @@ public class MainActivity extends AppCompatActivity
                                 .newInstance(result.getData().getStringExtra("Code"));
                         codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
                     } else if (result.getResultCode() == 2){
-                        Gson gson = new Gson();
-                        setPlayer(gson.fromJson(result.getData().getStringExtra("Player"),
-                                PlayerProfile.class));
+                        dataHandler.getPlayer(result.getData().getStringExtra("Username"), this);
                     } else {
                         String username = result.getData().getStringExtra("Username");
                         Intent intent = new Intent(this, PlayerDisplayActivity.class);
@@ -296,5 +295,11 @@ public class MainActivity extends AppCompatActivity
                     .toArray(new String[0]),REQUEST_PERMISSIONS_REQUEST_CODE);
         }  // all are granted
 
+    }
+
+
+    @Override
+    public void getPlayerListener(PlayerProfile player) {
+        setPlayer(player);
     }
 }

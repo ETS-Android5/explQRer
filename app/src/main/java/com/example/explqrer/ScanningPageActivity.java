@@ -49,7 +49,7 @@ import java.util.concurrent.Executors;
  */
 
 public class ScanningPageActivity extends AppCompatActivity
-        implements IsPlayerQrFragment.IsPlayerQrFragmentListener, OnGetPlayerListener {
+        implements IsPlayerQrFragment.IsPlayerQrFragmentListener {
 
     enum RETURNS {SCAN, SEE_PROFILE, LOG_IN}
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
@@ -214,35 +214,27 @@ public class ScanningPageActivity extends AppCompatActivity
 
     @Override
     public void processDecision(RETURNS value) {
+        Intent intent = new Intent();
         switch (value) {
             case SCAN:
                 if (!playerProfile.hasCode(rawValue)) {
-                    Intent intent = new Intent();
                     intent.putExtra("Code", rawValue);
                     setResult(RESULT_OK, intent);
                     finish();
                 }
                 break;
             case LOG_IN:
-                dataHandler.getPlayer(rawValue.substring(11), this);
+                intent.putExtra("Username", rawValue.substring(11));
+                setResult(2, intent);
+                finish();
                 break;
             case SEE_PROFILE:
-                Intent intent = new Intent();
+
                 intent.putExtra("Username", rawValue.substring(11));
                 setResult(3, intent);
                 finish();
                 break;
         }
-    }
-
-    @Override
-    public void getPlayerListener(PlayerProfile player) {
-        Intent intent = new Intent();
-        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
-        String json = gson.toJson(player);
-        intent.putExtra("Player", json);
-        setResult(2, intent);
-        finish();
     }
 
 
