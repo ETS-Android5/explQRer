@@ -15,12 +15,14 @@ public class PlayerProfile implements Serializable {
     private long points;
     private GameCode highest, lowest;
     private HashMap<String, GameCode> codes;
+    private final boolean isAdmin;
 
     public PlayerProfile(String username, String Contact) {
         name = username;
         contact = Contact;
         points = 0;
         codes = new HashMap<>() ;
+        isAdmin = false;
     }
 
     /**
@@ -174,4 +176,13 @@ public class PlayerProfile implements Serializable {
         return codes.containsKey(new GameCode(rawValue));
     }
 
+    public void addLocationToCode(GameCode code, Location location) {
+        if (codes.containsKey(code)) {
+            codes.get(code).setLocation(location);
+        }
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
 }
