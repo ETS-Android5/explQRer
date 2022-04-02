@@ -13,12 +13,17 @@ import android.widget.EditText;
 import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
+    private static SearchActivity instance;
+
+    public static void refresh(){
+        instance.recreate();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
+        instance = this;
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.user_recyclerview);
         Button search = (Button) findViewById(R.id.search_Button);
         EditText searchBar = (EditText) findViewById(R.id.search_Bar);

@@ -99,6 +99,7 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
                                                 String name = playerName.getText().toString();
                                                 DataHandler dh = DataHandler.getInstance();
                                                 dh.deletePlayer(name);
+                                                SearchActivity.refresh();
                                             }
                                         });
 
