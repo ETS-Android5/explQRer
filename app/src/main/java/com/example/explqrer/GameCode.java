@@ -12,10 +12,12 @@ import androidx.annotation.Nullable;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -27,7 +29,7 @@ public class GameCode implements Serializable {
     private final String sha256hex;
 
     private final int score;
-    private Location location;
+    private double lon, lat;
     private ProxyBitmap photo;
     private String description;
     private static HashFunction hash =  Hashing.sha256();
@@ -37,19 +39,20 @@ public class GameCode implements Serializable {
      * @param barcode   a scanned barcode to be recorded
      * @param location  geolocation information. Can be null
      * @param photo     an image of the location of the barcode. Can be null
-     * @param player    the player scanning the code
      */
-    public GameCode(@NonNull String barcode, @NonNull String player,
-                    @Nullable Location location, @Nullable Bitmap photo) {
+    public GameCode(@NonNull String barcode, @Nullable Location location, @Nullable Bitmap photo) {
         sha256hex = hashCode(barcode);
         score = calculateScore(barcode);
-        this.location = location;
+        if (location != null) {
+            lon = location.getLongitude();
+            lat = location.getLatitude();
+        }
         if (photo != null) {
             setPhoto(photo);
         }
     }
   
-    GameCode(String rawValue) {
+    public GameCode(String rawValue) {
         sha256hex = hashCode(rawValue);
         score = calculateScore(rawValue);
     }
@@ -110,6 +113,9 @@ public class GameCode implements Serializable {
      * @return
      */
     public Location getLocation() {
+        Location location = new Location("");
+        location.setLongitude(lon);
+        location.setLatitude(lat);
         return location;
     }
 
@@ -126,7 +132,8 @@ public class GameCode implements Serializable {
      * @param location
      */
     public void setLocation(Location location) {
-        this.location = location;
+        lon = location.getLongitude();
+        lat = location.getLatitude();
     }
 
     /**
