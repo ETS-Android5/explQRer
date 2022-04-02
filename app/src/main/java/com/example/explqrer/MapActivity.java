@@ -333,7 +333,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         }
     }
 
-//
+
 //    /**
 //     * requestPermission result
 //     * If add permission not add successfully, show the text

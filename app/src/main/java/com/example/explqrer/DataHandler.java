@@ -465,6 +465,7 @@ public class DataHandler {
                     if(doc.exists()){
                         ptsL = (long) doc.getData().get("ptsL");
                     }
+                    System.out.println(ptsL);
                     listener.getPtsLListener(ptsL);
                 }
                 else {
