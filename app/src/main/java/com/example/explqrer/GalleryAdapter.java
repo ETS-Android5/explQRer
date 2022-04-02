@@ -33,6 +33,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     private ArrayList<GalleryListItem> galleryList;
     private Context context;
     private UserProfileActivity activity;
+    private PlayerProfile player;
 
     /**
      * Constructor for the class
@@ -45,6 +46,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         this.galleryList = galleryList;
         this.context = context;
         this.activity = activity;
+        this.player = MainActivity.getPlayer();
+
     }
 
     /**
@@ -96,11 +99,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
             image = view.findViewById(R.id.image);
             view.setOnClickListener(view1 -> {
+
                 String codeHash = galleryList.get(getBindingAdapterPosition()).getHashCode();
-                Bitmap codeImage = galleryList.get(getBindingAdapterPosition()).getImage();
-                String codeDescription = galleryList.get(getBindingAdapterPosition()).getCodeDescription();
-                int codePts = galleryList.get(getBindingAdapterPosition()).getCodePts();
-                //activity.generateFragment(codeHash,codeImage,codePts,codeDescription);
+
+                GameCode code = player.getCode(codeHash);
+                System.out.println("this is the hash: "+ code);
+                activity.generateFragment(code);
             });
         }
     }

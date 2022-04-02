@@ -42,6 +42,7 @@ public class GalleryBuilder {
             GalleryListItem galleryListItem = new GalleryListItem();
             //get image of the qr scanned and set the images
             galleryListItem.setImage(qr.getPhoto());
+            galleryListItem.setHashCode(qr.getSha256hex());
             listOfImages.add(galleryListItem);
         }
         return listOfImages;

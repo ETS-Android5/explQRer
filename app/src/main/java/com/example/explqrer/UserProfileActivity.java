@@ -86,11 +86,6 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                                 Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
                                 startActivity(intent);
                                 break;
-                            case R.id.scan_sign_in:
-                                // Scan to sign in
-                                Intent myIntent = new Intent(getApplicationContext(), ProfileQr.class);
-                                startActivity(myIntent);
-                                break;
                             default:
                                 break;
                         }
@@ -209,7 +204,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
     }
 
-    public void generateFragment(String codeHash, Bitmap codeImage, int codePts, String codeDescription) {
+    public void generateFragment(GameCode codeHash) {
         GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCodes().get(codeHash));
         gameCodeFragment.show(getSupportFragmentManager(),"GAMECODE");
     }
