@@ -45,11 +45,7 @@ public class MainActivity extends AppCompatActivity
     private DataHandler dataHandler;
     private FusedLocationProviderClient fusedLocationClient;
     // Views
-<<<<<<< HEAD
     private TextView  usernameText, pointsRank, scannedRank, uniqueRank;
-=======
-    private TextView usernameText, highestText, lowestText;
->>>>>>> dev
     private BottomNavigationView bottomNavigationView;
 
     // Shared Preferences
