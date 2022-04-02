@@ -23,6 +23,7 @@ public class LocationAdapter extends ArrayAdapter<GameCode.CodeLocation> {
     private float distance;
     private double playerLongitude;
     private double playerLatitude;
+    private int score;
 
 
     public LocationAdapter(Context context, ArrayList<GameCode.CodeLocation> locations, double playerLongitude, double playerLatitude){
@@ -42,13 +43,15 @@ public class LocationAdapter extends ArrayAdapter<GameCode.CodeLocation> {
 
         GameCode.CodeLocation codeLocation = locations.get(position);
 
+
         TextView locationView = view.findViewById(R.id.location);
         TextView distanceView = view.findViewById(R.id.distance);
 
         Location location = codeLocation.getLocation(); // nearby code location
-        String longitude = String.format("%.2f",location.getLongitude());
-        String latitude = String.format("%.2f",location.getLatitude());
-        locationView.setText("Long: "+longitude+ "Lat: "+latitude);
+        score = GameCode.calculateScore(codeLocation.getHash());
+        //String longitude = String.format("%.2f",location.getLongitude());
+        //String latitude = String.format("%.2f",location.getLatitude());
+        locationView.setText(String.valueOf(score));
 
         Location playerLocation = new Location("");// player location
         playerLocation.setLongitude(playerLongitude);

@@ -2,6 +2,7 @@ package com.example.explqrer;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,8 +11,13 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.SearchEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -55,20 +61,25 @@ import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListen
 import com.mapbox.maps.viewannotation.ViewAnnotationManager;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class MapActivity extends AppCompatActivity implements OnGetNearByQrsListener {
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
+    private static final Object MAPBOX_ACCESS_TOKEN = 0;
 
     private MapView mapView;
     private FloatingActionButton recenterButton;
-    private EditText locationSearch;
+    private AutoCompleteTextView locationSearch;
     private ImageButton locationSearchButton;
     private Button refreshButton, nearbyListButton;
 
     private LocationRequest locationRequest;
     private double playerLongitude, playerLatitude;
+    private double searchLongitude, searchLatitude;
     private Bitmap image;
 
     private GesturesPluginImpl gesturePlugin;
@@ -116,7 +127,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
                             Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
 
-        Log.d("TAG", "onCreate:  1");
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -134,7 +144,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         locationSearchButton.setBackgroundResource(0);
         locationSearch.setSelection(0);
         nearbyListButton = findViewById(R.id.nearby_list_button);
-        Log.d("TAG", "onCreate:  2");
 
 
         locationComponentPlugin = mapView.getPlugin(Plugin.MAPBOX_LOCATION_COMPONENT_PLUGIN_ID);
@@ -206,24 +215,67 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             }
         }, getMainLooper());
 
+
+
+        List<String> suggestionResults = new ArrayList<String>();
+        final String[][] array = {new String[6]};
+        Locale locale = new Locale("", "CANADA");
+        Geocoder geocoder = new Geocoder(MapActivity.this, locale);
+//        locationSearch.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                String searchInputString = locationSearch.getText().toString();
+//                try{
+//                    searchAddresses = (ArrayList<Address>) geocoder.getFromLocationName(searchInputString, 6);
+//
+//                    if (searchAddresses.size()==0){
+//                        // no location
+//                    }else{
+//                        //Toast.makeText(MapActivity.this, "resulkt found", Toast.LENGTH_SHORT).show();
+////                        if(suggestionResults.contains("No results found")){
+////                            suggestionResults.remove("No results found");
+////                        }
+//                        for ( Address address: searchAddresses){
+//                            double longitude = address.getLongitude();
+//                            double latitude = address.getLatitude();
+//                            suggestionResults.add("longitude: "+String.valueOf(longitude)+" latitude: "+String.valueOf(latitude));
+//                            array[0] = suggestionResults.toArray(new String[0]);
+//                            locationSearch.setAdapter(new ArrayAdapter<String>(MapActivity.this, android.R.layout.simple_list_item_1, array[0]));
+//
+//                        }
+//                    }
+//                }catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
+
         // get address
         locationSearchButton.setOnClickListener(view -> {
             String searchInputString = locationSearch.getText().toString();
             Address address1 = null;
-
-            Locale locale = new Locale("", "CANADA");
-            Geocoder geocoder = new Geocoder(MapActivity.this, locale);
             try {
                 // An array of address that user search ( maximum = 10)
-                searchAddresses = (ArrayList<Address>) geocoder.getFromLocationName(searchInputString, 10);
+                ArrayList<Address> searchAddresses = (ArrayList<Address>) geocoder.getFromLocationName(searchInputString, 10);
 
                 if (searchAddresses.size() == 0) {  // No search result find
                     locationSearch.setText("");
                     Toast.makeText(MapActivity.this, "No address found", Toast.LENGTH_SHORT).show();
 
                 } else { // find search result
-                    //Toast.makeText(MapActivity.this, "Total " + searchAddresses.size() + " results finded", Toast.LENGTH_SHORT).show();
                     address1 = searchAddresses.get(0);
+                    searchLongitude = address1.getLongitude(); // get search location
+                    searchLatitude = address1.getLatitude();
 
                     // get the center of the map
                     stopFollow();
@@ -250,15 +302,17 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             refreshNearby(point.longitude(), point.latitude());
         });
 
-        //
+        // click and see nearby qr ( location and distance)
         nearbyListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                refreshNearby(searchLongitude,searchLatitude); // change
                 Intent intent = new Intent(MapActivity.this, NearbyQRListInMapShow.class);
-                intent.putParcelableArrayListExtra("nearby_code_locations",codes);
+                intent.putParcelableArrayListExtra("nearby_code_locations", codes);
                 intent.putExtra("player_longitude", playerLongitude);
                 intent.putExtra("player_latitude", playerLatitude);
                 startActivity(intent);
+
 
             }
         });
@@ -344,47 +398,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         }
     }
 
-//
-//    /**
-//     * requestPermission result
-//     * If add permission not add successfully, show the text
-//     * @param requestCode
-//     * @param permissions
-//     * @param grantResults
-//     */
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-//                                           @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        if (requestCode== REQUEST_PERMISSIONS_REQUEST_CODE &&grantResults.length>0){
-//            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-//                Toast.makeText(MapActivity.this,"Permission denied",
-//                        Toast.LENGTH_LONG).show();
-//            }
-//        }
-//    }
-//
-//    /**
-//     * request permission
-//     * @param permissions
-//     */
-//    public void requestPermissionsIfNecessary(String[] permissions) {
-//        ArrayList<String> permissionsToRequest = new ArrayList<>();
-//        for (String permission : permissions) {
-//            if (ContextCompat.checkSelfPermission(this, permission) !=
-//                    PackageManager.PERMISSION_GRANTED) {
-//                // Permission is not granted
-//                permissionsToRequest.add(permission);
-//            }
-//        }
-//        // more than one permission is not granted
-//        if (permissionsToRequest.size() > 0) {
-//            ActivityCompat.requestPermissions(this, permissionsToRequest
-//                    .toArray(new String[0]),REQUEST_PERMISSIONS_REQUEST_CODE);
-//        }  // all are granted
-//
-//    }
 
 
 }

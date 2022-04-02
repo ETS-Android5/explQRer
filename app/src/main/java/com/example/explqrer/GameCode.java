@@ -175,6 +175,10 @@ public class GameCode implements Serializable {
             return location;
         }
 
+        public String getHash() {
+            return hash;
+        }
+
         public CodeLocation(String hash, Location location) {
             this.hash = hash;
             this.location = location;
