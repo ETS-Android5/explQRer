@@ -4,12 +4,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +27,8 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private Button deleteButton;
     private Button commentButton;
     private Button locationButton;
+    private ImageView fragmentImageView;
+    private TextView fragmentDescriptionView;
 
     private Location location;
     private String codeDescription;
@@ -58,31 +62,33 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity())
                 .inflate(R.layout.fragment_game_code, null);
+        fragmentImageView = view.findViewById(R.id.gamecode_image);
+        fragmentDescriptionView = view.findViewById(R.id.gamecode_description);
 
-        GameCode code = null;
+        GameCode code;
         try {
-            code = (GameCode) getArguments().getSerializable(CODE);String hash = (String) getArguments().get(HASH);
+            code = (GameCode) getArguments().getSerializable(CODE);
+            String hash = (String) getArguments().get(HASH);
             location = code.getLocation();
             codeImage = code.getPhoto();
             codeDescription = code.getDescription();
             codePoints = code.getScore();
             completeDescription = codePoints + " pts; " + codeDescription;
-
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, fragmentImageView.getWidth(),
+                        fragmentImageView.getHeight(), false);
+                fragmentImageView.setImageBitmap(scaledImage);
+                fragmentDescriptionView.setText(completeDescription);
+            }, 300);
         } catch (Exception ignored) {
             DataHandler.getInstance().getCode(getArguments().getString(HASH), this);
+            fragmentImageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.red_marker));
+            fragmentDescriptionView.setText("Loading...");
         }
 
-        ImageView fragmentImageView = view.findViewById(R.id.gamecode_image);
-        TextView fragmentDescriptionView = view.findViewById(R.id.gamecode_description);
 
 
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, fragmentImageView.getWidth(),
-                    fragmentImageView.getHeight(), false);
-            fragmentImageView.setImageBitmap(scaledImage);
-            fragmentDescriptionView.setText(completeDescription);
-        }, 300);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder.setView(view)
@@ -98,5 +104,12 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         codeDescription = code.getDescription();
         codePoints = code.getScore();
         completeDescription = codePoints + " pts; " + codeDescription;
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, fragmentImageView.getWidth(),
+                    fragmentImageView.getHeight(), false);
+            fragmentImageView.setImageBitmap(scaledImage);
+            fragmentDescriptionView.setText(completeDescription);
+        }, 300);
     }
 }
