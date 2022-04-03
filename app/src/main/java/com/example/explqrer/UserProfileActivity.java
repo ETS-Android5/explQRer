@@ -124,9 +124,8 @@ public class UserProfileActivity extends AppCompatActivity
 
                 return true;
 
-            case R.id.scan_nav:
-                Intent scanningIntent= new Intent(this, ScanningPageActivity.class);
-                startActivity(scanningIntent);
+            case R.id.home_nav:
+                finish();
                 return true;
 
             case R.id.search_nav:

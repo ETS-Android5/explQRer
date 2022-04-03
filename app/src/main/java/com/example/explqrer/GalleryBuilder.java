@@ -37,18 +37,19 @@ public class GalleryBuilder {
 
         HashMap<String,GameCode> codes = player.getCodes();
         Collection<GameCode> qrCodes = codes.values();
-
-        //loop through all the imagePoints and imageIds populate galleryListItem objects with the image's point value and the image
+        System.out.println("this is true: "+ qrCodes);
         ArrayList<GalleryListItem> listOfImages = new ArrayList<>();
-        //loop through the QRs scanned by the player
+
         for(GameCode qr : qrCodes ){
+
             GalleryListItem galleryListItem = new GalleryListItem();
-            //get image of the qr scanned and set the images
             galleryListItem.setImage(qr.getPhoto());
             galleryListItem.setHashCode(qr.getSha256hex());
             listOfImages.add(galleryListItem);
         }
         return listOfImages;
     }
+
+
 
 }

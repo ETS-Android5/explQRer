@@ -3,6 +3,7 @@ package com.example.explqrer;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
@@ -31,6 +32,8 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private String codeDescription;
     private int codePoints;
     private String completeDescription;
+    private PlayerProfile player;
+
 
     public interface GameCodeFragmentHost {
         void createFragment(String hash);
@@ -61,9 +64,11 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         View view = LayoutInflater.from(getActivity())
                 .inflate(R.layout.fragment_game_code, null);
 
+        player = MainActivity.getPlayer();
         GameCode code = null;
+
         try {
-            code = (GameCode) getArguments().getSerializable(CODE);String hash = (String) getArguments().get(HASH);
+            code = (GameCode) getArguments().getSerializable(CODE);
             location = code.getLocation();
             codeImage = code.getPhoto();
             codeDescription = code.getDescription();
@@ -88,15 +93,35 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
 
 
         deleteButton = (ImageButton) view.findViewById(R.id.delete_button);
+
+        GameCode finalCode = code;
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                    View view = LayoutInflater.from(getContext()).inflate(R.layout.image_cell_layout, null);
+                    AlertDialog.Builder deletePrompt = new AlertDialog.Builder(GameCodeFragment.this.getActivity());
+                    deletePrompt.setView(view);
+                    deletePrompt.setCancelable(true)
+                            .setTitle("Wait!")
+                            .setMessage("Are you sure you want to delete it?")
+                            .setNegativeButton("No,Don't!", null)
+                            .setPositiveButton("Yes,Delete!", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                        player.removeCode(finalCode);
+                                        
 
+                                }
+                            });
+
+
+                    Dialog dialog = deletePrompt.create();
+                    dialog.show();
             }
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder.setView(view)
-                .setPositiveButton("Hello", null)
+                .setPositiveButton("close", null)
                 .create();
     }
 
