@@ -3,6 +3,7 @@ package com.example.explqrer;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +25,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private static final String CODE = "Code";
     private Bitmap codeImage;
     private Button deleteButton;
-    private Button commentButton;
+    private ImageButton commentButton;
     private Button locationButton;
 
     private Location location;
@@ -75,7 +77,16 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
 
         ImageView fragmentImageView = view.findViewById(R.id.gamecode_image);
         TextView fragmentDescriptionView = view.findViewById(R.id.gamecode_description);
-
+        commentButton = view.findViewById(R.id.comment_button);
+        String hash = code.getSha256hex();
+        commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),Comment.class);
+                intent.putExtra("hash",hash);
+                startActivity(intent);
+            }
+        });
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
