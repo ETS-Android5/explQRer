@@ -121,6 +121,22 @@ public class DataHandler {
     }
 
     /**
+     * Function to delete a QR code from the database
+     * @param code
+     *  The QRcode to delete
+     */
+    public void deleteQR(GameCode code){
+        // Connect to collection
+        CollectionReference cr = db.collection("qrbase");
+
+        // Document Reference
+        DocumentReference docRef = cr.document(code.getSha256hex());
+
+        // Delete the document
+        docRef.delete();
+    }
+
+    /**
      * Function to add the user comment to the qrbase collection on firestore
      *
      * @param hash    This is the GameCode object on which the player has commented
