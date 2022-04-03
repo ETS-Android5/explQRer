@@ -52,14 +52,7 @@ public class UserProfileActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        //button for comments
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openComment();
-            }
-        });
+
 
         // get the player from main activity
         player = MainActivity.getPlayer();
