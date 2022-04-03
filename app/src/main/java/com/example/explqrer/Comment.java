@@ -71,7 +71,7 @@ public class Comment extends AppCompatActivity {
     }
 
     /**
-     * Method to show and delete the comments that have
+     * Method to display the comments that have
      * already been made
      * @param name
      * Displaying comments
@@ -80,16 +80,8 @@ public class Comment extends AppCompatActivity {
         final View view = getLayoutInflater().inflate(R.layout.card, null);
 
         TextView nameView = view.findViewById(R.id.name);
-        Button delete = view.findViewById(R.id.delete);
 
         nameView.setText(name);
-
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                layout.removeView(view);
-            }
-        });
 
         layout.addView(view);
     }
