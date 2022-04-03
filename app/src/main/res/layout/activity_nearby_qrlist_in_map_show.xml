@@ -5,24 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2"
-        >
+        android:weightSum="2">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="QRScore"
-            android:textSize="40dp"
+            android:layout_weight="1"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:layout_weight="1"
-            android:textStyle="bold"
+            android:text="QRScore"
             android:textAlignment="center"
-            android:textColor="@color/white">
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold">
 
 
         </TextView>
@@ -30,14 +30,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Distance"
-            android:textSize="40dp"
+            android:layout_weight="1"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:textStyle="bold"
-            android:layout_weight="1"
+            android:text="Distance"
             android:textAlignment="center"
-            android:textColor="@color/white">
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold">
 
         </TextView>
 
@@ -46,7 +46,7 @@
 
     <ListView
         android:id="@+id/location_list"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     </ListView>

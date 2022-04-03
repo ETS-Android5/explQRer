@@ -1,49 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:layout_weight="2">
+    android:weightSum="2">
 
     <TextView
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/beige"
-        android:paddingTop="10dp"
-        android:paddingLeft="65dp"
-        android:paddingRight="65dp"
         android:layout_weight="1"
-        android:textColor="@color/black"
+        android:background="@color/beige"
+        android:padding="16dp"
         android:textAlignment="center"
-        android:paddingBottom="20dp"
-        android:textSize="30dp">
+        android:textColor="@color/black"
+        android:textSize="20sp">
 
     </TextView>
-
 
 
     <TextView
         android:id="@+id/distance"
-        android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/beige"
-        android:textColor="@color/black"
-        android:paddingLeft="65dp"
-        android:paddingRight="65dp"
         android:layout_weight="1"
-        android:paddingBottom="20dp"
-        android:textSize="30dp"
-        android:textAlignment="center">
+        android:background="@color/beige"
+        android:padding="16dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp">
 
     </TextView>
-
-
 
 
 </LinearLayout>

@@ -43,16 +43,14 @@ public class NearbyQRListInMapShow extends AppCompatActivity {
         locationList.setAdapter(locationAdapter);
 
         // click list view
-        locationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // select one nearby location that player want to see
-                GameCode.CodeLocation selectedQRLocation = locationAdapter.getItem(i);
-                // back to the previous activity
-                Intent intent = new Intent(NearbyQRListInMapShow.this, MapActivity.class);
-                intent.putExtra("QR Location", selectedQRLocation.getLocation());
-                startActivity(intent);
-            }
+        locationList.setOnItemClickListener((adapterView, view, i, l) -> {
+            // select one nearby location that player want to see
+            GameCode.CodeLocation selectedQRLocation = locationAdapter.getItem(i);
+            // back to the previous activity
+            Intent intent = new Intent();
+            intent.putExtra("location", selectedQRLocation.getLocation());
+            setResult(RESULT_OK, intent);
+            finish();
         });
 
     }
