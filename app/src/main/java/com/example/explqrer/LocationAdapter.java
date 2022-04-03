@@ -49,8 +49,6 @@ public class LocationAdapter extends ArrayAdapter<GameCode.CodeLocation> {
 
         Location location = codeLocation.getLocation(); // nearby code location
         score = GameCode.calculateScore(codeLocation.getHash());
-        //String longitude = String.format("%.2f",location.getLongitude());
-        //String latitude = String.format("%.2f",location.getLatitude());
         locationView.setText(String.valueOf(score));
 
         Location playerLocation = new Location("");// player location

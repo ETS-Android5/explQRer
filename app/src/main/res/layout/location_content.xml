@@ -7,20 +7,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:layout_weight="5">
+    android:layout_weight="2">
 
     <TextView
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/beige"
         android:paddingTop="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:layout_weight="2"
+        android:paddingLeft="65dp"
+        android:paddingRight="65dp"
+        android:layout_weight="1"
         android:textColor="@color/black"
         android:textAlignment="center"
-        android:textSize="20dp">
+        android:paddingBottom="20dp"
+        android:textSize="30dp">
 
     </TextView>
 
@@ -31,12 +32,13 @@
         android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/beige"
         android:textColor="@color/black"
-        android:paddingRight="15dp"
-        android:paddingLeft="60dp"
+        android:paddingLeft="65dp"
+        android:paddingRight="65dp"
         android:layout_weight="1"
-        android:textSize="20dp"
+        android:paddingBottom="20dp"
+        android:textSize="30dp"
         android:textAlignment="center">
 
     </TextView>
