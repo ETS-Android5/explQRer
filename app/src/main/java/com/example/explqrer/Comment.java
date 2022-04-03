@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,7 @@ public class Comment extends AppCompatActivity {
     Button add;
     AlertDialog dialog;
     LinearLayout layout;
+    String hash;
 
     /**
      * Method for adding comments
@@ -29,10 +31,12 @@ public class Comment extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-
+        Intent intent = getIntent();
+        hash = intent.getStringExtra("hash");
         add = findViewById(R.id.add);
         layout = findViewById(R.id.container);
-
+        DataHandler dh = DataHandler.getInstance();
+        
         buildDialog();
 
         add.setOnClickListener(new View.OnClickListener() {
