@@ -10,7 +10,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/fragment_card"
-        android:layout_width="match_parent"
+        android:layout_width="410dp"
         android:layout_height="400dp"
         android:background="@color/cool_dark"
         app:cardCornerRadius="7dp"

@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 
 public class GameCodeFragment extends DialogFragment implements OnGetCodeListener {
@@ -29,6 +30,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private Button locationButton;
     private ImageView fragmentImageView;
     private TextView fragmentDescriptionView;
+    private CardView cardView;
 
     private Location location;
     private String codeDescription;
@@ -64,6 +66,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                 .inflate(R.layout.fragment_game_code, null);
         fragmentImageView = view.findViewById(R.id.gamecode_image);
         fragmentDescriptionView = view.findViewById(R.id.gamecode_description);
+        cardView = view.findViewById(R.id.fragment_card);
 
         GameCode code;
         try {
@@ -83,7 +86,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             }, 300);
         } catch (Exception ignored) {
             DataHandler.getInstance().getCode(getArguments().getString(HASH), this);
-            fragmentImageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.red_marker));
+            cardView.setVisibility(View.GONE);
             fragmentDescriptionView.setText("Loading...");
         }
 
@@ -106,9 +109,11 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         completeDescription = codePoints + " pts; " + codeDescription;
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, fragmentImageView.getWidth(),
-                    fragmentImageView.getHeight(), false);
-            fragmentImageView.setImageBitmap(scaledImage);
+            if (codeImage != null) {
+                cardView.setVisibility(View.VISIBLE);
+                Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, 410, 400, false);
+                fragmentImageView.setImageBitmap(scaledImage);
+            }
             fragmentDescriptionView.setText(completeDescription);
         }, 300);
     }
