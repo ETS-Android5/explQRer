@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,9 +23,9 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private static final String LOCATION = "Location";
     private static final String CODE = "Code";
     private Bitmap codeImage;
-    private Button deleteButton;
-    private Button commentButton;
-    private Button locationButton;
+    private ImageButton deleteButton;
+    private ImageButton commentButton;
+    private ImageButton locationButton;
 
     private Location location;
     private String codeDescription;
@@ -73,9 +74,9 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             DataHandler.getInstance().getCode(getArguments().getString(HASH), this);
         }
 
+
         ImageView fragmentImageView = view.findViewById(R.id.gamecode_image);
         TextView fragmentDescriptionView = view.findViewById(R.id.gamecode_description);
-
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
@@ -84,6 +85,14 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             fragmentImageView.setImageBitmap(scaledImage);
             fragmentDescriptionView.setText(completeDescription);
         }, 300);
+
+
+        deleteButton = (ImageButton) view.findViewById(R.id.delete_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+            }
+        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder.setView(view)
