@@ -123,17 +123,14 @@ public class DataHandler {
     /**
      * Function to add the user comment to the qrbase collection on firestore
      *
-     * @param code    This is the GameCode object on which the player has commented
-     * @param player  This is the PlayerProfile object of the player that has commented
+     * @param hash    This is the GameCode object on which the player has commented
+     * @param username  This is the PlayerProfile object of the player that has commented
      * @param comment This is the comment of the player
      */
-    public void addComment(GameCode code, PlayerProfile player, String comment) {
+    public void addComment(String hash, String username, String comment) {
         // Collection reference
         CollectionReference cr = db.collection("qrbase");
 
-        // Get the info from the objects
-        String hash = code.getSha256hex();
-        String username = player.getName();
 
         // Hash map to store the comment info
         Map<String, String> data = new HashMap<>();
@@ -149,14 +146,13 @@ public class DataHandler {
     /**
      * This function returns the list of hashmaps which contains the username and comments
      *
-     * @param code     This is the GameCode object on which the player has commented
+     * @param hash     This is the GameCode object on which the player has commented
      * @param listener This is the listener has to be used to access the Arraylist of the hashmaps
      */
-    public void getComments(GameCode code, OnGetCommentsListener listener) {
+    public void getComments(String hash, OnGetCommentsListener listener) {
         // Collection reference
         CollectionReference cr = db.collection("qrbase");
 
-        String hash = code.getSha256hex();
 
         // Document Reference
         DocumentReference docRef = cr.document(hash);

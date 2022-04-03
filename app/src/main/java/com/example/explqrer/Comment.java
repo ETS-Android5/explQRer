@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 /**
  * class representing comments
  */
@@ -21,6 +24,7 @@ public class Comment extends AppCompatActivity {
     AlertDialog dialog;
     LinearLayout layout;
     String hash;
+    DataHandler dh;
 
     /**
      * Method for adding comments
@@ -35,8 +39,19 @@ public class Comment extends AppCompatActivity {
         hash = intent.getStringExtra("hash");
         add = findViewById(R.id.add);
         layout = findViewById(R.id.container);
-        DataHandler dh = DataHandler.getInstance();
-        
+        dh = DataHandler.getInstance();
+        dh.getComments(hash, new OnGetCommentsListener() {
+            @Override
+            public void getCommentsListener(ArrayList<Map<String, String>> comments) {
+                if (comments != null){
+                    for(Map<String,String> comment : comments){
+                        for(String name: comment.keySet()){
+                            addCard(name, comment.get(name));
+                        }
+                    }
+                }
+            }
+        });
         buildDialog();
 
         add.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +76,9 @@ public class Comment extends AppCompatActivity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        addCard(name.getText().toString());
+                        PlayerProfile player = MainActivity.getPlayer();
+                        dh.addComment(hash, player.getName(),name.getText().toString());
+                        addCard(player.getName(), name.getText().toString());
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -80,11 +97,12 @@ public class Comment extends AppCompatActivity {
      * @param name
      * Displaying comments
      */
-    private void addCard(String name) {
+    private void addCard(String name, String comment) {
         final View view = getLayoutInflater().inflate(R.layout.card, null);
 
-        TextView nameView = view.findViewById(R.id.name);
-
+        TextView commentView = view.findViewById(R.id.commentHolderCard);
+        TextView nameView = view.findViewById(R.id.usernameHolderCard);
+        commentView.setText(comment);
         nameView.setText(name);
 
         layout.addView(view);
