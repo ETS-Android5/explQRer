@@ -49,7 +49,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         this.galleryList = galleryList;
         this.context = context;
         this.host = host;
-        this.player = MainActivity.getPlayer();
+        this.player = host.getPlayer();
 
     }
 

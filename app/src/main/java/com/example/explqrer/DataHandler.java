@@ -136,19 +136,32 @@ public class DataHandler {
     }
 
     /**
+     * Function to delete a QR code from the database
+     * @param code
+     *  The QRcode to delete
+     */
+    public void deleteQR(GameCode code){
+        // Connect to collection
+        CollectionReference cr = db.collection("qrbase");
+
+        // Document Reference
+        DocumentReference docRef = cr.document(code.getSha256hex());
+
+        // Delete the document
+        docRef.delete();
+    }
+
+    /**
      * Function to add the user comment to the qrbase collection on firestore
      *
-     * @param code    This is the GameCode object on which the player has commented
-     * @param player  This is the PlayerProfile object of the player that has commented
+     * @param hash    This is the GameCode object on which the player has commented
+     * @param username  This is the PlayerProfile object of the player that has commented
      * @param comment This is the comment of the player
      */
-    public void addComment(GameCode code, PlayerProfile player, String comment) {
+    public void addComment(String hash, String username, String comment) {
         // Collection reference
         CollectionReference cr = db.collection("qrbase");
 
-        // Get the info from the objects
-        String hash = code.getSha256hex();
-        String username = player.getName();
 
         // Hash map to store the comment info
         Map<String, String> data = new HashMap<>();
@@ -164,14 +177,13 @@ public class DataHandler {
     /**
      * This function returns the list of hashmaps which contains the username and comments
      *
-     * @param code     This is the GameCode object on which the player has commented
+     * @param hash     This is the GameCode object on which the player has commented
      * @param listener This is the listener has to be used to access the Arraylist of the hashmaps
      */
-    public void getComments(GameCode code, OnGetCommentsListener listener) {
+    public void getComments(String hash, OnGetCommentsListener listener) {
         // Collection reference
         CollectionReference cr = db.collection("qrbase");
 
-        String hash = code.getSha256hex();
 
         // Document Reference
         DocumentReference docRef = cr.document(hash);
@@ -291,12 +303,15 @@ public class DataHandler {
         data.put("pts", 0);
         data.put("scanned", 0);
         data.put("uniqueScanned", 0);
-        data.put("ptsL", -1);
-        data.put("qrL", -1);
-        data.put("uniqueL", -1);
+        data.put("ptsL", 10000);
+        data.put("qrL", 10000);
+        data.put("uniqueL", 10000);
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         data.put("json", gson.toJson(playerProfile));
         cr.document(playerProfile.getName()).set(data);
+        updatePtsL();
+        updateQrL();
+        updateUniqueL();
     }
 
     /**
@@ -313,6 +328,22 @@ public class DataHandler {
 
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         docRef.update("json", gson.toJson(playerProfile));
+    }
+
+    /**
+     * Function to delete the player from the player database
+     *
+     * @param username The username of the player we want to delete
+     */
+    public void deletePlayer(String username) {
+        // Collection Reference
+        CollectionReference cr = db.collection("player");
+
+        // Document reference
+        DocumentReference docRef = cr.document(username);
+
+        // Delete the doc
+        docRef.delete();
     }
 
     /**
@@ -382,7 +413,7 @@ public class DataHandler {
      *
      * @param username This is the username of the user
      * @param listener It return a Hashmap of all the data of the user
-     *                 If it returns null that means the player doesnt exist, this can be used to check if
+     *                 If it returns null that means the player doesn't exist, this can be used to check if
      *                 the player exists or not.
      */
     public void getPlayer(String username, OnGetPlayerListener listener) {
@@ -404,8 +435,6 @@ public class DataHandler {
                     playerProfile = null;
                 }
                 listener.getPlayerListener(playerProfile);
-            } else {
-                listener.getPlayerListener(null);
             }
         });
     }
@@ -526,6 +555,7 @@ public class DataHandler {
         DocumentReference dr = cr.document(username);
 
         // Get the ptsL and store it
+
 
 
         dr.get().addOnCompleteListener(task -> {

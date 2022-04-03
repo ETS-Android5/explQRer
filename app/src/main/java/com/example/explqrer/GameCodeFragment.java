@@ -3,6 +3,7 @@ package com.example.explqrer;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -26,7 +27,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private static final String CODE = "Code";
     private Bitmap codeImage;
     private Button deleteButton;
-    private Button commentButton;
+    private ImageButton commentButton;
     private Button locationButton;
     private ImageView fragmentImageView;
     private TextView fragmentDescriptionView;
@@ -36,9 +37,11 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private String codeDescription;
     private int codePoints;
     private String completeDescription;
+    private String hash;
 
     public interface GameCodeFragmentHost {
         void createFragment(String hash);
+        PlayerProfile getPlayer();
     }
 
 
@@ -67,11 +70,12 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         fragmentImageView = view.findViewById(R.id.gamecode_image);
         fragmentDescriptionView = view.findViewById(R.id.gamecode_description);
         cardView = view.findViewById(R.id.fragment_card);
+        commentButton = view.findViewById(R.id.comment_button);
 
         GameCode code;
         try {
             code = (GameCode) getArguments().getSerializable(CODE);
-            String hash = (String) getArguments().get(HASH);
+            hash = code.getSha256hex();
             location = code.getLocation();
             codeImage = code.getPhoto();
             codeDescription = code.getDescription();
@@ -91,7 +95,11 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         }
 
 
-
+        commentButton.setOnClickListener(view1 -> {
+            Intent intent = new Intent(view1.getContext(),Comment.class);
+            intent.putExtra("hash", hash);
+            startActivity(intent);
+        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder.setView(view)
@@ -103,6 +111,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     @Override
     public void onGetCode(GameCode code) {
         location = code.getLocation();
+        hash = code.getSha256hex();
         codeImage = code.getPhoto();
         codeDescription = code.getDescription();
         codePoints = code.getScore();
