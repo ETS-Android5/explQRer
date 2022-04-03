@@ -217,14 +217,14 @@ public class MainActivity extends AppCompatActivity
         dataHandler.getQrL(player.getName(), new OnGetQrListener() {
             @Override
             public void getQrListener(long qrL) {
-                String q = qrL+"";
+                String q = qrL + "";
                 scannedRank.setText(q);
             }
         });
         dataHandler.getUniqueL(player.getName(), new OnGetUniqueLListener() {
             @Override
             public void getUniqueLListener(long uniqueL) {
-                String u = uniqueL+"";
+                String u = uniqueL + "";
                 uniqueRank.setText(u);
             }
         });

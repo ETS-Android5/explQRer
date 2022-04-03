@@ -21,13 +21,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@color/black">
+            android:background="@color/cool_dark">
 
             <TextView
                 android:id="@+id/app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 android:text="ExplQRer"
                 android:textColor="@color/white"
                 android:textSize="50sp"
@@ -39,6 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:text="Username"
                 android:textColor="@color/white"
                 android:textSize="35sp"
@@ -49,6 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="25dp"
                 android:text="Points Leaderboard"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -70,6 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="25dp"
                 android:text="QR's Scanned Leaderboard"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -91,6 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="25dp"
                 android:text="Unique QR's Scanned Leaderboard"
                 android:textColor="@color/white"
                 android:textSize="20sp"
