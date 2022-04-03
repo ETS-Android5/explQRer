@@ -28,4 +28,5 @@
     <string name="description">Description:</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="pin">pin</string>
+    <string name="explqrer">ExplQRer</string>
 </resources>

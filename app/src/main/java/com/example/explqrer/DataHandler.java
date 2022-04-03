@@ -525,6 +525,7 @@ public class DataHandler {
         // Get the ptsL and store it
 
 
+
         dr.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 long ptsL = 0;

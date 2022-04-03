@@ -22,9 +22,6 @@ import java.util.ArrayList;
 
 public class ScannedRank extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +53,7 @@ public class ScannedRank extends AppCompatActivity implements NavigationBarView.
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             }
         });
-
+        overridePendingTransition(0,0);
     }
 
     /**
@@ -74,6 +71,7 @@ public class ScannedRank extends AppCompatActivity implements NavigationBarView.
             case R.id.points_rank:
                 // Display points leaderboard
                 Intent pointsIntent = new Intent(this, PointsRank.class);
+                pointsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(pointsIntent);
 
                 return true;
@@ -81,6 +79,7 @@ public class ScannedRank extends AppCompatActivity implements NavigationBarView.
             case R.id.unique_rank:
                 // Display unique leaderboard
                 Intent uniqueIntent = new Intent(this, UniqueRank.class);
+                uniqueIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(uniqueIntent);
                 return true;
         }
