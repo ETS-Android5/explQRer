@@ -3,7 +3,9 @@ package com.example.explqrer;
 import static android.content.ContentValues.TAG;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.util.Base64;
 import android.util.Log;
 
 import com.google.firebase.firestore.CollectionReference;
@@ -68,18 +70,24 @@ public class DataHandler {
                 // Check if the document exists, add username if it does
                 if (documentSnapshot.exists()) {
                     docRef.update("users", FieldValue.arrayUnion(username));
-                    if (documentSnapshot.getData().get("location") == null) {
-                        ArrayList<Double> location = null;
-                        if (code.getLocation() != null) {
-                            location = new ArrayList<>();
-                            location.add(code.getLocation().getLatitude());
-                            location.add(code.getLocation().getLongitude());
-                        }
+
+                    if (code.getLocation() != null) {
+                        ArrayList<Double> location = new ArrayList<>();
+                        location.add(code.getLocation().getLatitude());
+                        location.add(code.getLocation().getLongitude());
                         docRef.update("location", location);
                     }
+
                     if (code.getPhoto() != null) {
-                        docRef.update("photo", new GsonBuilder().enableComplexMapKeySerialization()
-                                .create().toJson(code.getPhoto()));
+                        /* https://programmer.ink/think/how-to-use-bitmap-to-store-pictures-into-database.html
+                         * Author: bretx
+                         */
+                        Bitmap bitmap = code.getPhoto();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] bytes = stream.toByteArray();
+
+                        docRef.update("photo", Base64.encodeToString(bytes, Base64.DEFAULT));
                     }
                 } else {
                     Map<String, Object> data = new HashMap<>();
@@ -96,8 +104,15 @@ public class DataHandler {
                     if (code.getPhoto() == null) {
                         data.put("photo", null);
                     } else {
-                        data.put("photo", new GsonBuilder().enableComplexMapKeySerialization()
-                                .create().toJson(code.getPhoto()));
+                        /* https://programmer.ink/think/how-to-use-bitmap-to-store-pictures-into-database.html
+                         * Author: bretx
+                         */
+                        Bitmap bitmap = code.getPhoto();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] bytes = stream.toByteArray();
+
+                        data.put("photo", Base64.encodeToString(bytes, Base64.DEFAULT));
                     }
 
                     docRef.set(data)
@@ -202,8 +217,13 @@ public class DataHandler {
 
                     code.setLocation(location);
                 }
-                if (doc.get("photo") != null) {
-                    code.setPhoto(new Gson().fromJson(doc.get("photo").toString(), Bitmap.class));
+                if (doc.getString("photo") != null) {
+                    /* https://programmer.ink/think/how-to-use-bitmap-to-store-pictures-into-database.html
+                     * Author: bretx
+                     */
+                    String string = doc.getString("photo");
+                    byte[] bytes = Base64.decode(string, Base64.DEFAULT);
+                    code.setPhoto(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
                 }
                 listener.onGetCode(code);
             }

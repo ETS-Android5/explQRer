@@ -347,8 +347,8 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
             pts.setOnClickListener(view -> {
                 Log.d("TAG", "WORKING!");
 
-//                GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(location);
-//                gameCodeFragment.show(getSupportFragmentManager(), "GAME_CODE");
+                GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(location);
+                gameCodeFragment.show(getSupportFragmentManager(), "GAME_CODE");
                 //TODO: popup for the clicked QR
             });
         }
