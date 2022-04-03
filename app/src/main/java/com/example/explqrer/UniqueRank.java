@@ -49,6 +49,7 @@ public class UniqueRank extends AppCompatActivity implements NavigationBarView.O
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             }
         });
+        overridePendingTransition(0,0);
     }
 
 
@@ -63,12 +64,14 @@ public class UniqueRank extends AppCompatActivity implements NavigationBarView.O
             case R.id.scanned_rank:
                 // Display scanned leaderboard
                 Intent scannedIntent = new Intent(this, ScannedRank.class);
+                scannedIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(scannedIntent);
                 return true;
 
             case R.id.points_rank:
                 // Display points leaderboard
                 Intent pointsIntent = new Intent(this, PointsRank.class);
+                pointsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(pointsIntent);
                 return true;
 

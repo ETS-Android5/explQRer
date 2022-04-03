@@ -33,7 +33,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationBarView.OnItemSelectedListener,
-        CodeScannedFragment.CodeScannerFragmentListener {
+        CodeScannedFragment.CodeScannerFragmentListener,
+        OnGetPlayerListener {
 
     // DATA
     private static final String SHARED_PREFS_PLAYER_KEY = "Player";
@@ -44,11 +45,30 @@ public class MainActivity extends AppCompatActivity
     private DataHandler dataHandler;
     private FusedLocationProviderClient fusedLocationClient;
     // Views
-    private TextView  usernameText, highestText, lowestText;
+    private TextView  usernameText, pointsRank, scannedRank, uniqueRank;
     private BottomNavigationView bottomNavigationView;
 
     // Shared Preferences
     private SharedPreferences sharedPreferences;
+
+    /**
+     * Get the player
+     *
+     * @return
+     */
+    public static PlayerProfile getPlayer() {
+        return player;
+    }
+
+    /**
+     * Update the player
+     *
+     * @param player the new player
+     */
+    public void setPlayer(PlayerProfile player) {
+        MainActivity.player = player;
+        saveData();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,27 +76,24 @@ public class MainActivity extends AppCompatActivity
          * Link: https://stackoverflow.com/a/57175501
          * Author: https://stackoverflow.com/users/5255963/ali-rezaiyan
          */
-
-
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        dataHandler = DataHandler.getInstance();
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setSelectedItemId(R.id.scan_nav);
         bottomNavigationView.setOnItemSelectedListener(this);
-        usernameText = findViewById(R.id.username_text);
-        highestText = findViewById(R.id.highest_qr_display_main);
-        lowestText = findViewById(R.id.lowest_qr_display_main);
+        usernameText = findViewById(R.id.user_name);
+        pointsRank = findViewById(R.id.points_leaderboard_rank);
+        scannedRank = findViewById(R.id.scanned_leaderboard_rank);
+        uniqueRank = findViewById(R.id.unique_leaderboard_rank);
         loadData();
-        saveData();
-        requestPermissionsIfNecessary(new String[] {
+        requestPermissionsIfNecessary(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.CAMERA
@@ -84,22 +101,24 @@ public class MainActivity extends AppCompatActivity
 
         scannerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() != RESULT_OK && result.getResultCode() != 2) { return; }
+                    if (result.getResultCode() != RESULT_OK && result.getResultCode() != 2 && result.getResultCode() != 3) {
+                        return;
+                    }
                     assert result.getData() != null;
                     if (result.getResultCode() == RESULT_OK) {
                         CodeScannedFragment codeScannedFragment = CodeScannedFragment
-                                .newInstance(result.getData().getStringExtra("Code"),
-                                        player.getName());
+                                .newInstance(result.getData().getStringExtra("Code"));
                         codeScannedFragment.show(getSupportFragmentManager(), "CODE_SCANNED");
+                    } else if (result.getResultCode() == 2) {
+                        dataHandler.getPlayer(result.getData().getStringExtra("Username"), this);
                     } else {
-                        Gson gson = new Gson();
-                        setPlayer(gson.fromJson(result.getData().getStringExtra("Player"),
-                                PlayerProfile.class));
+                        String username = result.getData().getStringExtra("Username");
+                        Intent intent = new Intent(this, PlayerDisplayActivity.class);
+                        intent.putExtra("playerName", username);
+                        startActivity(intent);
                     }
 
                 });
-        dataHandler = DataHandler.getInstance();
-        dataHandler.createPlayer(player);
     }
 
     @Override
@@ -107,6 +126,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         saveData();
     }
+    // end reference
 
     /* Adapted from:
      * Source: youtube.com
@@ -120,22 +140,32 @@ public class MainActivity extends AppCompatActivity
 
         if (player == null) {
             // Random 6 digit number
-            player = new PlayerProfile(String.format(Locale.US,"%06d",
+            player = new PlayerProfile(String.format(Locale.US, "%06d",
                     (int) Math.floor(Math.random() * 1000000)), "");
+            dataHandler.createPlayer(player);
+            saveData();
+        } else {
+            dataHandler.getPlayer(player.getName(), this);
         }
     }
+
     private void saveData() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         String json = gson.toJson(player);
         editor.putString(SHARED_PREFS_PLAYER_KEY, json);
         editor.apply();
-        updateStrings();
+        if (player != null) {
+            updateStrings();
+        } else {
+            Toast.makeText(this, "Player Deleted", Toast.LENGTH_SHORT).show();
+            loadData();
+        }
     }
-    // end reference
 
     /**
      * Called when a navigation item is selected
+     *
      * @param item the selected item
      * @return True if the selection was processed successfully
      */
@@ -151,7 +181,7 @@ public class MainActivity extends AppCompatActivity
                 // goes to UserProfile activity
                 Intent profileIntent = new Intent(MainActivity.this, UserProfileActivity.class);
                 startActivity(profileIntent);
-            
+
                 return true;
 
             case R.id.scan_nav:
@@ -175,30 +205,29 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateStrings() {
-
+        System.out.print(player.getName());
         usernameText.setText(player.getName());
-
-        highestText.setText("Highest: " + (player.getHighestCode() != null ?
-                player.getHighestCode().getDescription() : "None"));
-        lowestText.setText("Lowest: " + (player.getLowestCode() != null ?
-                player.getLowestCode().getDescription() : "None"));
-    }
-
-    /**
-     * Get the player
-     * @return
-     */
-    public static PlayerProfile getPlayer() {
-        return player;
-    }
-
-    /**
-     * Update the player
-     * @param player the new player
-     */
-    public void setPlayer(PlayerProfile player) {
-        MainActivity.player = player;
-        saveData();
+        dataHandler.getPtsL(player.getName(), new OnGetPtsLListener() {
+            @Override
+            public void getPtsLListener(long ptsl) {
+                String p = ptsl + "";
+                pointsRank.setText(p);
+            }
+        });
+        dataHandler.getQrL(player.getName(), new OnGetQrListener() {
+            @Override
+            public void getQrListener(long qrL) {
+                String q = qrL + "";
+                scannedRank.setText(q);
+            }
+        });
+        dataHandler.getUniqueL(player.getName(), new OnGetUniqueLListener() {
+            @Override
+            public void getUniqueLListener(long uniqueL) {
+                String u = uniqueL + "";
+                uniqueRank.setText(u);
+            }
+        });
     }
 
     @Override
@@ -206,7 +235,7 @@ public class MainActivity extends AppCompatActivity
 
         if (recordLocation) {
             if (ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                                 Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -232,19 +261,19 @@ public class MainActivity extends AppCompatActivity
                 addQR(code);
             }).addOnFailureListener(e -> {
                 Toast.makeText(MainActivity.this, "Location not recorded",
-                Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();
                 addQR(code);
 
             });
 
-        }
-        else {
+        } else {
             addQR(code);
         }
     }
 
     /**
      * Call all the methods needed to add a code to the database and update the UI
+     *
      * @param code
      */
     private void addQR(GameCode code) {
@@ -256,6 +285,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * requestPermission result
      * If add permission not add successfully, show the text
+     *
      * @param requestCode
      * @param permissions
      * @param grantResults
@@ -265,9 +295,9 @@ public class MainActivity extends AppCompatActivity
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode== REQUEST_PERMISSIONS_REQUEST_CODE &&grantResults.length>0){
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE && grantResults.length > 0) {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(MainActivity.this,"Permission denied",
+                Toast.makeText(MainActivity.this, "Permission denied",
                         Toast.LENGTH_LONG).show();
             }
         }
@@ -275,6 +305,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * request permission
+     *
      * @param permissions
      */
     public void requestPermissionsIfNecessary(String[] permissions) {
@@ -289,8 +320,14 @@ public class MainActivity extends AppCompatActivity
         // more than one permission is not granted
         if (permissionsToRequest.size() > 0) {
             ActivityCompat.requestPermissions(this, permissionsToRequest
-                    .toArray(new String[0]),REQUEST_PERMISSIONS_REQUEST_CODE);
+                    .toArray(new String[0]), REQUEST_PERMISSIONS_REQUEST_CODE);
         }  // all are granted
 
+    }
+
+
+    @Override
+    public void getPlayerListener(PlayerProfile player) {
+        setPlayer(player);
     }
 }

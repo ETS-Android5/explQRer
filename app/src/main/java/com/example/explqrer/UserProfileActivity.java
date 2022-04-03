@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +29,9 @@ import java.util.TimerTask;
 /**
  * all the methods to create the User Profile
  */
-public class UserProfileActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener{
+public class UserProfileActivity extends AppCompatActivity
+        implements NavigationBarView.OnItemSelectedListener,
+        GameCodeFragment.GameCodeFragmentHost {
 
     private static final String[] paths = {"Select to delete QR", "Scan to sign-in", "Edit Profile"};
     private BottomNavigationView bottomNavigationView;
@@ -48,14 +52,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        //button for comments
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openComment();
-            }
-        });
+
 
         // get the player from main activity
         player = MainActivity.getPlayer();
@@ -67,42 +64,31 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         bottomNavigationView.setOnItemSelectedListener((NavigationBarView.OnItemSelectedListener) this);
 
         // Setting onClick behavior to the button
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Initializing the popup menu and giving the reference as current context
-                PopupMenu popupMenu = new PopupMenu(UserProfileActivity.this, button);
+        button.setOnClickListener(view -> {
+            // Initializing the popup menu and giving the reference as current context
+            PopupMenu popupMenu = new PopupMenu(UserProfileActivity.this, button);
 
-                // Inflating popup menu from popup_menu.xml file
-                popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int id = item.getItemId();
-                        switch(id) {
-                            case R.id.edit_profile:
-                                // Edit profile
-                                Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
-                                startActivity(intent);
-                                break;
-                            case R.id.scan_sign_in:
-                                // Scan to sign in
-                                Intent myIntent = new Intent(getApplicationContext(), ProfileQr.class);
-                                startActivity(myIntent);
-                                break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                // Showing the popup menu
-                popupMenu.show();
-            }
+            // Inflating popup menu from popup_menu.xml file
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                switch(id) {
+                    case R.id.edit_profile:
+                        // Edit profile
+                        Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            });
+            // Showing the popup menu
+            popupMenu.show();
         });
 
         this.populateBanner(player.getName()); //calls populateBanner to put points and scans in in banner recycler view
-        this.populateGallery(player); //calls populateGallery to put images in the gallery recycler view and provides name of player as parameter
+        GalleryBuilder.populateGallery(player,findViewById(R.id.image_gallery),getApplicationContext(),this); //calls populategallery of galleryBuilder to construct and populate the gallery
     }
 
     public void openComment(){
@@ -204,27 +190,16 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                 }
             }
         }, 0, time);
-
-
     }
 
-    /**
-     * This populates the gallery with a GalleryAdapter
-     *  Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
-     *  Author: Adam Sinicki
-     */
-    private void populateGallery(PlayerProfile player){
+    @Override
+    public void createFragment(String hash) {
+        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCode(hash));
+        gameCodeFragment.show(getSupportFragmentManager(),"GAME_CODE");
+    }
 
-        //set up the RecyclerView for the gallery
-        RecyclerView galleryRecyclerView = findViewById(R.id.image_gallery);
-        galleryRecyclerView.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),4);
-        galleryRecyclerView.setLayoutManager(gridLayoutManager);
-
-        ArrayList<GalleryListItem> listOfImages = GalleryList.updateGallery(player);
-
-        GalleryAdapter galleryListAdapter = new GalleryAdapter(getApplicationContext(),listOfImages);
-        System.out.println("before adapter");
-        galleryRecyclerView.setAdapter(galleryListAdapter);
+    @Override
+    public PlayerProfile getPlayer() {
+        return MainActivity.getPlayer();
     }
 }

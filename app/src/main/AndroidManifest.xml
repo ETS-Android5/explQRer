@@ -24,7 +24,7 @@
             android:name=".Comment"
             android:exported="false" />
         <activity
-            android:name=".playerDisplay"
+            android:name=".PlayerDisplayActivity"
             android:exported="false" />
         <activity
             android:name=".SearchActivity"

@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.auth.User;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,6 +34,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     private ArrayList<GalleryListItem> galleryList;
     private Context context;
+    private GameCodeFragment.GameCodeFragmentHost host;
+    private PlayerProfile player;
 
     /**
      * Constructor for the class
@@ -40,10 +44,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
      * @param galleryList
      *  galleryList is the array list for the adapter
      */
-    public GalleryAdapter(Context context, ArrayList<GalleryListItem> galleryList) {
+    public GalleryAdapter(Context context, ArrayList<GalleryListItem> galleryList,
+                          GameCodeFragment.GameCodeFragmentHost host) {
         this.galleryList = galleryList;
         this.context = context;
-        System.out.println("in adapter");
+        this.host = host;
+        this.player = host.getPlayer();
+
     }
 
     /**
@@ -94,6 +101,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             super(view);
 
             image = view.findViewById(R.id.image);
+            view.setOnClickListener(view1 -> {
+
+                String codeHash = galleryList.get(getBindingAdapterPosition()).getHashCode();
+
+                GameCode code = player.getCode(codeHash);
+                System.out.println("this is the hash: "+ code);
+                host.createFragment(code.getSha256hex());
+            });
         }
     }
 

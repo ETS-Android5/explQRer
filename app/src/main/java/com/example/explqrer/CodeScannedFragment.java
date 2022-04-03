@@ -38,10 +38,9 @@ public class CodeScannedFragment extends DialogFragment implements OnScannedByLi
         void processQR(GameCode code, Boolean recordLocation);
     }
 
-    public static CodeScannedFragment newInstance(String code, String username) {
+    public static CodeScannedFragment newInstance(String code) {
         Bundle args = new Bundle();
         args.putSerializable ("Code", code);
-        args.putSerializable("Name", username);
 
         CodeScannedFragment fragment = new CodeScannedFragment();
         fragment.setArguments(args);
@@ -65,8 +64,7 @@ public class CodeScannedFragment extends DialogFragment implements OnScannedByLi
         View view = LayoutInflater.from(getActivity())
                 .inflate(R.layout.fragment_code_scanned, null);
         String barcode = (String) getArguments().get("Code");
-        String username = (String) getArguments().get("Name");
-        GameCode code = new GameCode(barcode, username, null,null);
+        GameCode code = new GameCode(barcode, null,null);
         DataHandler.getInstance().scannedBy(code.getSha256hex(), this);
         description = view.findViewById(R.id.code_scanned_description_text);
         locationToggle = view.findViewById(R.id.code_scanned_record_location);
