@@ -354,5 +354,19 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         }
     }
 
+    public double getPlayerLongitude() {
+        return playerLongitude;
+    }
 
+    public double getPlayerLatitude() {
+        return playerLatitude;
+    }
+
+    public double getSearchLongitude(){
+        return searchLongitude;
+    }
+
+    public double getSearchLatitude(){
+        return searchLatitude;
+    }
 }
