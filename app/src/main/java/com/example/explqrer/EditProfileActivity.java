@@ -17,6 +17,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -58,7 +59,8 @@ public class EditProfileActivity extends AppCompatActivity {
      */
 
     boolean validateInput() {
-        if (userName.getText().toString().equals("")) {
+        Pattern regex = Pattern.compile("[$&+,:;=\\\\?@#|/}{~`'<>.^*()%!-]");
+        if (userName.getText().toString().equals("") || regex.matcher(userName.getText().toString()).find() || userName.getText().toString().contains("[") || userName.getText().toString().contains("]")){
             userName.setError("Please Enter Username With Only Letters and Numbers Cannot be Empty");
             return false;
         }
