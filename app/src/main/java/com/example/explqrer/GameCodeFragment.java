@@ -102,11 +102,11 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             }
         }).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                playerLocation = task.getResult();
-                if (playerLocation != null) {
-                    updateDistance();
-                }
+            playerLocation = task.getResult();
+            if (playerLocation != null) {
+                updateDistance();
             }
+        }
         });
 
 

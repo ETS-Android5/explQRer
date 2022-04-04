@@ -2,6 +2,7 @@ package com.example.explqrer;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -32,7 +33,9 @@ public class SearchActivity extends AppCompatActivity {
         // Get the text from the search bar
         search.setOnClickListener(view -> {
             String searchText = searchBar.getText().toString();
+            findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
             DataHandler.getInstance().searchPlayers(searchText, players -> {
+                findViewById(R.id.progressBar).setVisibility(View.GONE);
                 ArrayList<ScannedRankLeaderboard> scannedRankLeaderboards = new ArrayList<>();
                 int rank = 1;
                 for (String name : players) {
