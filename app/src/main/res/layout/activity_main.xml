@@ -131,6 +131,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
+        app:labelVisibilityMode="labeled"
         app:itemTextColor="@color/cool_dark"
         app:itemIconTint="@color/cool_dark"
         app:menu="@menu/bottom_navigation_menu"/>

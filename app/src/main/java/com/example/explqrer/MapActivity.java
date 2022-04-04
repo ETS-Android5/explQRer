@@ -353,6 +353,15 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         }
     }
 
+
+    public double getPlayerLongitude() {
+        return playerLongitude;
+    }
+
+    public double getPlayerLatitude() {
+        return playerLatitude;
+    }
+
     public void setCamera(Location location) {
         double lng = location.getLongitude();
         double lat = location.getLatitude();
@@ -362,4 +371,11 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
     }
 
 
+    public double getSearchLongitude(){
+        return searchLongitude;
+    }
+
+    public double getSearchLatitude(){
+        return searchLatitude;
+    }
 }
