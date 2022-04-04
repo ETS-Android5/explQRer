@@ -50,7 +50,11 @@ public class MainActivity extends AppCompatActivity
 
     // Shared Preferences
     private SharedPreferences sharedPreferences;
+    private static MainActivity instance;
 
+    public static void refresh(){
+        instance.recreate();
+    }
     /**
      * Get the player
      *
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity
          * Author: https://stackoverflow.com/users/5255963/ali-rezaiyan
          */
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
+        instance = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

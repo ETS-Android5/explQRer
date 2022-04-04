@@ -110,7 +110,7 @@ public class UserProfileActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.map_nav:
-                Intent intent = new Intent(UserProfileActivity.this, MapActivity.class);
+                Intent intent = new Intent(this, MapActivity.class);
                 startActivity(intent);
                 return true;
 
@@ -122,17 +122,20 @@ public class UserProfileActivity extends AppCompatActivity
                 return true;
 
             case R.id.home_nav:
+                // goes to home
                 finish();
                 return true;
 
             case R.id.search_nav:
-                Toast.makeText(this, "Search not yet available.", Toast.LENGTH_SHORT).show();
-                // TODO: add search activity
+                // goes to search
+                Intent searchIntent = new Intent(this, SearchActivity.class);
+                startActivity(searchIntent);
                 return true;
 
             case R.id.leaderboard_nav:
-                Toast.makeText(this, "Leaderboard not yet available.", Toast.LENGTH_SHORT).show();
-                // TODO: add leaderboard activity
+                // goes to leaderboard
+                Intent leaderboardIntent = new Intent(this, PointsRank.class);
+                startActivity(leaderboardIntent);
                 return true;
 
         }

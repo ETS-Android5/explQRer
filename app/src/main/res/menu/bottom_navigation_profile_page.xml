@@ -22,7 +22,7 @@
         android:textColor="#ffffff"
         android:title="@string/search_nav" />
     <item
-        android:id="@+id/ranking"
+        android:id="@+id/leaderboard_nav"
         android:icon="@drawable/ic_leaderboards"
         android:textColor="#ffffff"
         android:title="@string/leaderboard_nav" />

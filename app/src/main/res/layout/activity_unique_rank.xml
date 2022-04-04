@@ -19,13 +19,14 @@
         />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/unique_leaderboard_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif-condensed"
         android:gravity="center"
         android:text="Highest Unique QRs Scanned Leaderboard"
-        android:textColor="@color/white"
+        android:textColor="@color/beige"
         android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,12 +37,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/UR_recyclerView"
-        android:layout_width="409dp"
-        android:layout_height="560dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="405dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="76dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/unique_leaderboard_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
