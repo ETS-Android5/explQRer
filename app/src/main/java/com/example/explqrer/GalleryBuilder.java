@@ -27,17 +27,17 @@ public class GalleryBuilder {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context,4);
         galleryRecyclerView.setLayoutManager(gridLayoutManager);
 
-        ArrayList<GalleryListItem> listOfImages = updateGallery(player);
+        ArrayList<GalleryListItem> listOfImages = updateImageList(player);
 
         GalleryAdapter galleryListAdapter = new GalleryAdapter(context, listOfImages, host);
         galleryRecyclerView.setAdapter(galleryListAdapter);
     }
 
-    public static ArrayList<GalleryListItem> updateGallery(PlayerProfile player){
+    public static ArrayList<GalleryListItem> updateImageList(PlayerProfile player){
 
         HashMap<String,GameCode> codes = player.getCodes();
         Collection<GameCode> qrCodes = codes.values();
-        System.out.println("this is true: "+ qrCodes);
+        System.out.println("this is updateImageList "+ qrCodes);
         ArrayList<GalleryListItem> listOfImages = new ArrayList<>();
 
         for(GameCode qr : qrCodes ){

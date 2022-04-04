@@ -37,6 +37,13 @@ public class UserProfileActivity extends AppCompatActivity
     private BottomNavigationView bottomNavigationView;
     private PlayerProfile player;
     private Button button;
+    private static UserProfileActivity userProfileInstance;
+
+    public static void refresh() {
+        userProfileInstance.recreate();
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,7 @@ public class UserProfileActivity extends AppCompatActivity
         bottomNavigationView = findViewById(R.id.bottom_navigation_profile);
         bottomNavigationView.setOnItemSelectedListener((NavigationBarView.OnItemSelectedListener) this);
 
+
         // Setting onClick behavior to the button
         button.setOnClickListener(view -> {
             // Initializing the popup menu and giving the reference as current context
@@ -96,6 +104,7 @@ public class UserProfileActivity extends AppCompatActivity
 
         this.populateBanner(player.getName()); //calls populateBanner to put points and scans in in banner recycler view
         GalleryBuilder.populateGallery(player,findViewById(R.id.image_gallery),getApplicationContext(),this); //calls populategallery of galleryBuilder to construct and populate the gallery
+
     }
 
     public void openComment(){
@@ -113,8 +122,8 @@ public class UserProfileActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.map_nav:
-                Toast.makeText(this, "Map not yet available.", Toast.LENGTH_SHORT).show();
-                // TODO: add map activity
+                Intent intent = new Intent(UserProfileActivity.this, MapActivity.class);
+                startActivity(intent);
                 return true;
 
             case R.id.profile_qr_nav:
@@ -198,12 +207,21 @@ public class UserProfileActivity extends AppCompatActivity
         }, 0, time);
     }
 
+    /**
+     * to create show the GameCode fragment when an image in the gallery is clicked
+     * @param hash
+     */
     @Override
     public void createFragment(String hash) {
         GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCode(hash));
         gameCodeFragment.show(getSupportFragmentManager(),"GAME_CODE");
     }
 
+    /**
+     * gets the Player profile object player object from the main activity
+     * @return MainActivity.getPlayer()
+     *     the PlayerProfile object player with the player
+     */
     @Override
     public PlayerProfile getPlayer() {
         return MainActivity.getPlayer();

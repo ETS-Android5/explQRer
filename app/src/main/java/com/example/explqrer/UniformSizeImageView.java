@@ -17,11 +17,7 @@ public class UniformSizeImageView extends androidx.appcompat.widget.AppCompatIma
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
         Drawable d = getDrawable();
+        setMeasuredDimension(widthMeasureSpec,widthMeasureSpec);
 
-        if(d!=null){
-            setMeasuredDimension(350,350 );
-        }else{
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        }
     }
 }

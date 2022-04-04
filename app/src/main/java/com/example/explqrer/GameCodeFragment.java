@@ -107,8 +107,16 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                             .setPositiveButton("Yes,Delete!", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+
+                                        GalleryAdapter galleryAdapter = null;
+                                        System.out.println("final: "+ finalCode);
+                                        galleryAdapter.removeImage(finalCode);
                                         player.removeCode(finalCode);
-                                        
+
+                                        DataHandler dataHandler = null;
+                                        dataHandler.updatePlayerJson(player);
+
+                                        UserProfileActivity.refresh();
 
                                 }
                             });
