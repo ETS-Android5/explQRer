@@ -98,7 +98,7 @@ public class Comment extends AppCompatActivity {
      * Displaying comments
      */
     private void addCard(String name, String comment) {
-        final View view = getLayoutInflater().inflate(R.layout.card, null);
+        final View view = getLayoutInflater().inflate(R.layout.comments_cards, null);
 
         TextView commentView = view.findViewById(R.id.commentHolderCard);
         TextView nameView = view.findViewById(R.id.usernameHolderCard);
