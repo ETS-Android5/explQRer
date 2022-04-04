@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/beige"
     tools:context=".MainActivity">
 
     <FrameLayout
@@ -15,25 +16,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/beige">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@color/cool_dark">
+            android:background="@color/beige">
 
             <TextView
                 android:id="@+id/app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:text="ExplQRer"
-                android:textColor="@color/white"
+                android:layout_marginTop="70dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="explQRer!"
+                android:textColor="@color/cool_dark"
                 android:textSize="50sp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/user_name"
@@ -41,20 +43,21 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-condensed"
                 android:text="Username"
-                android:textColor="@color/white"
+                android:textColor="@color/cool_dark"
                 android:textSize="35sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/points_leaderboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="50dp"
                 android:text="Points Leaderboard"
-                android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textColor="@color/cool_dark"
+                android:textSize="25sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -75,8 +78,8 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="25dp"
                 android:text="QR's Scanned Leaderboard"
-                android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textColor="@color/cool_dark"
+                android:textSize="25sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -97,8 +100,8 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="25dp"
                 android:text="Unique QR's Scanned Leaderboard"
-                android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textColor="@color/cool_dark"
+                android:textSize="25sp"
                 android:textStyle="bold" />
 
             <TextView
