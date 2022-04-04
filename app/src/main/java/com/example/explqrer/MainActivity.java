@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
     private DataHandler dataHandler;
     private FusedLocationProviderClient fusedLocationClient;
     // Views
-    private TextView usernameText, highestText, lowestText;
+    private TextView  usernameText, pointsRank, scannedRank, uniqueRank;
     private BottomNavigationView bottomNavigationView;
 
     // Shared Preferences
@@ -88,9 +88,10 @@ public class MainActivity extends AppCompatActivity
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setSelectedItemId(R.id.scan_nav);
         bottomNavigationView.setOnItemSelectedListener(this);
-        usernameText = findViewById(R.id.username_text);
-        highestText = findViewById(R.id.highest_qr_display_main);
-        lowestText = findViewById(R.id.lowest_qr_display_main);
+        usernameText = findViewById(R.id.user_name);
+        pointsRank = findViewById(R.id.points_leaderboard_rank);
+        scannedRank = findViewById(R.id.scanned_leaderboard_rank);
+        uniqueRank = findViewById(R.id.unique_leaderboard_rank);
         loadData();
         requestPermissionsIfNecessary(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -204,13 +205,29 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateStrings() {
-
+        System.out.print(player.getName());
         usernameText.setText(player.getName());
-
-        highestText.setText("Highest: " + (player.getHighestCode() != null ?
-                player.getHighestCode().getDescription() : "None"));
-        lowestText.setText("Lowest: " + (player.getLowestCode() != null ?
-                player.getLowestCode().getDescription() : "None"));
+        dataHandler.getPtsL(player.getName(), new OnGetPtsLListener() {
+            @Override
+            public void getPtsLListener(long ptsl) {
+                String p = ptsl + "";
+                pointsRank.setText(p);
+            }
+        });
+        dataHandler.getQrL(player.getName(), new OnGetQrListener() {
+            @Override
+            public void getQrListener(long qrL) {
+                String q = qrL + "";
+                scannedRank.setText(q);
+            }
+        });
+        dataHandler.getUniqueL(player.getName(), new OnGetUniqueLListener() {
+            @Override
+            public void getUniqueLListener(long uniqueL) {
+                String u = uniqueL + "";
+                uniqueRank.setText(u);
+            }
+        });
     }
 
     @Override
