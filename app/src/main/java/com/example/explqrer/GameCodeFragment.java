@@ -98,7 +98,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         GameCode finalCode = code;
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                    View view = LayoutInflater.from(getContext()).inflate(R.layout.image_cell_layout, null);
+                    View view = LayoutInflater.from(getContext()).inflate(R.layout.confirm_delete_qr_prompt, null);
                     AlertDialog.Builder deletePrompt = new AlertDialog.Builder(GameCodeFragment.this.getActivity());
                     deletePrompt.setView(view);
                     deletePrompt.setCancelable(true)
