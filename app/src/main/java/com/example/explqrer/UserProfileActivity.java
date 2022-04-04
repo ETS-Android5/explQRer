@@ -36,7 +36,13 @@ public class UserProfileActivity extends AppCompatActivity
     private static final String[] paths = {"Select to delete QR", "Scan to sign-in", "Edit Profile"};
     private BottomNavigationView bottomNavigationView;
     private PlayerProfile player;
-    private Button button;
+    private static UserProfileActivity userProfileInstance;
+
+    public static void refresh() {
+        userProfileInstance.recreate();
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,8 @@ public class UserProfileActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        userProfileInstance = this;
+
 
 
         // get the player from main activity
@@ -62,6 +70,7 @@ public class UserProfileActivity extends AppCompatActivity
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_profile);
         bottomNavigationView.setOnItemSelectedListener((NavigationBarView.OnItemSelectedListener) this);
+
 
         // Setting onClick behavior to the button
         button.setOnClickListener(view -> {
@@ -89,13 +98,8 @@ public class UserProfileActivity extends AppCompatActivity
 
         this.populateBanner(player.getName()); //calls populateBanner to put points and scans in in banner recycler view
         GalleryBuilder.populateGallery(player,findViewById(R.id.image_gallery),getApplicationContext(),this); //calls populategallery of galleryBuilder to construct and populate the gallery
-    }
 
-    public void openComment(){
-        Intent intent = new Intent(this, Comment.class);
-        startActivity(intent);
     }
-
 
     /**
      * Called when a navigation item is selected
@@ -106,8 +110,8 @@ public class UserProfileActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.map_nav:
-                Toast.makeText(this, "Map not yet available.", Toast.LENGTH_SHORT).show();
-                // TODO: add map activity
+                Intent intent = new Intent(UserProfileActivity.this, MapActivity.class);
+                startActivity(intent);
                 return true;
 
             case R.id.profile_qr_nav:
@@ -117,9 +121,8 @@ public class UserProfileActivity extends AppCompatActivity
 
                 return true;
 
-            case R.id.scan_nav:
-                Intent scanningIntent= new Intent(this, ScanningPageActivity.class);
-                startActivity(scanningIntent);
+            case R.id.home_nav:
+                finish();
                 return true;
 
             case R.id.search_nav:
@@ -192,12 +195,21 @@ public class UserProfileActivity extends AppCompatActivity
         }, 0, time);
     }
 
+    /**
+     * to create show the GameCode fragment when an image in the gallery is clicked
+     * @param hash
+     */
     @Override
     public void createFragment(String hash) {
         GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCode(hash));
         gameCodeFragment.show(getSupportFragmentManager(),"GAME_CODE");
     }
 
+    /**
+     * gets the Player profile object player object from the main activity
+     * @return MainActivity.getPlayer()
+     *     the PlayerProfile object player with the player
+     */
     @Override
     public PlayerProfile getPlayer() {
         return MainActivity.getPlayer();

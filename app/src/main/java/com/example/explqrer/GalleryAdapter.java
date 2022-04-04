@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Gallery;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -32,10 +33,11 @@ import java.util.List;
  */
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
-    private ArrayList<GalleryListItem> galleryList;
-    private Context context;
-    private GameCodeFragment.GameCodeFragmentHost host;
+    private static ArrayList<GalleryListItem> galleryList;
+    private static Context context;
+    private static GameCodeFragment.GameCodeFragmentHost host;
     private PlayerProfile player;
+    private static GalleryAdapter galleryAdapterInstance;
 
     /**
      * Constructor for the class
@@ -93,6 +95,16 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     }
 
     /**
+     * remove the image in the galleryList
+     */
+    public void removeImage(GameCode codeImage){
+        System.out.println("gallery list in remove : "+galleryList);
+        galleryList.remove(codeImage);
+
+        System.out.println("in remove");
+    }
+
+    /**
      * This class creates the ViewHolder which makes it easier to iterate through images
      */
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -104,12 +116,20 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             view.setOnClickListener(view1 -> {
 
                 String codeHash = galleryList.get(getBindingAdapterPosition()).getHashCode();
-
                 GameCode code = player.getCode(codeHash);
                 System.out.println("this is the hash: "+ code);
+                System.out.println("hello");
                 host.createFragment(code.getSha256hex());
             });
         }
     }
+
+    public static GalleryAdapter getInstance() {
+        if (galleryAdapterInstance == null) {
+            galleryAdapterInstance = new GalleryAdapter(context,galleryList,host);
+        }
+        return galleryAdapterInstance;
+    }
+
 
 }

@@ -10,7 +10,7 @@
         android:title="@string/profile_page_nav" />
     <item
         android:id="@+id/scan_nav"
-        android:icon="@android:drawable/ic_dialog_dialer"
+        android:icon="@drawable/ic_code_scanner"
         android:title="@string/scanner_nav" />
     <item
         android:id="@+id/search_nav"
