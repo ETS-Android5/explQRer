@@ -26,7 +26,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private Bitmap codeImage;
     private ImageButton deleteButton;
     private ImageButton commentButton;
-    private Button locationButton;
+    private ImageButton locationButton;
     private ImageView fragmentImageView;
     private TextView fragmentDescriptionView;
     private CardView cardView;
@@ -37,11 +37,12 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private String completeDescription;
     private PlayerProfile player;
     private String hash;
+    private GameCode code = null;
 
     public static GameCodeFragment newInstance(GameCode.CodeLocation codeLocation) {
         Bundle args = new Bundle();
-        args.putSerializable(HASH, codeLocation.hash);
-        args.putParcelable(LOCATION, codeLocation.location);
+        args.putSerializable(HASH, codeLocation.getHash());
+        args.putParcelable(LOCATION, codeLocation.getLocation());
         GameCodeFragment fragment = new GameCodeFragment();
         fragment.setArguments(args);
         return fragment;
@@ -55,6 +56,11 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         return fragment;
     }
 
+    public interface GameCodeFragmentHost {
+        void createFragment(String hash);
+        PlayerProfile getPlayer();
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -65,9 +71,9 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         cardView = view.findViewById(R.id.fragment_card);
         commentButton = view.findViewById(R.id.comment_button);
         locationButton = view.findViewById(R.id.qr_location_button);
+        deleteButton = view.findViewById(R.id.delete_button);
 
         player = MainActivity.getPlayer();
-        GameCode code = null;
         try {
             code = (GameCode) getArguments().getSerializable(CODE);
             hash = code.getSha256hex();
@@ -83,6 +89,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                 fragmentImageView.setImageBitmap(scaledImage);
                 fragmentDescriptionView.setText(completeDescription);
             }, 300);
+            setListeners();
         } catch (Exception ignored) {
             DataHandler.getInstance().getCode(getArguments().getString(HASH), this);
             cardView.setVisibility(View.GONE);
@@ -90,26 +97,45 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         }
 
 
-        ImageView fragmentImageView = view.findViewById(R.id.gamecode_image);
-        TextView fragmentDescriptionView = view.findViewById(R.id.gamecode_description);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        return builder.setView(view)
+                .setPositiveButton("close", null)
+                .create();
+    }
+
+    @Override
+    public void onGetCode(GameCode code) {
+        location = code.getLocation();
+        hash = code.getSha256hex();
+        codeImage = code.getPhoto();
+        codeDescription = code.getDescription();
+        codePoints = code.getScore();
+        completeDescription = codePoints + " pts; " + codeDescription;
+        if (player.getCode(hash) == null) {
+            deleteButton.setVisibility(View.GONE);
+        }
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, fragmentImageView.getWidth(),
-                    fragmentImageView.getHeight(), false);
-            fragmentImageView.setImageBitmap(scaledImage);
+            if (codeImage != null) {
+                cardView.setVisibility(View.VISIBLE);
+                Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, 410, 400, false);
+                fragmentImageView.setImageBitmap(scaledImage);
+            }
             fragmentDescriptionView.setText(completeDescription);
         }, 300);
+        setListeners();
+    }
+
+    private void setListeners() {
+        GameCode finalCode = code;
+
         commentButton.setOnClickListener(view1 -> {
             Intent intent = new Intent(view1.getContext(), Comment.class);
             intent.putExtra("hash", hash);
             startActivity(intent);
         });
 
-
-        deleteButton = view.findViewById(R.id.delete_button);
-
-        GameCode finalCode = code;
         deleteButton.setOnClickListener(v -> {
             View view12 = LayoutInflater.from(getContext()).inflate(R.layout.confirm_delete_qr_prompt, null);
             AlertDialog.Builder deletePrompt = new AlertDialog.Builder(GameCodeFragment.this.getActivity());
@@ -142,7 +168,6 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             dialog.show();
         });
 
-        GameCode finalCode = code;
         locationButton.setOnClickListener(view12 -> {
             if (finalCode == null) {
                 return;
@@ -156,39 +181,5 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                 startActivity(intent);
             }
         });
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        return builder.setView(view)
-                .setPositiveButton("close", null)
-                .create();
-    }
-
-    @Override
-    public void onGetCode(GameCode code) {
-        location = code.getLocation();
-        hash = code.getSha256hex();
-        codeImage = code.getPhoto();
-        codeDescription = code.getDescription();
-        codePoints = code.getScore();
-        completeDescription = codePoints + " pts; " + codeDescription;
-        if (player.getCode(hash) == null) {
-            deleteButton.setVisibility(View.GONE);
-        }
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            if (codeImage != null) {
-                cardView.setVisibility(View.VISIBLE);
-                Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, 410, 400, false);
-                fragmentImageView.setImageBitmap(scaledImage);
-            }
-            fragmentDescriptionView.setText(completeDescription);
-        }, 300);
-    }
-
-
-    public interface GameCodeFragmentHost {
-        void createFragment(String hash);
-
-        PlayerProfile getPlayer();
     }
 }

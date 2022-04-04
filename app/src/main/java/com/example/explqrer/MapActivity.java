@@ -327,23 +327,23 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         pointAnnotationManager.deleteAll();
 
         for (GameCode.CodeLocation location : locations) {
-            Point point = Point.fromLngLat(location.location.getLongitude(), location.location.getLatitude());
+            Point point = Point.fromLngLat(location.getLocation().getLongitude(), location.getLocation().getLatitude());
 
             PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
                     .withPoint(point)
                     .withIconImage(image)
-                    .withIconAnchor(IconAnchor.TOP);
+                    .withIconAnchor(IconAnchor.BOTTOM);
             PointAnnotation pointAnnotation = pointAnnotationManager.create(pointAnnotationOptions);
 
             ViewAnnotationOptions viewAnnotationOptions = new ViewAnnotationOptions.Builder()
                     .associatedFeatureId(pointAnnotation.getFeatureIdentifier())
                     .geometry(pointAnnotation.getPoint())
-                    .anchor(ViewAnnotationAnchor.TOP)
+                    .anchor(ViewAnnotationAnchor.BOTTOM)
                     .allowOverlap(true)
                     .build();
 
             TextView pts = (TextView) annotationManager.addViewAnnotation(R.layout.map_qr, viewAnnotationOptions);
-            pts.setText(GameCode.calculateScore(location.hash) + " pts");
+            pts.setText(GameCode.calculateScoreFromHash(location.getHash()) + " pts");
             pts.setOnClickListener(view -> {
                 Log.d("TAG", "WORKING!");
 

@@ -14,12 +14,10 @@ import androidx.annotation.Nullable;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -44,7 +42,7 @@ public class GameCode implements Serializable {
      */
     public GameCode(@NonNull String barcode, @Nullable Location location, @Nullable Bitmap photo) {
         sha256hex = hashCode(barcode);
-        score = calculateScore(barcode);
+        score = calculateScoreFromRaw(barcode);
         if (location != null) {
             lon = location.getLongitude();
             lat = location.getLatitude();
@@ -56,15 +54,22 @@ public class GameCode implements Serializable {
   
     public GameCode(String rawValue) {
         sha256hex = hashCode(rawValue);
-        score = calculateScore(rawValue);
+        score = calculateScoreFromRaw(rawValue);
+    }
+
+    /**
+     * Calculate the score of the barcode data
+     * @return The score as an integer
+     */
+    public static int calculateScoreFromRaw(String rawValue) {
+        return calculateScoreFromHash(hashCode(rawValue));
     }
 
     /**
      * Calculate the score of the hash string
      * @return The score as an integer
      */
-    public static int calculateScore(String rawValue) {
-        String sha256hex = hashCode(rawValue);
+    public static Integer calculateScoreFromHash(String sha256hex) {
         int ret = 0;
         int repeats = 0;
         char prevChar = sha256hex.charAt(0);
@@ -176,8 +181,8 @@ public class GameCode implements Serializable {
     }
 
     public static class CodeLocation implements Parcelable {
-        public String hash;
-        public Location location;
+        private String hash;
+        private Location location;
 
         public Location getLocation() {
             return location;

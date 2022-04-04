@@ -1,21 +1,17 @@
 package com.example.explqrer;
 
 import android.content.Context;
-import android.location.Geocoder;
 import android.location.Location;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class LocationAdapter extends ArrayAdapter<GameCode.CodeLocation> {
     private ArrayList<GameCode.CodeLocation> locations;
@@ -48,7 +44,7 @@ public class LocationAdapter extends ArrayAdapter<GameCode.CodeLocation> {
         TextView distanceView = view.findViewById(R.id.distance);
 
         Location location = codeLocation.getLocation(); // nearby code location
-        score = GameCode.calculateScore(codeLocation.getHash());
+        score = GameCode.calculateScoreFromRaw(codeLocation.getHash());
         locationView.setText(String.valueOf(score));
 
         Location playerLocation = new Location("");// player location
