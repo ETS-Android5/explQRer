@@ -11,11 +11,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="136dp"
+        android:fontFamily="sans-serif-condensed"
         android:gravity="center_horizontal"
         android:text="Edit Profile"
         android:textColor="@color/white"
+        android:textSize="40sp"
         android:textStyle="bold"
-        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,6 +37,9 @@
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:textSize="15sp"
+        app:counterEnabled="true"
+        app:counterTextColor="@color/white"
+        app:counterMaxLength="20"
         app:layout_constraintBottom_toTopOf="@+id/contact_field_layout"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:layout_editor_absoluteX="16dp">
@@ -45,12 +49,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="sans-serif-condensed"
+            android:maxLength="20"
             android:importantForAutofill="no"
             android:inputType="textPersonName"
-            android:textColorHint="@color/white"
             android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:textSize="20sp"
-          />
+            />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -77,16 +83,16 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/contact_text"
+            style="@style/TextInputLayoutStyleModern"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="sans-serif-condensed"
             android:importantForAutofill="no"
-            style="@style/TextInputLayoutStyleModern"
             android:inputType="textEmailAddress"
-            android:textColorHint="@color/white"
             android:textColor="@color/white"
-            android:textSize="20sp"
-            />
+            android:textColorHint="@color/white"
+            android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -95,14 +101,15 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="30dp"
         android:background="@color/lightgreen"
         android:elevation="2dp"
+        android:fontFamily="sans-serif-condensed"
         android:onClick="performEditProfile"
-        android:text="Save"
+        android:text="save"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="15sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

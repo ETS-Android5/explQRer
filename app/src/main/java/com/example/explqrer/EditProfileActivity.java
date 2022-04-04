@@ -41,7 +41,6 @@ public class EditProfileActivity extends AppCompatActivity {
         // get the player from main activity
         player = MainActivity.getPlayer();
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-
         viewInitializations();
     }
 
@@ -57,13 +56,14 @@ public class EditProfileActivity extends AppCompatActivity {
      * @return false
      *     When username or email entered is not an empty space
      */
+
     boolean validateInput() {
         if (userName.getText().toString().equals("")) {
             userName.setError("Please Enter Username With Only Letters and Numbers Cannot be Empty");
             return false;
         }
         if (userContact.getText().toString().equals("")) {
-            userContact.setError("Please Enter Email");
+            userContact.setError("Please Enter Email,cannot be empty");
             return false;
         }
 
