@@ -207,6 +207,10 @@ public class DataHandler {
         dr.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot doc = task.getResult();
+                if (doc.getData() == null) {
+                    listener.onGetCode(null);
+                    return;
+                }
                 GameCode code = new GameCode(doc.getId());
 
                 if (doc.get("location") != null) {
