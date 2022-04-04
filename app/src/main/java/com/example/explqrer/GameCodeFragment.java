@@ -12,24 +12,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.CancellationToken;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
-import com.google.android.gms.tasks.Task;
+
 import java.util.HashMap;
 
 public class GameCodeFragment extends DialogFragment implements OnGetCodeListener {
@@ -70,12 +68,6 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         return fragment;
     }
 
-    public interface GameCodeFragmentHost {
-        void createFragment(String hash);
-
-        PlayerProfile getPlayer();
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -87,7 +79,8 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         commentButton = view.findViewById(R.id.comment_button);
         locationButton = view.findViewById(R.id.qr_location_button);
         deleteButton = view.findViewById(R.id.delete_button);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) { }
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        }
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
             @NonNull
@@ -102,11 +95,11 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             }
         }).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-            playerLocation = task.getResult();
-            if (playerLocation != null) {
-                updateDistance();
+                playerLocation = task.getResult();
+                if (playerLocation != null) {
+                    updateDistance();
+                }
             }
-        }
         });
 
 
@@ -118,7 +111,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             codeImage = code.getPhoto();
             codeDescription = code.getDescription();
             codePoints = code.getScore();
-            completeDescription = codePoints + " pts; \n" + (codeDescription != null ? codeDescription: "");
+            completeDescription = codePoints + " pts; \n" + (codeDescription != null ? codeDescription : "");
             fragmentDescriptionView.setText(completeDescription);
             if (player.getCode(hash) == null) {
                 deleteButton.setVisibility(View.GONE);
@@ -141,11 +134,19 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         }
 
 
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        return builder.setView(view)
-                .setPositiveButton("close", null)
-                .create();
+        builder.setView(view)
+                .setPositiveButton("close", null);
+        if (player.isAdmin()) {
+            builder.setNegativeButton("Delete QR", (dialogInterface, i) -> {
+                if (code != null) {
+                    DataHandler.getInstance().deleteQR(code);
+                    player.removeCode(code);
+                }
+            });
+        }
+
+        return builder.create();
     }
 
     @SuppressLint("SetTextI18n")
@@ -163,7 +164,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         codeImage = code.getPhoto();
         codeDescription = code.getDescription();
         codePoints = code.getScore();
-        completeDescription = codePoints + " pts; \n" + (codeDescription != null ? codeDescription: "");
+        completeDescription = codePoints + " pts; \n" + (codeDescription != null ? codeDescription : "");
         if (player.getCode(hash) == null) {
             deleteButton.setVisibility(View.GONE);
         }
@@ -189,8 +190,8 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             startActivity(intent);
         });
 
-        HashMap<String,GameCode> codes= player.getCodes();
-        if (!codes.containsKey(code.getSha256hex())){
+        HashMap<String, GameCode> codes = player.getCodes();
+        if (!codes.containsKey(code.getSha256hex())) {
             deleteButton.setVisibility(View.GONE);
         }
         deleteButton.setOnClickListener(v -> {
@@ -242,5 +243,11 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                 startActivity(intent);
             }
         });
+    }
+
+    public interface GameCodeFragmentHost {
+        void createFragment(String hash);
+
+        PlayerProfile getPlayer();
     }
 }

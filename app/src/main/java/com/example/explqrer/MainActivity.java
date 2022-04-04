@@ -52,27 +52,7 @@ public class MainActivity extends AppCompatActivity
     private SharedPreferences sharedPreferences;
     private static MainActivity instance;
 
-    public static void refresh(){
-        instance.recreate();
-    }
-    /**
-     * Get the player
-     *
-     * @return
-     */
-    public static PlayerProfile getPlayer() {
-        return player;
-    }
 
-    /**
-     * Update the player
-     *
-     * @param player the new player
-     */
-    public void setPlayer(PlayerProfile player) {
-        MainActivity.player = player;
-        saveData();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,26 +191,17 @@ public class MainActivity extends AppCompatActivity
     private void updateStrings() {
         System.out.print(player.getName());
         usernameText.setText(player.getName());
-        dataHandler.getPtsL(player.getName(), new OnGetPtsLListener() {
-            @Override
-            public void getPtsLListener(long ptsl) {
-                String p = ptsl + "";
-                pointsRank.setText(p);
-            }
+        dataHandler.getPtsL(player.getName(), ptsl -> {
+            String p = ptsl + "";
+            pointsRank.setText(p);
         });
-        dataHandler.getQrL(player.getName(), new OnGetQrListener() {
-            @Override
-            public void getQrListener(long qrL) {
-                String q = qrL + "";
-                scannedRank.setText(q);
-            }
+        dataHandler.getQrL(player.getName(), qrL -> {
+            String q = qrL + "";
+            scannedRank.setText(q);
         });
-        dataHandler.getUniqueL(player.getName(), new OnGetUniqueLListener() {
-            @Override
-            public void getUniqueLListener(long uniqueL) {
-                String u = uniqueL + "";
-                uniqueRank.setText(u);
-            }
+        dataHandler.getUniqueL(player.getName(), uniqueL -> {
+            String u = uniqueL + "";
+            uniqueRank.setText(u);
         });
     }
 
@@ -273,6 +244,34 @@ public class MainActivity extends AppCompatActivity
         } else {
             addQR(code);
         }
+    }
+
+    public static void refresh(){
+        instance.recreate();
+    }
+
+    /**
+     * Get the player
+     * @return
+     */
+    public static PlayerProfile getPlayer() {
+        return player;
+    }
+
+    /**
+     * Update the player
+     * @param player the new player
+     */
+    public void setPlayer(PlayerProfile player) {
+        MainActivity.player = player;
+        for (GameCode code : player.getCodes().values()) {
+            dataHandler.getCode(code.getSha256hex(), newCode -> {
+                if (newCode == null) {
+                    player.removeCode(code);
+                }
+            });
+        }
+        saveData();
     }
 
     /**
