@@ -32,7 +32,7 @@ public class PlayerDisplayActivity extends AppCompatActivity
 
     @Override
     public void createFragment(String hash) {
-        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCode(hash),true);
+        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCode(hash));
         gameCodeFragment.show(getSupportFragmentManager(), "GAME_CODE");
     }
 

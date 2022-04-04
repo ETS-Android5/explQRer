@@ -23,7 +23,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private static final String HASH = "Hash";
     private static final String LOCATION = "Location";
     private static final String CODE = "Code";
-    private static final String VISITING = "Visiting";
+
     private Bitmap codeImage;
     private ImageButton deleteButton;
     private ImageButton commentButton;
@@ -48,9 +48,8 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         return fragment;
     }
 
-    public static GameCodeFragment newInstance(GameCode code,boolean visiting) {
+    public static GameCodeFragment newInstance(GameCode code) {
         Bundle args = new Bundle();
-        args.putSerializable(VISITING , visiting);
         args.putSerializable(CODE, code);
         GameCodeFragment fragment = new GameCodeFragment();
         fragment.setArguments(args);
@@ -72,7 +71,6 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         Boolean visiting = false;
         try {
             code = (GameCode) getArguments().getSerializable(CODE);
-            visiting= (Boolean) getArguments().getSerializable(VISITING);
 
             hash = code.getSha256hex();
             location = code.getLocation();
@@ -114,11 +112,6 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
 
         deleteButton = view.findViewById(R.id.delete_button);
 
-//        if(!visiting){
-//            deleteButton.setVisibility(view.VISIBLE);
-//        }else{
-//            deleteButton.setVisibility(view.INVISIBLE);
-//        }
 
         GameCode finalCode = code;
         deleteButton.setOnClickListener(v -> {
