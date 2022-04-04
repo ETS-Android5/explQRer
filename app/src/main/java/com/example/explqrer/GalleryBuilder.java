@@ -27,28 +27,36 @@ public class GalleryBuilder {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context,4);
         galleryRecyclerView.setLayoutManager(gridLayoutManager);
 
-        ArrayList<GalleryListItem> listOfImages = updateGallery(player);
+        ArrayList<GalleryListItem> listOfImages = updateImageList(player);
 
         GalleryAdapter galleryListAdapter = new GalleryAdapter(context, listOfImages, host);
         galleryRecyclerView.setAdapter(galleryListAdapter);
     }
 
-    public static ArrayList<GalleryListItem> updateGallery(PlayerProfile player){
+    /**
+     * updates the list of images that the gallery displays
+     * @param player
+     *    a PlayerProfile object
+     * @return
+     *    the list of images of the QRs
+     */
+    public static ArrayList<GalleryListItem> updateImageList(PlayerProfile player){
 
         HashMap<String,GameCode> codes = player.getCodes();
         Collection<GameCode> qrCodes = codes.values();
-
-        //loop through all the imagePoints and imageIds populate galleryListItem objects with the image's point value and the image
+        System.out.println("this is updateImageList "+ qrCodes);
         ArrayList<GalleryListItem> listOfImages = new ArrayList<>();
-        //loop through the QRs scanned by the player
+
         for(GameCode qr : qrCodes ){
+
             GalleryListItem galleryListItem = new GalleryListItem();
-            //get image of the qr scanned and set the images
             galleryListItem.setImage(qr.getPhoto());
             galleryListItem.setHashCode(qr.getSha256hex());
             listOfImages.add(galleryListItem);
         }
         return listOfImages;
     }
+
+
 
 }
