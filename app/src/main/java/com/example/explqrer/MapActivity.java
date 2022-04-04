@@ -354,5 +354,13 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         }
     }
 
+    public void setCamera(Location location) {
+        double lng = location.getLongitude();
+        double lat = location.getLatitude();
+        stopFollow();
+        mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(Point.fromLngLat(lng, lat)).build());
+        refreshNearby(lng, lat);
+    }
+
 
 }

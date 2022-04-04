@@ -2,10 +2,8 @@ package com.example.explqrer;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,12 +37,6 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private String completeDescription;
     private String hash;
 
-    public interface GameCodeFragmentHost {
-        void createFragment(String hash);
-        PlayerProfile getPlayer();
-    }
-
-
     public static GameCodeFragment newInstance(GameCode.CodeLocation codeLocation) {
         Bundle args = new Bundle();
         args.putSerializable(HASH, codeLocation.hash);
@@ -71,8 +63,9 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         fragmentDescriptionView = view.findViewById(R.id.gamecode_description);
         cardView = view.findViewById(R.id.fragment_card);
         commentButton = view.findViewById(R.id.comment_button);
+        locationButton = view.findViewById(R.id.qr_location_button);
 
-        GameCode code;
+        GameCode code = null;
         try {
             code = (GameCode) getArguments().getSerializable(CODE);
             hash = code.getSha256hex();
@@ -96,9 +89,24 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
 
 
         commentButton.setOnClickListener(view1 -> {
-            Intent intent = new Intent(view1.getContext(),Comment.class);
+            Intent intent = new Intent(view1.getContext(), Comment.class);
             intent.putExtra("hash", hash);
             startActivity(intent);
+        });
+
+        GameCode finalCode = code;
+        locationButton.setOnClickListener(view12 -> {
+            if (finalCode == null) {
+                return;
+            }
+            if (getActivity() instanceof MapActivity) {
+                ((MapActivity) getActivity()).setCamera(finalCode.getLocation());
+                this.dismiss();
+            } else {
+                Intent intent = new Intent(getActivity(), MapActivity.class);
+                intent.putExtra("QR Location", finalCode.getLocation());
+                startActivity(intent);
+            }
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -106,7 +114,6 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                 .setPositiveButton("Hello", null)
                 .create();
     }
-
 
     @Override
     public void onGetCode(GameCode code) {
@@ -125,5 +132,12 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             }
             fragmentDescriptionView.setText(completeDescription);
         }, 300);
+    }
+
+
+    public interface GameCodeFragmentHost {
+        void createFragment(String hash);
+
+        PlayerProfile getPlayer();
     }
 }
