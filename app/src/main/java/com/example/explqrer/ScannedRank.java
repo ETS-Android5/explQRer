@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -39,6 +40,7 @@ public class ScannedRank extends AppCompatActivity implements NavigationBarView.
         dh.getQrLeaderBoard(new OnGetQrLeaderBoardListener() {
             @Override
             public void getQrLeaderBoardListener(ArrayList<String> leaderboard) {
+                findViewById(R.id.progressBar3).setVisibility(View.GONE);
                 ArrayList<ScannedRankLeaderboard> scannedRankLeaderboards = new ArrayList<>();
                 int rank = 1;
                 System.out.println(leaderboard.toArray());

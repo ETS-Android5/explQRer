@@ -23,7 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -31,6 +30,7 @@ import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
+import java.util.HashMap;
 
 public class GameCodeFragment extends DialogFragment implements OnGetCodeListener {
     private static final String HASH = "Hash";
@@ -120,6 +120,9 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             codePoints = code.getScore();
             completeDescription = codePoints + " pts; \n" + (codeDescription != null ? codeDescription: "");
             fragmentDescriptionView.setText(completeDescription);
+            if (player.getCode(hash) == null) {
+                deleteButton.setVisibility(View.GONE);
+            }
             if (codeImage != null) {
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
@@ -165,15 +168,15 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             deleteButton.setVisibility(View.GONE);
         }
         fragmentDescriptionView.setText(completeDescription);
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            if (codeImage != null) {
-                cardView.setVisibility(View.VISIBLE);
-                Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, 410, 400, false);
+        if (codeImage != null) {
+            cardView.setVisibility(View.VISIBLE);
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, fragmentImageView.getWidth(),
+                        fragmentImageView.getHeight(), false);
                 fragmentImageView.setImageBitmap(scaledImage);
-            }
-        }, 300);
-        setListeners();
+            }, 300);
+        }
         updateDistance();
     }
 
@@ -186,6 +189,10 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             startActivity(intent);
         });
 
+        HashMap<String,GameCode> codes= player.getCodes();
+        if (!codes.containsKey(code.getSha256hex())){
+            deleteButton.setVisibility(View.GONE);
+        }
         deleteButton.setOnClickListener(v -> {
             View view12 = LayoutInflater.from(getContext()).inflate(R.layout.confirm_delete_qr_prompt, null);
             AlertDialog.Builder deletePrompt = new AlertDialog.Builder(GameCodeFragment.this.getActivity());
