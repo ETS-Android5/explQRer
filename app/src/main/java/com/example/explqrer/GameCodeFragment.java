@@ -127,6 +127,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                             GalleryAdapter galleryAdapter = GalleryAdapter.getInstance();
                             System.out.println("this is after adapter delete before: " + galleryAdapter.getItemCount() + "is here");
                             galleryAdapter.removeImage(finalCode);
+                            galleryAdapter.notifyDataSetChanged();
                             System.out.println("this is after adapter delete: " + galleryAdapter.getItemCount());
                             DataHandler dataHandler = DataHandler.getInstance();
                             dataHandler.updatePlayerJson(player);

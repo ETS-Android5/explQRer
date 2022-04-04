@@ -36,7 +36,6 @@ public class UserProfileActivity extends AppCompatActivity
     private static final String[] paths = {"Select to delete QR", "Scan to sign-in", "Edit Profile"};
     private BottomNavigationView bottomNavigationView;
     private PlayerProfile player;
-    private Button button;
     private static UserProfileActivity userProfileInstance;
 
     public static void refresh() {
@@ -99,12 +98,6 @@ public class UserProfileActivity extends AppCompatActivity
         GalleryBuilder.populateGallery(player,findViewById(R.id.image_gallery),getApplicationContext(),this); //calls populategallery of galleryBuilder to construct and populate the gallery
 
     }
-
-    public void openComment(){
-        Intent intent = new Intent(this, Comment.class);
-        startActivity(intent);
-    }
-
 
     /**
      * Called when a navigation item is selected
