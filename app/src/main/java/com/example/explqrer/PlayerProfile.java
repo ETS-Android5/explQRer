@@ -184,7 +184,7 @@ public class PlayerProfile implements Serializable {
      * @return
      */
     public boolean hasCode(String rawValue) {
-        return codes.containsKey(new GameCode(rawValue));
+        return codes.containsKey(new GameCode(GameCode.hashCode(rawValue)));
     }
 
     public boolean isAdmin() {
