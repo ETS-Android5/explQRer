@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">explQRer</string>
+    <string name="app_name">explQRer!</string>
     <string name="back_button">Back</string>
     <string name="profile_page_nav">Profile</string>
     <string name="map_nav">Map</string>
@@ -29,5 +29,4 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="pin">pin</string>
     <string name="home">home</string>
-    <string name="explqrer">ExplQRer</string>
 </resources>
