@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -35,6 +36,7 @@ public class UniqueRank extends AppCompatActivity implements NavigationBarView.O
         dh.getUniqueLeaderBoard(new OnGetUniqueLeaderBoardListener() {
             @Override
             public void getUniqueLeaderBoardListener(ArrayList<String> leaderboard) {
+                findViewById(R.id.progressBar4).setVisibility(View.GONE);
                 ArrayList<ScannedRankLeaderboard> scannedRankLeaderboards = new ArrayList<>();
                 int rank = 1;
                 System.out.println(leaderboard.toArray());
