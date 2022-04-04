@@ -11,16 +11,17 @@
         android:layout_width="38dp"
         android:layout_height="30dp"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="40dp"
         android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
         android:background="@color/cool_dark"
+        android:contentDescription="settings"
         android:src="@drawable/ic_preferences_dots"
         android:textColor="#ffffff"
-        android:contentDescription="settings"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.157"
         app:layout_constraintStart_toEndOf="@+id/points"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/points"
@@ -35,8 +36,8 @@
         android:id="@+id/image_gallery"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/points"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation_profile"
+        app:layout_constraintTop_toBottomOf="@+id/points"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="-7dp" />
 
@@ -45,11 +46,52 @@
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:background="@color/cool_dark"
+        app:itemIconTint="@color/beige"
+        app:itemTextColor="@color/beige"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_navigation_profile_page"
-        />
+        app:menu="@menu/bottom_navigation_profile_page" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="33dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="40dp"
+        android:text="H"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/points"
+        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="33dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="68dp"
+        android:text="L"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/points"
+        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/down_row"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="55dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_down" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

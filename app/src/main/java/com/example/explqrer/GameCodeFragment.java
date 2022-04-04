@@ -23,6 +23,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private static final String HASH = "Hash";
     private static final String LOCATION = "Location";
     private static final String CODE = "Code";
+    private static final String VISITING = "Visiting";
     private Bitmap codeImage;
     private ImageButton deleteButton;
     private ImageButton commentButton;
@@ -47,8 +48,9 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         return fragment;
     }
 
-    public static GameCodeFragment newInstance(GameCode code) {
+    public static GameCodeFragment newInstance(GameCode code,boolean visiting) {
         Bundle args = new Bundle();
+        args.putSerializable(VISITING , visiting);
         args.putSerializable(CODE, code);
         GameCodeFragment fragment = new GameCodeFragment();
         fragment.setArguments(args);
@@ -67,14 +69,18 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
 
         player = MainActivity.getPlayer();
         GameCode code = null;
+        Boolean visiting = false;
         try {
             code = (GameCode) getArguments().getSerializable(CODE);
+            visiting= (Boolean) getArguments().getSerializable(VISITING);
+
             hash = code.getSha256hex();
             location = code.getLocation();
             codeImage = code.getPhoto();
             codeDescription = code.getDescription();
             codePoints = code.getScore();
             completeDescription = codePoints + " pts; " + codeDescription;
+
             Handler handler = new Handler();
             handler.postDelayed(() -> {
                 Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, fragmentImageView.getWidth(),
@@ -108,6 +114,12 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
 
         deleteButton = view.findViewById(R.id.delete_button);
 
+//        if(!visiting){
+//            deleteButton.setVisibility(view.VISIBLE);
+//        }else{
+//            deleteButton.setVisibility(view.INVISIBLE);
+//        }
+
         GameCode finalCode = code;
         deleteButton.setOnClickListener(v -> {
             View view12 = LayoutInflater.from(getContext()).inflate(R.layout.confirm_delete_qr_prompt, null);
@@ -127,7 +139,6 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                             GalleryAdapter galleryAdapter = GalleryAdapter.getInstance();
                             System.out.println("this is after adapter delete before: " + galleryAdapter.getItemCount() + "is here");
                             galleryAdapter.removeImage(finalCode);
-                            galleryAdapter.notifyDataSetChanged();
                             System.out.println("this is after adapter delete: " + galleryAdapter.getItemCount());
                             DataHandler dataHandler = DataHandler.getInstance();
                             dataHandler.updatePlayerJson(player);

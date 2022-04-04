@@ -204,7 +204,7 @@ public class UserProfileActivity extends AppCompatActivity
      */
     @Override
     public void createFragment(String hash) {
-        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCode(hash));
+        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCode(hash),false);
         gameCodeFragment.show(getSupportFragmentManager(),"GAME_CODE");
     }
 
