@@ -30,6 +30,7 @@ public class GameCode implements Serializable {
 
     private final int score;
     private double lon, lat;
+    private boolean locationRecorded = false;
     private ProxyBitmap photo;
     private String description;
     private static HashFunction hash =  Hashing.sha256();
@@ -44,6 +45,7 @@ public class GameCode implements Serializable {
         sha256hex = hashCode(barcode);
         score = calculateScoreFromRaw(barcode);
         if (location != null) {
+            locationRecorded = true;
             lon = location.getLongitude();
             lat = location.getLatitude();
         }
@@ -123,7 +125,7 @@ public class GameCode implements Serializable {
         Location location = new Location("");
         location.setLongitude(lon);
         location.setLatitude(lat);
-        return location;
+        return locationRecorded ? location : null;
     }
 
     /**
@@ -139,8 +141,12 @@ public class GameCode implements Serializable {
      * @param location
      */
     public void setLocation(Location location) {
-        lon = location.getLongitude();
-        lat = location.getLatitude();
+        if (location != null) {
+            lon = location.getLongitude();
+            lat = location.getLatitude();
+            locationRecorded = true;
+
+        }
     }
 
     /**

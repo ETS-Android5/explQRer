@@ -1,8 +1,11 @@
 package com.example.explqrer;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
@@ -13,11 +16,21 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationToken;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
+import com.google.android.gms.tasks.Task;
 
 public class GameCodeFragment extends DialogFragment implements OnGetCodeListener {
     private static final String HASH = "Hash";
@@ -32,6 +45,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private CardView cardView;
 
     private Location location;
+    private Location playerLocation;
     private String codeDescription;
     private int codePoints;
     private String completeDescription;
@@ -58,6 +72,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
 
     public interface GameCodeFragmentHost {
         void createFragment(String hash);
+
         PlayerProfile getPlayer();
     }
 
@@ -72,6 +87,28 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         commentButton = view.findViewById(R.id.comment_button);
         locationButton = view.findViewById(R.id.qr_location_button);
         deleteButton = view.findViewById(R.id.delete_button);
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) { }
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+            @NonNull
+            @Override
+            public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
+                return null;
+            }
+
+            @Override
+            public boolean isCancellationRequested() {
+                return false;
+            }
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+            playerLocation = task.getResult();
+            if (playerLocation != null) {
+                updateDistance();
+            }
+        }
+        });
+
 
         player = MainActivity.getPlayer();
         try {
@@ -81,7 +118,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             codeImage = code.getPhoto();
             codeDescription = code.getDescription();
             codePoints = code.getScore();
-            completeDescription = codePoints + " pts; " + codeDescription;
+            completeDescription = codePoints + " pts; \n" + (codeDescription != null ? codeDescription: "");
             fragmentDescriptionView.setText(completeDescription);
             if (codeImage != null) {
                 Handler handler = new Handler();
@@ -108,6 +145,13 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                 .create();
     }
 
+    @SuppressLint("SetTextI18n")
+    private void updateDistance() {
+        if (location != null && playerLocation != null) {
+            fragmentDescriptionView.setText(completeDescription + "\nDistance from current position: " + (int) location.distanceTo(playerLocation) + "m");
+        }
+    }
+
     @Override
     public void onGetCode(GameCode gotCode) {
         code = gotCode;
@@ -116,10 +160,11 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         codeImage = code.getPhoto();
         codeDescription = code.getDescription();
         codePoints = code.getScore();
-        completeDescription = codePoints + " pts; " + codeDescription;
+        completeDescription = codePoints + " pts; \n" + (codeDescription != null ? codeDescription: "");
         if (player.getCode(hash) == null) {
             deleteButton.setVisibility(View.GONE);
         }
+        fragmentDescriptionView.setText(completeDescription);
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             if (codeImage != null) {
@@ -127,9 +172,9 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                 Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, 410, 400, false);
                 fragmentImageView.setImageBitmap(scaledImage);
             }
-            fragmentDescriptionView.setText(completeDescription);
         }, 300);
         setListeners();
+        updateDistance();
     }
 
     private void setListeners() {
