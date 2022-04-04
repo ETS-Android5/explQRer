@@ -19,6 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.HashMap;
+
 public class GameCodeFragment extends DialogFragment implements OnGetCodeListener {
     private static final String HASH = "Hash";
     private static final String LOCATION = "Location";
@@ -107,7 +109,10 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
 
 
         deleteButton = view.findViewById(R.id.delete_button);
-
+        HashMap<String,GameCode> codes= player.getCodes();
+        if (!codes.containsKey(code.getSha256hex())){
+            deleteButton.setVisibility(View.GONE);
+        }
         GameCode finalCode = code;
         deleteButton.setOnClickListener(v -> {
             View view12 = LayoutInflater.from(getContext()).inflate(R.layout.confirm_delete_qr_prompt, null);
