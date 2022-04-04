@@ -252,7 +252,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
 
         // click and see nearby qr ( location and distance)
         nearbyListButton.setOnClickListener(view -> {
-            refreshNearby(searchLongitude, searchLatitude); // change
             Intent intent = new Intent(MapActivity.this, NearbyQRListInMapShow.class);
             intent.putParcelableArrayListExtra("nearby_code_locations", codes);
             intent.putExtra("player_longitude", playerLongitude);
@@ -327,23 +326,23 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         pointAnnotationManager.deleteAll();
 
         for (GameCode.CodeLocation location : locations) {
-            Point point = Point.fromLngLat(location.location.getLongitude(), location.location.getLatitude());
+            Point point = Point.fromLngLat(location.getLocation().getLongitude(), location.getLocation().getLatitude());
 
             PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
                     .withPoint(point)
                     .withIconImage(image)
-                    .withIconAnchor(IconAnchor.TOP);
+                    .withIconAnchor(IconAnchor.BOTTOM);
             PointAnnotation pointAnnotation = pointAnnotationManager.create(pointAnnotationOptions);
 
             ViewAnnotationOptions viewAnnotationOptions = new ViewAnnotationOptions.Builder()
                     .associatedFeatureId(pointAnnotation.getFeatureIdentifier())
                     .geometry(pointAnnotation.getPoint())
-                    .anchor(ViewAnnotationAnchor.TOP)
+                    .anchor(ViewAnnotationAnchor.BOTTOM)
                     .allowOverlap(true)
                     .build();
 
             TextView pts = (TextView) annotationManager.addViewAnnotation(R.layout.map_qr, viewAnnotationOptions);
-            pts.setText(GameCode.calculateScore(location.hash) + " pts");
+            pts.setText(GameCode.calculateScoreFromHash(location.getHash()) + " pts");
             pts.setOnClickListener(view -> {
                 Log.d("TAG", "WORKING!");
 
@@ -354,6 +353,7 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
         }
     }
 
+
     public double getPlayerLongitude() {
         return playerLongitude;
     }
@@ -361,6 +361,15 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
     public double getPlayerLatitude() {
         return playerLatitude;
     }
+
+    public void setCamera(Location location) {
+        double lng = location.getLongitude();
+        double lat = location.getLatitude();
+        stopFollow();
+        mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(Point.fromLngLat(lng, lat)).build());
+        refreshNearby(lng, lat);
+    }
+
 
     public double getSearchLongitude(){
         return searchLongitude;

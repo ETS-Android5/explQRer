@@ -11,12 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:layout_marginTop="1dp"
-        android:background="@color/white"
+        android:background="@color/cool_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SR_recyclerView"
+        app:itemIconTint="@color/beige"
+        app:itemTextColor="@color/beige"
         app:menu="@menu/bottom_navigation_leaderboard" />
 
     <TextView
@@ -48,5 +50,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scanned_leaderboard_text" />
+
+    <ProgressBar
+        android:id="@+id/progressBar3"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

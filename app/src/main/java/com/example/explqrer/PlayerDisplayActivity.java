@@ -45,9 +45,9 @@ public class PlayerDisplayActivity extends AppCompatActivity
     public void getPlayerListener(PlayerProfile player) {
         this.player = player;
         usernameHolder.setText(player.getName());
-        String points = "Points: " + player.getPoints();
+        String points = "points: " + player.getPoints();
         pointsHolder.setText(points);
-        String scanned = "Scanned: " + player.getNumCodes();
+        String scanned = "scanned: " + player.getNumCodes();
         scannedHolder.setText(scanned);
         GalleryBuilder.populateGallery(player,findViewById(R.id.imageHolder),
                 getApplicationContext(), this);

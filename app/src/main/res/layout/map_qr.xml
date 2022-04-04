@@ -10,6 +10,7 @@
     android:gravity="bottom"
     android:text="@string/default_text"
     android:textAlignment="center"
+    android:textColor="#000000"
     android:textStyle="bold"
     tools:ignore="TextContrastCheck">
 
