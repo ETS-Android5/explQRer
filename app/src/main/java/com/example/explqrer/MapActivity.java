@@ -252,7 +252,6 @@ public class MapActivity extends AppCompatActivity implements OnGetNearByQrsList
 
         // click and see nearby qr ( location and distance)
         nearbyListButton.setOnClickListener(view -> {
-            refreshNearby(searchLongitude, searchLatitude); // change
             Intent intent = new Intent(MapActivity.this, NearbyQRListInMapShow.class);
             intent.putParcelableArrayListExtra("nearby_code_locations", codes);
             intent.putExtra("player_longitude", playerLongitude);

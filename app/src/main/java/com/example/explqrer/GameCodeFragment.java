@@ -82,13 +82,17 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             codeDescription = code.getDescription();
             codePoints = code.getScore();
             completeDescription = codePoints + " pts; " + codeDescription;
-            Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, fragmentImageView.getWidth(),
-                        fragmentImageView.getHeight(), false);
-                fragmentImageView.setImageBitmap(scaledImage);
-                fragmentDescriptionView.setText(completeDescription);
-            }, 300);
+            fragmentDescriptionView.setText(completeDescription);
+            if (codeImage != null) {
+                Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, fragmentImageView.getWidth(),
+                            fragmentImageView.getHeight(), false);
+                    fragmentImageView.setImageBitmap(scaledImage);
+                }, 300);
+            } else {
+                cardView.setVisibility(View.GONE);
+            }
             setListeners();
         } catch (Exception ignored) {
             DataHandler.getInstance().getCode(getArguments().getString(HASH), this);
@@ -105,7 +109,8 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     }
 
     @Override
-    public void onGetCode(GameCode code) {
+    public void onGetCode(GameCode gotCode) {
+        code = gotCode;
         location = code.getLocation();
         hash = code.getSha256hex();
         codeImage = code.getPhoto();

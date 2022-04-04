@@ -52,9 +52,9 @@ public class GameCode implements Serializable {
         }
     }
   
-    public GameCode(String rawValue) {
-        sha256hex = hashCode(rawValue);
-        score = calculateScoreFromRaw(rawValue);
+    public GameCode(String hash) {
+        sha256hex = hash;
+        score = calculateScoreFromHash(hash);
     }
 
     /**

@@ -212,8 +212,8 @@ public class DataHandler {
                 if (doc.get("location") != null) {
                     ArrayList<Double> loc = (ArrayList<Double>) doc.get("location");
                     Location location = new Location("");
-                    location.setLongitude(loc.get(0));
-                    location.setLatitude(loc.get(1));
+                    location.setLongitude(loc.get(1));
+                    location.setLatitude(loc.get(0));
 
                     code.setLocation(location);
                 }

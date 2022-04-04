@@ -280,6 +280,7 @@ public class MainActivity extends AppCompatActivity
         player.addCode(code);
         dataHandler.addQR(code, player);
         saveData();
+        Toast.makeText(this, "Code Recorded", Toast.LENGTH_SHORT).show();
     }
 
     /**

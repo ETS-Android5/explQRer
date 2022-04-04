@@ -44,7 +44,7 @@ public class LocationAdapter extends ArrayAdapter<GameCode.CodeLocation> {
         TextView distanceView = view.findViewById(R.id.distance);
 
         Location location = codeLocation.getLocation(); // nearby code location
-        score = GameCode.calculateScoreFromRaw(codeLocation.getHash());
+        score = GameCode.calculateScoreFromHash(codeLocation.getHash());
         locationView.setText(String.valueOf(score));
 
         Location playerLocation = new Location("");// player location
