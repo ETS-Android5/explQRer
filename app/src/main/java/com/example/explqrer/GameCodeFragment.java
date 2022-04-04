@@ -131,6 +131,10 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                             System.out.println("this is after adapter delete: " + galleryAdapter.getItemCount());
                             DataHandler dataHandler = DataHandler.getInstance();
                             dataHandler.updatePlayerJson(player);
+                            dataHandler.updatePts(player.getName(), -finalCode.getScore());
+                            dataHandler.updateScanned(player.getName(), -1);
+                            dataHandler.updateUniqueScanned(player.getName(), -1);
+                            MainActivity.refresh();
                             UserProfileActivity.refresh();
                             GameCodeFragment.this.dismiss();
                         }
