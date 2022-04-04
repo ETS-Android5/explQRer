@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -190,13 +190,14 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addLocationToCode(com.example.explqrer.GameCode,android.location.Location)">addLocationToCode</a></span>&#8203;(<a href="GameCode.html" title="class in com.example.explqrer">GameCode</a>&nbsp;code,
-                 android.location.Location&nbsp;location)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colFirst"><code><a href="GameCode.html" title="class in com.example.explqrer">GameCode</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCode(java.lang.String)">getCode</a></span>&#8203;(java.lang.String&nbsp;hash)</code></th>
+<td class="colLast">
+<div class="block">Get the game code object from a player</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>java.util.HashMap&lt;<a href="GameCode.html" title="class in com.example.explqrer">GameCode</a>,&#8203;<a href="GameCode.html" title="class in com.example.explqrer">GameCode</a>&gt;</code></td>
+<td class="colFirst"><code>java.util.HashMap&lt;java.lang.String,&#8203;<a href="GameCode.html" title="class in com.example.explqrer">GameCode</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCodes()">getCodes</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the list of scanned code hashes</div>
@@ -252,6 +253,11 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i10" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isAdmin()">isAdmin</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#refreshProfile()">refreshProfile</a></span>()</code></th>
 <td class="colLast">
@@ -259,21 +265,26 @@ implements java.io.Serializable</pre>
  as well as fetching new information from the database.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeCode(com.example.explqrer.GameCode)">removeCode</a></span>&#8203;(<a href="GameCode.html" title="class in com.example.explqrer">GameCode</a>&nbsp;code)</code></th>
 <td class="colLast">
 <div class="block">Remove a code from a player profile</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setAsAdmin()">setAsAdmin</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setContact(java.lang.String)">setContact</a></span>&#8203;(java.lang.String&nbsp;contact)</code></th>
 <td class="colLast">
 <div class="block">This set method sets the player info.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setName(java.lang.String)">setName</a></span>&#8203;(java.lang.String&nbsp;name)</code></th>
 <td class="colLast">
@@ -400,11 +411,28 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getCodes</h4>
-<pre class="methodSignature">public&nbsp;java.util.HashMap&lt;<a href="GameCode.html" title="class in com.example.explqrer">GameCode</a>,&#8203;<a href="GameCode.html" title="class in com.example.explqrer">GameCode</a>&gt;&nbsp;getCodes()</pre>
+<pre class="methodSignature">public&nbsp;java.util.HashMap&lt;java.lang.String,&#8203;<a href="GameCode.html" title="class in com.example.explqrer">GameCode</a>&gt;&nbsp;getCodes()</pre>
 <div class="block">Get the list of scanned code hashes</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The scanned code hashes in an ArrayList</dd>
+</dl>
+</li>
+</ul>
+<a id="getCode(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCode</h4>
+<pre class="methodSignature">@Nullable
+public&nbsp;<a href="GameCode.html" title="class in com.example.explqrer">GameCode</a>&nbsp;getCode&#8203;(java.lang.String&nbsp;hash)</pre>
+<div class="block">Get the game code object from a player</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>hash</code> - </dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Can return null</dd>
 </dl>
 </li>
 </ul>
@@ -509,14 +537,22 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="addLocationToCode(com.example.explqrer.GameCode,android.location.Location)">
+<a id="isAdmin()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isAdmin</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;isAdmin()</pre>
+</li>
+</ul>
+<a id="setAsAdmin()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>addLocationToCode</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;addLocationToCode&#8203;(<a href="GameCode.html" title="class in com.example.explqrer">GameCode</a>&nbsp;code,
-                              android.location.Location&nbsp;location)</pre>
+<h4>setAsAdmin</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setAsAdmin()</pre>
 </li>
 </ul>
 </li>
