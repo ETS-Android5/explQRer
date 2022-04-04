@@ -6,17 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".UniqueRank">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_leaderboard"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_navigation_leaderboard"
-        />
 
     <TextView
         android:id="@+id/unique_leaderboard_text"
@@ -45,6 +34,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/unique_leaderboard_text" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_leaderboard"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/cool_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:itemIconTint="@color/beige"
+        app:itemTextColor="@color/beige"
+        app:menu="@menu/bottom_navigation_leaderboard"
+        />
+
     <ProgressBar
         android:id="@+id/progressBar4"
         style="?android:attr/progressBarStyle"
@@ -54,5 +57,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

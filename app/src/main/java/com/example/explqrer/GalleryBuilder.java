@@ -13,6 +13,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Builds the Gallery with the gridView and the updated listOfImages to populate the gallery
+ */
 public class GalleryBuilder {
     /**
      * This populates the gallery with a GalleryAdapter
