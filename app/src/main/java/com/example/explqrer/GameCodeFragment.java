@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
@@ -108,14 +109,17 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
-                                        GalleryAdapter galleryAdapter = null;
-                                        System.out.println("final: "+ finalCode);
-                                        galleryAdapter.removeImage(finalCode);
+                                        //GalleryAdapter galleryAdapter = GalleryAdapter();
+                                        System.out.println("final: "+ player.getCodes());
+                                        //galleryAdapter.removeImage(finalCode);
                                         player.removeCode(finalCode);
-
-                                        DataHandler dataHandler = null;
+                                        System.out.println("final after : "+ player.getCodes());
+                                        GalleryAdapter galleryAdapter = GalleryAdapter.getInstance();
+                                        System.out.println("this is after adapter delete before: "+ galleryAdapter.getItemCount()+ "is here");
+                                        galleryAdapter.removeImage(finalCode);
+                                        System.out.println("this is after adapter delete: "+ galleryAdapter.getItemCount());
+                                        DataHandler dataHandler = DataHandler.getInstance();
                                         dataHandler.updatePlayerJson(player);
-
                                         UserProfileActivity.refresh();
 
                                 }

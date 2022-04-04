@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Gallery;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -32,10 +33,11 @@ import java.util.List;
  */
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
-    private ArrayList<GalleryListItem> galleryList;
-    private Context context;
-    private GameCodeFragment.GameCodeFragmentHost host;
+    private static ArrayList<GalleryListItem> galleryList;
+    private static Context context;
+    private static GameCodeFragment.GameCodeFragmentHost host;
     private PlayerProfile player;
+    private static GalleryAdapter galleryAdapterInstance;
 
     /**
      * Constructor for the class
@@ -120,6 +122,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                 host.createFragment(code.getSha256hex());
             });
         }
+    }
+
+    public static GalleryAdapter getInstance() {
+        if (galleryAdapterInstance == null) {
+            galleryAdapterInstance = new GalleryAdapter(context,galleryList,host);
+        }
+        return galleryAdapterInstance;
     }
 
 

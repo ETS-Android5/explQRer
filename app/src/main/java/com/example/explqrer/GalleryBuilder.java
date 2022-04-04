@@ -33,6 +33,13 @@ public class GalleryBuilder {
         galleryRecyclerView.setAdapter(galleryListAdapter);
     }
 
+    /**
+     * updates the list of images that the gallery displays
+     * @param player
+     *    a PlayerProfile object
+     * @return
+     *    the list of images of the QRs
+     */
     public static ArrayList<GalleryListItem> updateImageList(PlayerProfile player){
 
         HashMap<String,GameCode> codes = player.getCodes();
