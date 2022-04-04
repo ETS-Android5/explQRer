@@ -132,6 +132,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                             DataHandler dataHandler = DataHandler.getInstance();
                             dataHandler.updatePlayerJson(player);
                             UserProfileActivity.refresh();
+                            GameCodeFragment.this.dismiss();
                         }
                     });
 
