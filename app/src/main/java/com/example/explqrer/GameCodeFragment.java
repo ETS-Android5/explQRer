@@ -2,8 +2,6 @@ package com.example.explqrer;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 
 public class GameCodeFragment extends DialogFragment implements OnGetCodeListener {
@@ -27,20 +26,17 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     private Bitmap codeImage;
     private ImageButton deleteButton;
     private ImageButton commentButton;
-    private ImageButton locationButton;
+    private Button locationButton;
+    private ImageView fragmentImageView;
+    private TextView fragmentDescriptionView;
+    private CardView cardView;
 
     private Location location;
     private String codeDescription;
     private int codePoints;
     private String completeDescription;
     private PlayerProfile player;
-
-
-    public interface GameCodeFragmentHost {
-        void createFragment(String hash);
-        PlayerProfile getPlayer();
-    }
-
+    private String hash;
 
     public static GameCodeFragment newInstance(GameCode.CodeLocation codeLocation) {
         Bundle args = new Bundle();
@@ -64,20 +60,32 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity())
                 .inflate(R.layout.fragment_game_code, null);
+        fragmentImageView = view.findViewById(R.id.gamecode_image);
+        fragmentDescriptionView = view.findViewById(R.id.gamecode_description);
+        cardView = view.findViewById(R.id.fragment_card);
+        commentButton = view.findViewById(R.id.comment_button);
 
         player = MainActivity.getPlayer();
         GameCode code = null;
-
         try {
             code = (GameCode) getArguments().getSerializable(CODE);
+            hash = code.getSha256hex();
             location = code.getLocation();
             codeImage = code.getPhoto();
             codeDescription = code.getDescription();
             codePoints = code.getScore();
             completeDescription = codePoints + " pts; " + codeDescription;
-
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, fragmentImageView.getWidth(),
+                        fragmentImageView.getHeight(), false);
+                fragmentImageView.setImageBitmap(scaledImage);
+                fragmentDescriptionView.setText(completeDescription);
+            }, 300);
         } catch (Exception ignored) {
             DataHandler.getInstance().getCode(getArguments().getString(HASH), this);
+            cardView.setVisibility(View.GONE);
+            fragmentDescriptionView.setText("Loading...");
         }
 
 
@@ -91,44 +99,44 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             fragmentImageView.setImageBitmap(scaledImage);
             fragmentDescriptionView.setText(completeDescription);
         }, 300);
+        commentButton.setOnClickListener(view1 -> {
+            Intent intent = new Intent(view1.getContext(), Comment.class);
+            intent.putExtra("hash", hash);
+            startActivity(intent);
+        });
 
 
-        deleteButton = (ImageButton) view.findViewById(R.id.delete_button);
+        deleteButton = view.findViewById(R.id.delete_button);
 
         GameCode finalCode = code;
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                    View view = LayoutInflater.from(getContext()).inflate(R.layout.image_cell_layout, null);
-                    AlertDialog.Builder deletePrompt = new AlertDialog.Builder(GameCodeFragment.this.getActivity());
-                    deletePrompt.setView(view);
-                    deletePrompt.setCancelable(true)
-                            .setTitle("Wait!")
-                            .setMessage("Are you sure you want to delete it?")
-                            .setNegativeButton("No,Don't!", null)
-                            .setPositiveButton("Yes,Delete!", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                        //GalleryAdapter galleryAdapter = GalleryAdapter();
-                                        System.out.println("final: "+ player.getCodes());
-                                        //galleryAdapter.removeImage(finalCode);
-                                        player.removeCode(finalCode);
-                                        System.out.println("final after : "+ player.getCodes());
-                                        GalleryAdapter galleryAdapter = GalleryAdapter.getInstance();
-                                        System.out.println("this is after adapter delete before: "+ galleryAdapter.getItemCount()+ "is here");
-                                        galleryAdapter.removeImage(finalCode);
-                                        System.out.println("this is after adapter delete: "+ galleryAdapter.getItemCount());
-                                        DataHandler dataHandler = DataHandler.getInstance();
-                                        dataHandler.updatePlayerJson(player);
-                                        UserProfileActivity.refresh();
-
-                                }
-                            });
+        deleteButton.setOnClickListener(v -> {
+            View view12 = LayoutInflater.from(getContext()).inflate(R.layout.image_cell_layout, null);
+            AlertDialog.Builder deletePrompt = new AlertDialog.Builder(GameCodeFragment.this.getActivity());
+            deletePrompt.setView(view12);
+            deletePrompt.setCancelable(true)
+                    .setTitle("Wait!")
+                    .setMessage("Are you sure you want to delete it?")
+                    .setNegativeButton("No,Don't!", null)
+                    .setPositiveButton("Yes,Delete!", (dialog, which) -> {
+                        if (finalCode != null) {
+                            //GalleryAdapter galleryAdapter = GalleryAdapter();
+                            System.out.println("final: " + player.getCodes());
+                            //galleryAdapter.removeImage(finalCode);
+                            player.removeCode(finalCode);
+                            System.out.println("final after : " + player.getCodes());
+                            GalleryAdapter galleryAdapter = GalleryAdapter.getInstance();
+                            System.out.println("this is after adapter delete before: " + galleryAdapter.getItemCount() + "is here");
+                            galleryAdapter.removeImage(finalCode);
+                            System.out.println("this is after adapter delete: " + galleryAdapter.getItemCount());
+                            DataHandler dataHandler = DataHandler.getInstance();
+                            dataHandler.updatePlayerJson(player);
+                            UserProfileActivity.refresh();
+                        }
+                    });
 
 
-                    Dialog dialog = deletePrompt.create();
-                    dialog.show();
-            }
+            Dialog dialog = deletePrompt.create();
+            dialog.show();
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -137,13 +145,32 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                 .create();
     }
 
-
     @Override
     public void onGetCode(GameCode code) {
         location = code.getLocation();
+        hash = code.getSha256hex();
         codeImage = code.getPhoto();
         codeDescription = code.getDescription();
         codePoints = code.getScore();
         completeDescription = codePoints + " pts; " + codeDescription;
+        if (player.getCode(hash) == null) {
+            deleteButton.setVisibility(View.GONE);
+        }
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            if (codeImage != null) {
+                cardView.setVisibility(View.VISIBLE);
+                Bitmap scaledImage = Bitmap.createScaledBitmap(codeImage, 410, 400, false);
+                fragmentImageView.setImageBitmap(scaledImage);
+            }
+            fragmentDescriptionView.setText(completeDescription);
+        }, 300);
+    }
+
+
+    public interface GameCodeFragmentHost {
+        void createFragment(String hash);
+
+        PlayerProfile getPlayer();
     }
 }

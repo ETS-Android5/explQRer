@@ -3,7 +3,9 @@ package com.example.explqrer;
 import static android.content.ContentValues.TAG;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.util.Base64;
 import android.util.Log;
 
 import com.google.firebase.firestore.CollectionReference;
@@ -68,18 +70,24 @@ public class DataHandler {
                 // Check if the document exists, add username if it does
                 if (documentSnapshot.exists()) {
                     docRef.update("users", FieldValue.arrayUnion(username));
-                    if (documentSnapshot.getData().get("location") == null) {
-                        ArrayList<Double> location = null;
-                        if (code.getLocation() != null) {
-                            location = new ArrayList<>();
-                            location.add(code.getLocation().getLatitude());
-                            location.add(code.getLocation().getLongitude());
-                        }
+
+                    if (code.getLocation() != null) {
+                        ArrayList<Double> location = new ArrayList<>();
+                        location.add(code.getLocation().getLatitude());
+                        location.add(code.getLocation().getLongitude());
                         docRef.update("location", location);
                     }
+
                     if (code.getPhoto() != null) {
-                        docRef.update("photo", new GsonBuilder().enableComplexMapKeySerialization()
-                                .create().toJson(code.getPhoto()));
+                        /* https://programmer.ink/think/how-to-use-bitmap-to-store-pictures-into-database.html
+                         * Author: bretx
+                         */
+                        Bitmap bitmap = code.getPhoto();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] bytes = stream.toByteArray();
+
+                        docRef.update("photo", Base64.encodeToString(bytes, Base64.DEFAULT));
                     }
                 } else {
                     Map<String, Object> data = new HashMap<>();
@@ -96,8 +104,15 @@ public class DataHandler {
                     if (code.getPhoto() == null) {
                         data.put("photo", null);
                     } else {
-                        data.put("photo", new GsonBuilder().enableComplexMapKeySerialization()
-                                .create().toJson(code.getPhoto()));
+                        /* https://programmer.ink/think/how-to-use-bitmap-to-store-pictures-into-database.html
+                         * Author: bretx
+                         */
+                        Bitmap bitmap = code.getPhoto();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] bytes = stream.toByteArray();
+
+                        data.put("photo", Base64.encodeToString(bytes, Base64.DEFAULT));
                     }
 
                     docRef.set(data)
@@ -121,19 +136,32 @@ public class DataHandler {
     }
 
     /**
+     * Function to delete a QR code from the database
+     * @param code
+     *  The QRcode to delete
+     */
+    public void deleteQR(GameCode code){
+        // Connect to collection
+        CollectionReference cr = db.collection("qrbase");
+
+        // Document Reference
+        DocumentReference docRef = cr.document(code.getSha256hex());
+
+        // Delete the document
+        docRef.delete();
+    }
+
+    /**
      * Function to add the user comment to the qrbase collection on firestore
      *
-     * @param code    This is the GameCode object on which the player has commented
-     * @param player  This is the PlayerProfile object of the player that has commented
+     * @param hash    This is the GameCode object on which the player has commented
+     * @param username  This is the PlayerProfile object of the player that has commented
      * @param comment This is the comment of the player
      */
-    public void addComment(GameCode code, PlayerProfile player, String comment) {
+    public void addComment(String hash, String username, String comment) {
         // Collection reference
         CollectionReference cr = db.collection("qrbase");
 
-        // Get the info from the objects
-        String hash = code.getSha256hex();
-        String username = player.getName();
 
         // Hash map to store the comment info
         Map<String, String> data = new HashMap<>();
@@ -149,14 +177,13 @@ public class DataHandler {
     /**
      * This function returns the list of hashmaps which contains the username and comments
      *
-     * @param code     This is the GameCode object on which the player has commented
+     * @param hash     This is the GameCode object on which the player has commented
      * @param listener This is the listener has to be used to access the Arraylist of the hashmaps
      */
-    public void getComments(GameCode code, OnGetCommentsListener listener) {
+    public void getComments(String hash, OnGetCommentsListener listener) {
         // Collection reference
         CollectionReference cr = db.collection("qrbase");
 
-        String hash = code.getSha256hex();
 
         // Document Reference
         DocumentReference docRef = cr.document(hash);
@@ -190,8 +217,13 @@ public class DataHandler {
 
                     code.setLocation(location);
                 }
-                if (doc.get("photo") != null) {
-                    code.setPhoto(new Gson().fromJson(doc.get("photo").toString(), Bitmap.class));
+                if (doc.getString("photo") != null) {
+                    /* https://programmer.ink/think/how-to-use-bitmap-to-store-pictures-into-database.html
+                     * Author: bretx
+                     */
+                    String string = doc.getString("photo");
+                    byte[] bytes = Base64.decode(string, Base64.DEFAULT);
+                    code.setPhoto(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
                 }
                 listener.onGetCode(code);
             }
@@ -523,6 +555,7 @@ public class DataHandler {
         DocumentReference dr = cr.document(username);
 
         // Get the ptsL and store it
+
 
 
         dr.get().addOnCompleteListener(task -> {

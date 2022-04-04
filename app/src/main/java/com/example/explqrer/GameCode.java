@@ -5,6 +5,8 @@ import static com.google.common.math.IntMath.pow;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -141,6 +143,7 @@ public class GameCode implements Serializable {
      * @param photo
      */
     public void setPhoto(Bitmap photo) {
+        if (photo == null) { return; }
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         photo.compress(Bitmap.CompressFormat.JPEG, 70, stream);
         this.photo = new ProxyBitmap(BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size()));
@@ -172,13 +175,49 @@ public class GameCode implements Serializable {
         return Objects.hash(sha256hex);
     }
 
-    public static class CodeLocation {
+    public static class CodeLocation implements Parcelable {
         public String hash;
         public Location location;
+
+        public Location getLocation() {
+            return location;
+        }
+
+        public String getHash() {
+            return hash;
+        }
 
         public CodeLocation(String hash, Location location) {
             this.hash = hash;
             this.location = location;
+        }
+
+        protected CodeLocation(Parcel in) {
+            hash = in.readString();
+            location = in.readParcelable(Location.class.getClassLoader());
+        }
+
+        public static final Creator<CodeLocation> CREATOR = new Creator<CodeLocation>() {
+            @Override
+            public CodeLocation createFromParcel(Parcel in) {
+                return new CodeLocation(in);
+            }
+
+            @Override
+            public CodeLocation[] newArray(int size) {
+                return new CodeLocation[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(hash);
+            parcel.writeParcelable(location, i);
         }
     }
 }

@@ -58,7 +58,8 @@ public class RecyclerViewAdapterLeaderBoard extends RecyclerView.Adapter<Recycle
             PlayerProfile currentPlayer = MainActivity.getPlayer();
             itemView.setOnClickListener(view -> viewPlayer(context));
             itemView.setOnLongClickListener(view -> {
-                if (!currentPlayer.isAdmin()) {
+                if (!currentPlayer.isAdmin() || context instanceof ScannedRank
+                        || context instanceof PointsRank || context instanceof UniqueRank) {
                     return false;
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
