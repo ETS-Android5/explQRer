@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * takes images and binds them to view holders
  * Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
  * Author: Adam Sinicki
  * This is a class for a custom adapter for the recycler View
@@ -124,6 +125,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         }
     }
 
+    /**
+     * get instance of the GalleryAdapater
+     * @return galleryAdapterInstance
+     */
     public static GalleryAdapter getInstance() {
         if (galleryAdapterInstance == null) {
             galleryAdapterInstance = new GalleryAdapter(context,galleryList,host);

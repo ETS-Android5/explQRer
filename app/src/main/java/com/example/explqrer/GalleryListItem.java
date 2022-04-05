@@ -12,8 +12,6 @@ public class GalleryListItem {
 
     private Bitmap image;
     private String hashCode;
-    private String codeDescription;
-    private int codePts;
 
     /**
      * This gets the bitmap image of the image stored in the GalleryListItem object
@@ -50,36 +48,5 @@ public class GalleryListItem {
         this.hashCode = hashCode;
     }
 
-    /**
-     * gets the descrition of the code that is stored in the object
-     * @return codeDescription
-     *   The description writen for the code
-     */
-    public String getCodeDescription() {
-        return codeDescription;
-    }
 
-    /**
-     * set the codeDescription to the parameter provided
-     * @param codeDescription
-     */
-    public void setCodeDescription(String codeDescription) {
-        this.codeDescription = codeDescription;
-    }
-
-    /**
-     * get the codePts of the object
-     * @return codePts
-     */
-    public int getCodePts() {
-        return codePts;
-    }
-
-    /**
-     * sets the codePts to the object
-     * @param codePts
-     */
-    public void setCodePts(int codePts) {
-        this.codePts = codePts;
-    }
 }
