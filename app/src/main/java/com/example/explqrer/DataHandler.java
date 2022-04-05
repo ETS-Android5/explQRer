@@ -540,6 +540,9 @@ public class DataHandler {
                     String username = doc.getId();
                     DocumentReference dr = cr.document(username);
                     dr.update("ptsL", pos++);
+                    if(username.equals(MainActivity.getPlayer().getName())){
+                        MainActivity.getPlayer().setPtsL(pos-1);
+                    }
                 }
             }
         });
@@ -619,6 +622,9 @@ public class DataHandler {
                     String username = doc.getId();
                     DocumentReference dr = cr.document(username);
                     dr.update("qrL", pos++);
+                    if(username.equals(MainActivity.getPlayer().getName())){
+                        MainActivity.getPlayer().setQrL(pos-1);
+                    }
                 }
             }
         });
@@ -698,6 +704,9 @@ public class DataHandler {
                     String username = doc.getId();
                     DocumentReference dr = cr.document(username);
                     dr.update("uniqueL", pos++);
+                    if(username.equals(MainActivity.getPlayer().getName())){
+                        MainActivity.getPlayer().setUniqueL(pos-1);
+                    }
                 }
             }
         });

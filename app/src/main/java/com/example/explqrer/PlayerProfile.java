@@ -14,6 +14,7 @@ public class PlayerProfile implements Serializable {
     private long points;
     private GameCode highest, lowest;
     private boolean isAdmin;
+    private long ptsL,qrL,uniqueL;
 
     public PlayerProfile(String username, String Contact) {
         name = username;
@@ -21,6 +22,60 @@ public class PlayerProfile implements Serializable {
         points = 0;
         codes = new HashMap<>();
         isAdmin = false;
+    }
+
+    /**
+     * Getter function for ptsL
+     * @return
+     *  ptsl
+     */
+    public long getPtsL() {
+        return ptsL;
+    }
+
+    /**
+     * Setter function for ptsL
+     * @param ptsL
+     *  ptsl
+     */
+    public void setPtsL(long ptsL) {
+        this.ptsL = ptsL;
+    }
+
+    /**
+     * Getter function for qrL
+     * @return
+     *  qrL
+     */
+    public long getQrL() {
+        return qrL;
+    }
+
+    /**
+     * Setter function for qrL
+     * @param qrL
+     *  qrL
+     */
+    public void setQrL(long qrL) {
+        this.qrL = qrL;
+    }
+
+    /**
+     * Getter function for uniqueL
+     * @return
+     *  uniqueL
+     */
+    public long getUniqueL() {
+        return uniqueL;
+    }
+
+    /**
+     * Setter function for uniqueL
+     * @param uniqueL
+     *  uniqueL
+     */
+    public void setUniqueL(long uniqueL) {
+        this.uniqueL = uniqueL;
     }
 
     /**
