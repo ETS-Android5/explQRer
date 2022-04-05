@@ -11,21 +11,21 @@
         android:layout_width="38dp"
         android:layout_height="30dp"
         android:layout_marginStart="7dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="24dp"
         android:background="@color/cool_dark"
         android:contentDescription="settings"
         android:src="@drawable/ic_preferences_dots"
         android:textColor="#ffffff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.157"
-        app:layout_constraintStart_toEndOf="@+id/points"
+        app:layout_constraintStart_toEndOf="@+id/points_and_scanned_banner"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="TouchTargetSizeCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/points"
-        android:layout_width="281dp"
+        android:id="@+id/points_and_scanned_banner"
+        android:layout_width="260dp"
         android:layout_height="131dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.507"
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation_profile"
-        app:layout_constraintTop_toBottomOf="@+id/points"
+        app:layout_constraintTop_toBottomOf="@+id/points_and_scanned_banner"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="-7dp" />
 
@@ -56,32 +56,32 @@
         app:menu="@menu/bottom_navigation_profile_page" />
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="33dp"
-        android:layout_height="24dp"
+        android:id="@+id/textViewhigh"
+        android:layout_width="16dp"
+        android:layout_height="23dp"
         android:layout_marginStart="3dp"
         android:layout_marginTop="40dp"
         android:text="H"
         android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/points"
-        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintEnd_toStartOf="@+id/points_and_scanned_banner"
+        app:layout_constraintHorizontal_bias="0.276"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="33dp"
-        android:layout_height="24dp"
+        android:id="@+id/textLow"
+        android:layout_width="13dp"
+        android:layout_height="22dp"
         android:layout_marginStart="3dp"
         android:layout_marginTop="68dp"
-        android:text="L"
+        android:text="@string/lower"
         android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/points"
-        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintEnd_toStartOf="@+id/points_and_scanned_banner"
+        app:layout_constraintHorizontal_bias="0.32"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

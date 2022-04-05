@@ -69,7 +69,7 @@ public class UserProfileActivityTest {
         solo.clickOnButton("Profile");
         solo.assertCurrentActivity("Wrong Activity", UserProfileActivity.class);
         solo.clickOnButton("Profile QR");
-        solo.waitForView(R.id.)
+
     }
 
 }

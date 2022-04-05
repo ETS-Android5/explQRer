@@ -204,24 +204,24 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
                     .setNegativeButton("No,Don't!", null)
                     .setPositiveButton("Yes,Delete!", (dialog, which) -> {
                         if (finalCode != null) {
-                            //GalleryAdapter galleryAdapter = GalleryAdapter();
-                            System.out.println("final: " + player.getCodes());
-                            //galleryAdapter.removeImage(finalCode);
+
                             player.removeCode(finalCode);
-                            System.out.println("final after : " + player.getCodes());
                             GalleryAdapter galleryAdapter = GalleryAdapter.getInstance();
-                            System.out.println("this is after adapter delete before: " + galleryAdapter.getItemCount() + "is here");
                             galleryAdapter.removeImage(finalCode);
                             galleryAdapter.notifyDataSetChanged();
-                            System.out.println("this is after adapter delete: " + galleryAdapter.getItemCount());
                             DataHandler dataHandler = DataHandler.getInstance();
                             dataHandler.updatePlayerJson(player);
+                            UserProfileActivity.refresh();
+
                             dataHandler.updatePts(player.getName(), -finalCode.getScore());
                             dataHandler.updateScanned(player.getName(), -1);
                             dataHandler.updateUniqueScanned(player.getName(), -1);
+
                             MainActivity.refresh();
-                            UserProfileActivity.refresh();
+
                             GameCodeFragment.this.dismiss();
+
+
                         }
                     });
 

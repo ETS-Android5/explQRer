@@ -99,10 +99,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
      * remove the image in the galleryList
      */
     public void removeImage(GameCode codeImage){
-        System.out.println("gallery list in remove : "+galleryList);
         galleryList.remove(codeImage);
 
-        System.out.println("in remove");
     }
 
     /**
@@ -118,8 +116,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
                 String codeHash = galleryList.get(getBindingAdapterPosition()).getHashCode();
                 GameCode code = player.getCode(codeHash);
-                System.out.println("this is the hash: "+ code);
-                System.out.println("hello");
                 host.createFragment(code.getSha256hex());
             });
         }

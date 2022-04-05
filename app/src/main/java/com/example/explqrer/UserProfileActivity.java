@@ -165,7 +165,7 @@ public class UserProfileActivity extends AppCompatActivity
 
         //set up the RecyclerView
         final int time = 4000; // time delay for the sliding between items in recyclerview
-        RecyclerView recyclerView = findViewById(R.id.points);
+        RecyclerView recyclerView = findViewById(R.id.points_and_scanned_banner);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(UserProfileActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManager);
         RecyclerViewAdapter myRecyclerViewAdapter = new RecyclerViewAdapter(this, banner);
