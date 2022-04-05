@@ -264,12 +264,14 @@ public class MainActivity extends AppCompatActivity
      */
     public void setPlayer(PlayerProfile player) {
         MainActivity.player = player;
-        for (GameCode code : player.getCodes().values()) {
-            dataHandler.getCode(code.getSha256hex(), newCode -> {
-                if (newCode == null) {
-                    player.removeCode(code);
-                }
-            });
+        if (player != null) {
+            for (GameCode code : player.getCodes().values()) {
+                dataHandler.getCode(code.getSha256hex(), newCode -> {
+                    if (newCode == null) {
+                        player.removeCode(code);
+                    }
+                });
+            }
         }
         saveData();
     }

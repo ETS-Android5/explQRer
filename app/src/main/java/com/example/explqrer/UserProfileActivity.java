@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,7 @@ public class UserProfileActivity extends AppCompatActivity
     private BottomNavigationView bottomNavigationView;
     private PlayerProfile player;
     private static UserProfileActivity userProfileInstance;
+    public static Bitmap defaultQr;
 
     public static void refresh() {
         userProfileInstance.recreate();
@@ -59,6 +61,8 @@ public class UserProfileActivity extends AppCompatActivity
         setContentView(R.layout.activity_user_profile);
 
         userProfileInstance = this;
+
+        defaultQr = BitmapFactory.decodeResource(getResources(), R.drawable.defualt_qr);
 
 
 
