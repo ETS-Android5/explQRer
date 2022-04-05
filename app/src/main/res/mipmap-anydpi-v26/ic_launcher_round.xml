@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@drawable/ic_launcher_background" />
-    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+<!--part of the image was from the internet through this link https://media.istockphoto.com/vectors/businessman-and-telescope-icon-on-black-and-white-vector-backgrounds-vector-id831528634?k=6&m=831528634&s=612x612&w=0&h=RYdIN-9j8CUVFlMUBn-1QFwc43NFyAySjUpe7hG6cTA=
+potential creator: https://www.istockphoto.com/vector/businessman-and-telescope-icon-on-black-and-white-vector-backgrounds-gm831528634-135216555-->
+<adaptive-icon
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background"/>
+    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
 </adaptive-icon>
