@@ -176,6 +176,7 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             }, 300);
         }
         updateDistance();
+        setListeners();
     }
 
     private void setListeners() {
