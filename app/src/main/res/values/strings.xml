@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">explQRer</string>
+    <string name="app_name">explQRer!</string>
     <string name="back_button">Back</string>
     <string name="profile_page_nav">Profile</string>
     <string name="map_nav">Map</string>
     <string name="user_profile_qr">User QR</string>
     <string name="scanner_nav">Scanner</string>
     <string name="search_nav">Search</string>
-    <string name="leaderboard_nav">Leaderboard</string>
+    <string name="leaderboard_nav">Rankings</string>
     <string name="default_text">default_text</string>
     <string name="short_description">Enter a short description (optional)</string>
     <string name="record_location">Record Location?</string>
@@ -18,4 +18,16 @@
     <string name="banner">Banner</string>
     <string name="already_scanned">Already Scanned!</string>
     <string name="preview">Preview</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="log_in">Log In</string>
+    <string name="view_profile">View Profile</string>
+    <string name="scan_for_points">Scan for Points</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoibWFzb25ibHkiLCJhIjoiY2wxM3U5ZGp4MjA2OTNpcWh5bHNyZmxhaCJ9.OeTAtGuE9LiP6rWe_qS_tg</string>
+    <string name="player_qr_alert_description_text">This is a player code. You can scan it for points, see the user\'s profile, or log in to this account.</string>
+    <string name="description">Description:</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="pin">pin</string>
+    <string name="home">home</string>
+    <string name="lower">L</string>
 </resources>

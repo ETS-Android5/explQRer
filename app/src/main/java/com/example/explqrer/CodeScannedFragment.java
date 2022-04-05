@@ -1,5 +1,6 @@
 package com.example.explqrer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -22,23 +24,23 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 
-public class CodeScannedFragment extends DialogFragment {
+public class CodeScannedFragment extends DialogFragment implements OnScannedByListener {
     private CodeScannerFragmentListener listener;
 
     private EditText description;
     private SwitchCompat locationToggle;
     private Button takePictureButton;
     private ImageView pictureTaken;
+    private TextView rawText, scannedBy;
 
 
     public interface CodeScannerFragmentListener {
         void processQR(GameCode code, Boolean recordLocation);
     }
 
-    public static CodeScannedFragment newInstance(String code, String username) {
+    public static CodeScannedFragment newInstance(String code) {
         Bundle args = new Bundle();
         args.putSerializable ("Code", code);
-        args.putSerializable("Name", username);
 
         CodeScannedFragment fragment = new CodeScannedFragment();
         fragment.setArguments(args);
@@ -60,15 +62,22 @@ public class CodeScannedFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity())
-                .inflate(R.layout.code_scanned_fragment_layout, null);
+                .inflate(R.layout.fragment_code_scanned, null);
+        String barcode = (String) getArguments().get("Code");
+        GameCode code = new GameCode(barcode, null,null);
+        DataHandler.getInstance().scannedBy(code.getSha256hex(), this);
         description = view.findViewById(R.id.code_scanned_description_text);
         locationToggle = view.findViewById(R.id.code_scanned_record_location);
         takePictureButton = view.findViewById(R.id.code_scanned_take_picture);
         pictureTaken = view.findViewById(R.id.code_scanned_image_taken);
+        rawText = view.findViewById(R.id.scanned_raw_value_text);
+        scannedBy = view.findViewById(R.id.scanned_by_number);
 
-        String barcode = (String) getArguments().get("Code");
-        String username = (String) getArguments().get("Name");
-        GameCode code = new GameCode(barcode, username, null,null);
+        if (barcode.length() > 35) {
+            rawText.setText("Contents: " + barcode.substring(0,34)+ "...");
+        } else {
+            rawText.setText("Contents: " + barcode);
+        }
 
         ActivityResultLauncher<Intent> pictureActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -104,5 +113,22 @@ public class CodeScannedFragment extends DialogFragment {
                 .setTitle("Code worth: " + code.getScore() + " points!")
                 .create();
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void scannedByListener(int scannedBy) {
+        switch (scannedBy) {
+            case -1:
+            case 0:
+                this.scannedBy.setText("Never scanned before!");
+                break;
+            case 1:
+                this.scannedBy.setText("Scanned by: 1 other player");
+                break;
+            default:
+                this.scannedBy.setText("Scanned by: " + scannedBy + " other players");
+                break;
+        }
     }
 }

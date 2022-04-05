@@ -1,37 +1,96 @@
 package com.example.explqrer;
 
-import android.location.Location;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class PlayerProfile implements Serializable {
 
+    private final HashMap<String, GameCode> codes;
     private String name;
     private String contact;
     private long points;
     private GameCode highest, lowest;
-    private HashMap<GameCode, GameCode> codes;
+    private boolean isAdmin;
+    private long ptsL,qrL,uniqueL;
 
     public PlayerProfile(String username, String Contact) {
         name = username;
         contact = Contact;
         points = 0;
-        codes = new HashMap<>() ;
+        codes = new HashMap<>();
+        isAdmin = false;
+    }
+
+    /**
+     * Getter function for ptsL
+     * @return
+     *  ptsl
+     */
+    public long getPtsL() {
+        return ptsL;
+    }
+
+    /**
+     * Setter function for ptsL
+     * @param ptsL
+     *  ptsl
+     */
+    public void setPtsL(long ptsL) {
+        this.ptsL = ptsL;
+    }
+
+    /**
+     * Getter function for qrL
+     * @return
+     *  qrL
+     */
+    public long getQrL() {
+        return qrL;
+    }
+
+    /**
+     * Setter function for qrL
+     * @param qrL
+     *  qrL
+     */
+    public void setQrL(long qrL) {
+        this.qrL = qrL;
+    }
+
+    /**
+     * Getter function for uniqueL
+     * @return
+     *  uniqueL
+     */
+    public long getUniqueL() {
+        return uniqueL;
+    }
+
+    /**
+     * Setter function for uniqueL
+     * @param uniqueL
+     *  uniqueL
+     */
+    public void setUniqueL(long uniqueL) {
+        this.uniqueL = uniqueL;
     }
 
     /**
      * Returns the String value of player name.
-     *  @return playerName, a String value.
+     *
+     * @return playerName, a String value.
      */
     public String getName() {
         return name;
     }
+
     /**
      * This set method sets the name of the player.
-     *  @param name a String as name.
+     *
+     * @param name a String as name.
      */
     public void setName(String name) {
         this.name = name;
@@ -39,7 +98,8 @@ public class PlayerProfile implements Serializable {
 
     /**
      * Returns the String value of player info.
-     *  @return playerInfo, a String value.
+     *
+     * @return playerInfo, a String value.
      */
     public String getContact() {
         return contact;
@@ -47,7 +107,8 @@ public class PlayerProfile implements Serializable {
 
     /**
      * This set method sets the player info.
-     *  @param contact a String.
+     *
+     * @param contact a String.
      */
     public void setContact(String contact) {
         this.contact = contact;
@@ -55,7 +116,8 @@ public class PlayerProfile implements Serializable {
 
     /**
      * Returns the long value of player points.
-     *  @return playerInfo, a long value.
+     *
+     * @return playerInfo, a long value.
      */
     public long getPoints() {
         return points;
@@ -63,21 +125,34 @@ public class PlayerProfile implements Serializable {
 
     /**
      * Get the list of scanned code hashes
+     *
      * @return The scanned code hashes in an ArrayList
      */
-    public HashMap<GameCode, GameCode> getCodes() {
+    public HashMap<String, GameCode> getCodes() {
         return codes;
     }
 
     /**
+     * Get the game code object from a player
+     *
+     * @param hash
+     * @return Can return null
+     */
+    @Nullable
+    public GameCode getCode(String hash) {
+        return codes.get(hash);
+    }
+
+    /**
      * Add a GameCode to the PlayerProfile
+     *
      * @param code the code to add
      * @return true if the code was added, false otherwise
      */
     public boolean addCode(@NonNull GameCode code) {
 
-        if (!codes.containsKey(code)) {
-            codes.put(code, code);
+        if (!codes.containsKey(code.getSha256hex())) {
+            codes.put(code.getSha256hex(), code);
             int score = code.getScore();
             points += score;
             if (highest == null || score > highest.getScore()) {
@@ -93,12 +168,13 @@ public class PlayerProfile implements Serializable {
 
     /**
      * Remove a code from a player profile
+     *
      * @param code the code to remove
      * @return true if the code was successfully removed
      */
     public boolean removeCode(GameCode code) {
-        if (codes.containsKey(code)) {
-            codes.remove(code);
+        if (codes.containsKey(code.getSha256hex())) {
+            codes.remove(code.getSha256hex());
             // TODO: add some error checking
             points -= code.getScore();
             if (code == lowest || code == highest) {
@@ -111,6 +187,7 @@ public class PlayerProfile implements Serializable {
 
     /**
      * get the highest scoring GameCode from the account
+     *
      * @return the aforementioned code
      */
     public GameCode getHighestCode() {
@@ -119,6 +196,7 @@ public class PlayerProfile implements Serializable {
 
     /**
      * get the lowest scoring GameCode from the account
+     *
      * @return the aforementioned code
      */
     public GameCode getLowestCode() {
@@ -135,7 +213,7 @@ public class PlayerProfile implements Serializable {
 
         // refresh highest and lowest
         highest = lowest = null;
-        for (GameCode code : codes.keySet()) {
+        for (GameCode code : codes.values()) {
             if (highest == null || code.getScore() > highest.getScore()) {
                 highest = code;
             }
@@ -147,6 +225,7 @@ public class PlayerProfile implements Serializable {
 
     /**
      * Get the total number of codes scanned by the player
+     *
      * @return the number of codes
      */
     public int getNumCodes() {
@@ -155,16 +234,19 @@ public class PlayerProfile implements Serializable {
 
     /**
      * Check if a player profile already contains a given code.
+     *
      * @param rawValue
      * @return
      */
     public boolean hasCode(String rawValue) {
-        return codes.containsKey(new GameCode(rawValue));
+        return codes.containsKey(GameCode.hashCode(rawValue));
     }
 
-    public void addLocationToCode(GameCode code, Location location) {
-        if (codes.containsKey(code)) {
-            codes.get(code).setLocation(location);
-        }
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAsAdmin() {
+        isAdmin = true;
     }
 }

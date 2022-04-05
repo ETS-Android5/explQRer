@@ -1,12 +1,16 @@
 package com.example.explqrer;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +20,9 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,14 +30,24 @@ import java.util.TimerTask;
 /**
  * all the methods to create the User Profile
  */
-public class UserProfileActivity extends AppCompatActivity{
+public class UserProfileActivity extends AppCompatActivity
+        implements NavigationBarView.OnItemSelectedListener,
+        GameCodeFragment.GameCodeFragmentHost {
 
     private static final String[] paths = {"Select to delete QR", "Scan to sign-in", "Edit Profile"};
-
+    private BottomNavigationView bottomNavigationView;
     private PlayerProfile player;
+    private static UserProfileActivity userProfileInstance;
+    public static Bitmap defaultQr;
+
+    public static void refresh() {
+        userProfileInstance.recreate();
+    }
+
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         /* Site: stackoverflow.com
          * Link: https://stackoverflow.com/questions/28460300
          * Author: https://stackoverflow.com/users/3681880/suragch
@@ -43,50 +60,92 @@ public class UserProfileActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        userProfileInstance = this;
+
+        defaultQr = BitmapFactory.decodeResource(getResources(), R.drawable.defualt_qr);
+
+
+
         // get the player from main activity
         player = MainActivity.getPlayer();
 
         // Referencing and Initializing the button
         ImageButton button = (ImageButton) findViewById(R.id.settings);
 
-        // Setting onClick behavior to the button
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Initializing the popup menu and giving the reference as current context
-                PopupMenu popupMenu = new PopupMenu(UserProfileActivity.this, button);
+        bottomNavigationView = findViewById(R.id.bottom_navigation_profile);
+        bottomNavigationView.setOnItemSelectedListener((NavigationBarView.OnItemSelectedListener) this);
 
-                // Inflating popup menu from popup_menu.xml file
-                popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int id = item.getItemId();
-                        switch(id) {
-                            case R.id.edit_profile:
-                                // Edit profile
-                                Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
-                                startActivity(intent);
-                                break;
-                            case R.id.scan_sign_in:
-                                // Scan to sign in
-                                Intent myIntent = new Intent(getApplicationContext(), ProfileQr.class);
-                                startActivity(myIntent);
-                              break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                // Showing the popup menu
-                popupMenu.show();
-            }
+
+        // Setting onClick behavior to the button
+        button.setOnClickListener(view -> {
+            // Initializing the popup menu and giving the reference as current context
+            PopupMenu popupMenu = new PopupMenu(UserProfileActivity.this, button);
+
+            // Inflating popup menu from popup_menu.xml file
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                switch(id) {
+                    case R.id.edit_profile:
+                        // Edit profile
+                        Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            });
+            // Showing the popup menu
+            popupMenu.show();
         });
+
         this.populateBanner(player.getName()); //calls populateBanner to put points and scans in in banner recycler view
-        this.populateGallery(player); //calls populateGallery to put images in the gallery recycler view and provides name of player as parameter
+        GalleryBuilder.populateGallery(player,findViewById(R.id.image_gallery),getApplicationContext(),this); //calls populategallery of galleryBuilder to construct and populate the gallery
 
     }
+
+    /**
+     * Called when a navigation item is selected
+     * @param item the selected item
+     * @return True if the selection was processed successfully
+     */
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.map_nav:
+                Intent intent = new Intent(this, MapActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.profile_qr_nav:
+                // goes to UserProfile activity
+                Intent profileIntent = new Intent(this, ProfileQr.class);
+                startActivity(profileIntent);
+
+                return true;
+
+            case R.id.home_nav:
+                // goes to home
+                finish();
+                return true;
+
+            case R.id.search_nav:
+                // goes to search
+                Intent searchIntent = new Intent(this, SearchActivity.class);
+                startActivity(searchIntent);
+                return true;
+
+            case R.id.leaderboard_nav:
+                // goes to leaderboard
+                Intent leaderboardIntent = new Intent(this, PointsRank.class);
+                startActivity(leaderboardIntent);
+                return true;
+
+        }
+        return false;
+    }
+
     /**
      * populates the Banner with the total points and the total scanned
      * @param playerName
@@ -110,7 +169,7 @@ public class UserProfileActivity extends AppCompatActivity{
 
         //set up the RecyclerView
         final int time = 4000; // time delay for the sliding between items in recyclerview
-        RecyclerView recyclerView = findViewById(R.id.points);
+        RecyclerView recyclerView = findViewById(R.id.points_and_scanned_banner);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(UserProfileActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManager);
         RecyclerViewAdapter myRecyclerViewAdapter = new RecyclerViewAdapter(this, banner);
@@ -141,27 +200,25 @@ public class UserProfileActivity extends AppCompatActivity{
                 }
             }
         }, 0, time);
-
-
     }
 
     /**
-     * This populates the gallery with a GalleryAdapter
-     *  Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
-     *  Author: Adam Sinicki
+     * to create show the GameCode fragment when an image in the gallery is clicked
+     * @param hash
      */
-    private void populateGallery(PlayerProfile player){
+    @Override
+    public void createFragment(String hash) {
+        GameCodeFragment gameCodeFragment = GameCodeFragment.newInstance(player.getCode(hash));
+        gameCodeFragment.show(getSupportFragmentManager(),"GAME_CODE");
+    }
 
-        //set up the RecyclerView for the gallery
-        RecyclerView galleryRecyclerView = findViewById(R.id.image_gallery);
-        galleryRecyclerView.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),4);
-        galleryRecyclerView.setLayoutManager(gridLayoutManager);
-
-        ArrayList<GalleryListItem> listOfImages = GalleryList.updateGallery(player);
-
-        GalleryAdapter galleryListAdapter = new GalleryAdapter(getApplicationContext(),listOfImages);
-        System.out.println("before adapter");
-        galleryRecyclerView.setAdapter(galleryListAdapter);
+    /**
+     * gets the Player profile object player object from the main activity
+     * @return MainActivity.getPlayer()
+     *     the PlayerProfile object player with the player
+     */
+    @Override
+    public PlayerProfile getPlayer() {
+        return MainActivity.getPlayer();
     }
 }

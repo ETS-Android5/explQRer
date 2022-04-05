@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MapActivity">
+
+
+    <com.mapbox.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        mapbox:mapbox_cameraTargetLat="40.7128"
+        mapbox:mapbox_cameraTargetLng="-74.0060"
+        mapbox:mapbox_cameraZoom="9.0"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/search_location"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="30dp"
+                android:autofillHints=""
+                android:background="@drawable/search_border"
+                android:backgroundTint="@color/white"
+                android:cursorVisible="true"
+                android:hint="   search an address"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColor="#696969"
+                android:textCursorDrawable="@color/black"></AutoCompleteTextView>
+
+
+
+            <ImageButton
+                android:id="@+id/search_location_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/search_location"
+                android:layout_alignEnd="@+id/search_location"
+                android:contentDescription="Search"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:src="@drawable/location_search">
+
+            </ImageButton>
+
+            <Button
+                android:id="@+id/map_refresh_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_location_btn"
+                android:layout_alignStart="@+id/search_location_btn"
+                android:layout_marginStart="-52dp"
+                android:layout_marginTop="11dp"
+                android:text="Refresh" />
+
+            <Button
+                android:id="@+id/nearby_list_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_location"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="12dp"
+                android:text="Nearby List" />
+
+
+        </RelativeLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/recenter_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
+            android:clickable="true"
+            mapbox:srcCompat="@drawable/access_geolocation" />
+
+
+    </com.mapbox.maps.MapView>
+
+</LinearLayout>

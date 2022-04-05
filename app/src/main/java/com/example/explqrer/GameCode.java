@@ -3,7 +3,10 @@ package com.example.explqrer;
 import static com.google.common.math.IntMath.pow;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -25,7 +29,8 @@ public class GameCode implements Serializable {
     private final String sha256hex;
 
     private final int score;
-    private Location location;
+    private double lon, lat;
+    private boolean locationRecorded = false;
     private ProxyBitmap photo;
     private String description;
     private static HashFunction hash =  Hashing.sha256();
@@ -35,29 +40,38 @@ public class GameCode implements Serializable {
      * @param barcode   a scanned barcode to be recorded
      * @param location  geolocation information. Can be null
      * @param photo     an image of the location of the barcode. Can be null
-     * @param player    the player scanning the code
      */
-    public GameCode(@NonNull String barcode, @NonNull String player,
-                    @Nullable Location location, @Nullable Bitmap photo) {
+    public GameCode(@NonNull String barcode, @Nullable Location location, @Nullable Bitmap photo) {
         sha256hex = hashCode(barcode);
-        score = calculateScore(barcode);
-        this.location = location;
+        score = calculateScoreFromRaw(barcode);
+        if (location != null) {
+            locationRecorded = true;
+            lon = location.getLongitude();
+            lat = location.getLatitude();
+        }
         if (photo != null) {
-            this.photo = new ProxyBitmap(photo);
+            setPhoto(photo);
         }
     }
   
-    GameCode(String rawValue) {
-        sha256hex = hashCode(rawValue);
-        score = calculateScore(rawValue);
+    public GameCode(String hash) {
+        sha256hex = hash;
+        score = calculateScoreFromHash(hash);
+    }
+
+    /**
+     * Calculate the score of the barcode data
+     * @return The score as an integer
+     */
+    public static int calculateScoreFromRaw(String rawValue) {
+        return calculateScoreFromHash(hashCode(rawValue));
     }
 
     /**
      * Calculate the score of the hash string
      * @return The score as an integer
      */
-    public static int calculateScore(String rawValue) {
-        String sha256hex = hashCode(rawValue);
+    public static Integer calculateScoreFromHash(String sha256hex) {
         int ret = 0;
         int repeats = 0;
         char prevChar = sha256hex.charAt(0);
@@ -76,6 +90,9 @@ public class GameCode implements Serializable {
         }
         if (repeats > 0) {
             ret += Integer.parseInt(String.valueOf(prevChar), 16);
+        }
+        if (ret == 0) {
+            ret = 1;
         }
         return ret;
     }
@@ -105,7 +122,10 @@ public class GameCode implements Serializable {
      * @return
      */
     public Location getLocation() {
-        return location;
+        Location location = new Location("");
+        location.setLongitude(lon);
+        location.setLatitude(lat);
+        return locationRecorded ? location : null;
     }
 
     /**
@@ -121,7 +141,12 @@ public class GameCode implements Serializable {
      * @param location
      */
     public void setLocation(Location location) {
-        this.location = location;
+        if (location != null) {
+            lon = location.getLongitude();
+            lat = location.getLatitude();
+            locationRecorded = true;
+
+        }
     }
 
     /**
@@ -129,7 +154,10 @@ public class GameCode implements Serializable {
      * @param photo
      */
     public void setPhoto(Bitmap photo) {
-        this.photo = new ProxyBitmap(photo);
+        if (photo == null) { return; }
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        this.photo = new ProxyBitmap(BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size()));
     }
 
     public String getDescription() {
@@ -156,5 +184,51 @@ public class GameCode implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(sha256hex);
+    }
+
+    public static class CodeLocation implements Parcelable {
+        private String hash;
+        private Location location;
+
+        public Location getLocation() {
+            return location;
+        }
+
+        public String getHash() {
+            return hash;
+        }
+
+        public CodeLocation(String hash, Location location) {
+            this.hash = hash;
+            this.location = location;
+        }
+
+        protected CodeLocation(Parcel in) {
+            hash = in.readString();
+            location = in.readParcelable(Location.class.getClassLoader());
+        }
+
+        public static final Creator<CodeLocation> CREATOR = new Creator<CodeLocation>() {
+            @Override
+            public CodeLocation createFromParcel(Parcel in) {
+                return new CodeLocation(in);
+            }
+
+            @Override
+            public CodeLocation[] newArray(int size) {
+                return new CodeLocation[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(hash);
+            parcel.writeParcelable(location, i);
+        }
     }
 }

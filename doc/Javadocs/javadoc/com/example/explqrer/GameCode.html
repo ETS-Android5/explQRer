@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":9,"i9":10,"i10":10,"i11":10};
+var data = {"i0":9,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":9,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -86,7 +86,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -149,6 +149,29 @@ implements java.io.Serializable</pre>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="nested.class.summary">
+<!--   -->
+</a>
+<h3>Nested Class Summary</h3>
+<table class="memberSummary">
+<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Class</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="GameCode.CodeLocation.html" title="class in com.example.explqrer">GameCode.CodeLocation</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
+</section>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <section role="region">
 <ul class="blockList">
@@ -163,8 +186,11 @@ implements java.io.Serializable</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.lang.String,android.location.Location,android.graphics.Bitmap)">GameCode</a></span>&#8203;(java.lang.String&nbsp;barcode,
-        java.lang.String&nbsp;player,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String)">GameCode</a></span>&#8203;(java.lang.String&nbsp;hash)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,android.location.Location,android.graphics.Bitmap)">GameCode</a></span>&#8203;(java.lang.String&nbsp;barcode,
         android.location.Location&nbsp;location,
         android.graphics.Bitmap&nbsp;photo)</code></th>
 <td class="colLast">
@@ -190,75 +216,82 @@ implements java.io.Serializable</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#calculateScore(java.lang.String)">calculateScore</a></span>&#8203;(java.lang.String&nbsp;rawValue)</code></th>
+<td class="colFirst"><code>static java.lang.Integer</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#calculateScoreFromHash(java.lang.String)">calculateScoreFromHash</a></span>&#8203;(java.lang.String&nbsp;sha256hex)</code></th>
 <td class="colLast">
 <div class="block">Calculate the score of the hash string</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#calculateScoreFromRaw(java.lang.String)">calculateScoreFromRaw</a></span>&#8203;(java.lang.String&nbsp;rawValue)</code></th>
+<td class="colLast">
+<div class="block">Calculate the score of the barcode data</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(java.lang.Object&nbsp;o)</code></th>
 <td class="colLast">
 <div class="block">Return true if the object equals the GameCode</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDescription()">getDescription</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>android.location.Location</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLocation()">getLocation</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the stored location of the code</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>android.graphics.Bitmap</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPhoto()">getPhoto</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the bitmap of the image stored</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getScore()">getScore</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the score</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSha256hex()">getSha256hex</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the hash</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hashCode()">hashCode</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hashCode(java.lang.String)">hashCode</a></span>&#8203;(java.lang.String&nbsp;rawValue)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDescription(java.lang.String)">setDescription</a></span>&#8203;(java.lang.String&nbsp;description)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setLocation(android.location.Location)">setLocation</a></span>&#8203;(android.location.Location&nbsp;location)</code></th>
 <td class="colLast">
 <div class="block">Set the location info</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setPhoto(android.graphics.Bitmap)">setPhoto</a></span>&#8203;(android.graphics.Bitmap&nbsp;photo)</code></th>
 <td class="colLast">
@@ -289,16 +322,14 @@ implements java.io.Serializable</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(java.lang.String,java.lang.String,android.location.Location,android.graphics.Bitmap)">
+<a id="&lt;init&gt;(java.lang.String,android.location.Location,android.graphics.Bitmap)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>GameCode</h4>
 <pre>public&nbsp;GameCode&#8203;(@NonNull
                 java.lang.String&nbsp;barcode,
-                @NonNull
-                java.lang.String&nbsp;player,
                 @Nullable
                 android.location.Location&nbsp;location,
                 @Nullable
@@ -309,8 +340,16 @@ implements java.io.Serializable</pre>
 <dd><code>barcode</code> - a scanned barcode to be recorded</dd>
 <dd><code>location</code> - geolocation information. Can be null</dd>
 <dd><code>photo</code> - an image of the location of the barcode. Can be null</dd>
-<dd><code>player</code> - the player scanning the code</dd>
 </dl>
+</li>
+</ul>
+<a id="&lt;init&gt;(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>GameCode</h4>
+<pre>public&nbsp;GameCode&#8203;(java.lang.String&nbsp;hash)</pre>
 </li>
 </ul>
 </li>
@@ -323,13 +362,27 @@ implements java.io.Serializable</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="calculateScore(java.lang.String)">
+<a id="calculateScoreFromRaw(java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>calculateScore</h4>
-<pre class="methodSignature">public static&nbsp;int&nbsp;calculateScore&#8203;(java.lang.String&nbsp;rawValue)</pre>
+<h4>calculateScoreFromRaw</h4>
+<pre class="methodSignature">public static&nbsp;int&nbsp;calculateScoreFromRaw&#8203;(java.lang.String&nbsp;rawValue)</pre>
+<div class="block">Calculate the score of the barcode data</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The score as an integer</dd>
+</dl>
+</li>
+</ul>
+<a id="calculateScoreFromHash(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>calculateScoreFromHash</h4>
+<pre class="methodSignature">public static&nbsp;java.lang.Integer&nbsp;calculateScoreFromHash&#8203;(java.lang.String&nbsp;sha256hex)</pre>
 <div class="block">Calculate the score of the hash string</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -527,7 +580,7 @@ implements java.io.Serializable</pre>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>

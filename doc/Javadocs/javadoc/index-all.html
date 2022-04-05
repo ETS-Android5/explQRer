@@ -90,7 +90,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </nav>
 </header>
 <main role="main">
-<div class="contentContainer"><a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a><a id="I:A">
+<div class="contentContainer"><a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a><a id="I:A">
 <!--   -->
 </a>
 <h2 class="title">A</h2>
@@ -99,11 +99,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Add a GameCode to the PlayerProfile</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#addLocationToCode(com.example.explqrer.GameCode,android.location.Location)">addLocationToCode(GameCode, Location)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#addQR(com.example.explqrer.GameCode,java.lang.String)">addQR(GameCode, String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#addComment(java.lang.String,java.lang.String,java.lang.String)">addComment(String, String, String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
 <dd>
-<div class="block">Method to add the user to the QRcode when a user scans it</div>
+<div class="block">Function to add the user comment to the qrbase collection on firestore</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#addQR(com.example.explqrer.GameCode,com.example.explqrer.PlayerProfile)">addQR(GameCode, PlayerProfile)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>
+<div class="block">Method to add the user and location of the qr code to the
+ qrbase database when a user scans it</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/ScanningPageActivity.MyImageAnalyzer.html#analyze(androidx.camera.core.ImageProxy)">analyze(ImageProxy)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/ScanningPageActivity.MyImageAnalyzer.html" title="class in com.example.explqrer">ScanningPageActivity.MyImageAnalyzer</a></dt>
 <dd>&nbsp;</dd>
@@ -113,10 +116,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">C</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#calculateScore(java.lang.String)">calculateScore(String)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#calculateScoreFromHash(java.lang.String)">calculateScoreFromHash(String)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
 <dd>
 <div class="block">Calculate the score of the hash string</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#calculateScoreFromRaw(java.lang.String)">calculateScoreFromRaw(String)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
+<dd>
+<div class="block">Calculate the score of the barcode data</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.CodeLocation.html#%3Cinit%3E(android.os.Parcel)">CodeLocation(Parcel)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/GameCode.CodeLocation.html" title="class in com.example.explqrer">GameCode.CodeLocation</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.CodeLocation.html#%3Cinit%3E(java.lang.String,android.location.Location)">CodeLocation(String, Location)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/GameCode.CodeLocation.html" title="class in com.example.explqrer">GameCode.CodeLocation</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/CodeScannedFragment.html" title="class in com.example.explqrer"><span class="typeNameLink">CodeScannedFragment</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/CodeScannedFragment.html#%3Cinit%3E()">CodeScannedFragment()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/CodeScannedFragment.html" title="class in com.example.explqrer">CodeScannedFragment</a></dt>
@@ -124,6 +135,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><a href="com/example/explqrer/CodeScannedFragment.CodeScannerFragmentListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">CodeScannedFragment.CodeScannerFragmentListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/package-summary.html">com.example.explqrer</a> - package com.example.explqrer</dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/Comment.html" title="class in com.example.explqrer"><span class="typeNameLink">Comment</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>
+<div class="block">class representing comments</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/Comment.html#%3Cinit%3E()">Comment()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/Comment.html" title="class in com.example.explqrer">Comment</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/Comments.html" title="class in com.example.explqrer"><span class="typeNameLink">Comments</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>
@@ -141,7 +158,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/CommentsAdaptor.html#%3Cinit%3E(android.content.Context,java.util.ArrayList)">CommentsAdaptor(Context, ArrayList&lt;Comments&gt;)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/CommentsAdaptor.html" title="class in com.example.explqrer">CommentsAdaptor</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#createPlayer(java.lang.String,java.lang.String)">createPlayer(String, String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCodeFragment.GameCodeFragmentHost.html#createFragment(java.lang.String)">createFragment(String)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/GameCodeFragment.GameCodeFragmentHost.html" title="interface in com.example.explqrer">GameCodeFragment.GameCodeFragmentHost</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerDisplayActivity.html#createFragment(java.lang.String)">createFragment(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerDisplayActivity.html" title="class in com.example.explqrer">PlayerDisplayActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/UserProfileActivity.html#createFragment(java.lang.String)">createFragment(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/UserProfileActivity.html" title="class in com.example.explqrer">UserProfileActivity</a></dt>
+<dd>
+<div class="block">to create show the GameCode fragment when an image in the gallery is clicked</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#createPlayer(com.example.explqrer.PlayerProfile)">createPlayer(PlayerProfile)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>
+<div class="block">Function to create a new player document in the database</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.CodeLocation.html#CREATOR">CREATOR</a></span> - Static variable in class com.example.explqrer.<a href="com/example/explqrer/GameCode.CodeLocation.html" title="class in com.example.explqrer">GameCode.CodeLocation</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a id="I:D">
@@ -151,10 +180,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer"><span class="typeNameLink">DataHandler</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#%3Cinit%3E()">DataHandler()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#deletePlayer(java.lang.String)">deletePlayer(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>
+<div class="block">Function to delete the player from the player database</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#deleteQR(com.example.explqrer.GameCode)">deleteQR(GameCode)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>
+<div class="block">Function to delete a QR code from the database</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.CodeLocation.html#describeContents()">describeContents()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.CodeLocation.html" title="class in com.example.explqrer">GameCode.CodeLocation</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#downloadImage(java.lang.String)">downloadImage(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 </dl>
 <a id="I:E">
 <!--   -->
@@ -177,7 +216,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#firstScan(java.lang.String)">firstScan(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
 <dd>
-<div class="block">Method to check if the qr code is being scanned for the first time</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 </dd>
 </dl>
 <a id="I:G">
@@ -191,7 +230,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  Author: Adam Sinicki
  This is a class for a custom adapter for the recycler View</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryAdapter.html#%3Cinit%3E(android.content.Context,java.util.ArrayList)">GalleryAdapter(Context, ArrayList&lt;GalleryListItem&gt;)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/GalleryAdapter.html" title="class in com.example.explqrer">GalleryAdapter</a></dt>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryAdapter.html#%3Cinit%3E(android.content.Context,java.util.ArrayList,com.example.explqrer.GameCodeFragment.GameCodeFragmentHost)">GalleryAdapter(Context, ArrayList&lt;GalleryListItem&gt;, GameCodeFragment.GameCodeFragmentHost)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/GalleryAdapter.html" title="class in com.example.explqrer">GalleryAdapter</a></dt>
 <dd>
 <div class="block">Constructor for the class</div>
 </dd>
@@ -199,13 +238,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">This class creates the ViewHolder which makes it easier to iterate through images</div>
 </dd>
-<dt><a href="com/example/explqrer/GalleryList.html" title="class in com.example.explqrer"><span class="typeNameLink">GalleryList</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
-<dd>
-<div class="block">Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
- Author: Adam Sinicki
- populates the Gallery images list</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryList.html#%3Cinit%3E()">GalleryList()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/GalleryList.html" title="class in com.example.explqrer">GalleryList</a></dt>
+<dt><a href="com/example/explqrer/GalleryBuilder.html" title="class in com.example.explqrer"><span class="typeNameLink">GalleryBuilder</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryBuilder.html#%3Cinit%3E()">GalleryBuilder()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/GalleryBuilder.html" title="class in com.example.explqrer">GalleryBuilder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/GalleryListItem.html" title="class in com.example.explqrer"><span class="typeNameLink">GalleryListItem</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>
@@ -221,12 +256,36 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Store information about a code scanned by a player, so that it
  can be displayed to the player.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#%3Cinit%3E(java.lang.String,java.lang.String,android.location.Location,android.graphics.Bitmap)">GameCode(String, String, Location, Bitmap)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#%3Cinit%3E(java.lang.String)">GameCode(String)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#%3Cinit%3E(java.lang.String,android.location.Location,android.graphics.Bitmap)">GameCode(String, Location, Bitmap)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
 <dd>
 <div class="block">Constructor for GameCode.</div>
 </dd>
+<dt><a href="com/example/explqrer/GameCode.CodeLocation.html" title="class in com.example.explqrer"><span class="typeNameLink">GameCode.CodeLocation</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/GameCodeFragment.html" title="class in com.example.explqrer"><span class="typeNameLink">GameCodeFragment</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCodeFragment.html#%3Cinit%3E()">GameCodeFragment()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/GameCodeFragment.html" title="class in com.example.explqrer">GameCodeFragment</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/GameCodeFragment.GameCodeFragmentHost.html" title="interface in com.example.explqrer"><span class="typeNameLink">GameCodeFragment.GameCodeFragmentHost</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/ProxyBitmap.html#getBitmap()">getBitmap()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/ProxyBitmap.html" title="class in com.example.explqrer">ProxyBitmap</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#getCode(java.lang.String)">getCode(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
+<dd>
+<div class="block">Get the game code object from a player</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#getCode(java.lang.String,com.example.explqrer.OnGetCodeListener)">getCode(String, OnGetCodeListener)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryListItem.html#getCodeDescription()">getCodeDescription()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryListItem.html" title="class in com.example.explqrer">GalleryListItem</a></dt>
+<dd>
+<div class="block">gets the descrition of the code that is stored in the object</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryListItem.html#getCodePts()">getCodePts()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryListItem.html" title="class in com.example.explqrer">GalleryListItem</a></dt>
+<dd>
+<div class="block">get the codePts of the object</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#getCodes()">getCodes()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
 <dd>
 <div class="block">Get the list of scanned code hashes</div>
@@ -235,25 +294,45 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Function to get the comment left by the user</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#getComments(java.lang.String,com.example.explqrer.OnGetCommentsListener)">getComments(String, OnGetCommentsListener)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>
+<div class="block">This function returns the list of hashmaps which contains the username and comments</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/OnGetCommentsListener.html#getCommentsListener(java.util.ArrayList)">getCommentsListener(ArrayList&lt;Map&lt;String, String&gt;&gt;)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnGetCommentsListener.html" title="interface in com.example.explqrer">OnGetCommentsListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#getContact()">getContact()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
 <dd>
 <div class="block">Returns the String value of player info.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#getDescription()">getDescription()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.CodeLocation.html#getHash()">getHash()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.CodeLocation.html" title="class in com.example.explqrer">GameCode.CodeLocation</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryListItem.html#getHashCode()">getHashCode()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryListItem.html" title="class in com.example.explqrer">GalleryListItem</a></dt>
+<dd>
+<div class="block">get the hashCode of the GalleryListItem object</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#getHighestCode()">getHighestCode()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
 <dd>
 <div class="block">get the highest scoring GameCode from the account</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryListItem.html#getImage()">getImage()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryListItem.html" title="class in com.example.explqrer">GalleryListItem</a></dt>
 <dd>
-<div class="block">This gets the ID of the image stored in the ImageListItem object</div>
+<div class="block">This gets the bitmap image of the image stored in the GalleryListItem object</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#getInstance()">getInstance()</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryAdapter.html#getInstance()">getInstance()</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/GalleryAdapter.html" title="class in com.example.explqrer">GalleryAdapter</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryAdapter.html#getItemCount()">getItemCount()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryAdapter.html" title="class in com.example.explqrer">GalleryAdapter</a></dt>
 <dd>
 <div class="block">This gets how many items are in the adapter</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/RecyclerViewAdapter.html#getItemCount()">getItemCount()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/RecyclerViewAdapter.html" title="class in com.example.explqrer">RecyclerViewAdapter</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.html#getItemCount()">getItemCount()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.html" title="class in com.example.explqrer">RecyclerViewAdapterLeaderBoard</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.CodeLocation.html#getLocation()">getLocation()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.CodeLocation.html" title="class in com.example.explqrer">GameCode.CodeLocation</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#getLocation()">getLocation()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
 <dd>
@@ -267,6 +346,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Returns the String value of player name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/MapActivity.html#getNearbyQrs(java.util.ArrayList)">getNearbyQrs(ArrayList&lt;GameCode.CodeLocation&gt;)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/MapActivity.html" title="class in com.example.explqrer">MapActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/OnGetNearByQrsListener.html#getNearbyQrs(java.util.ArrayList)">getNearbyQrs(ArrayList&lt;GameCode.CodeLocation&gt;)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnGetNearByQrsListener.html" title="interface in com.example.explqrer">OnGetNearByQrsListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#getNearByQrs(android.location.Location,float,com.example.explqrer.OnGetNearByQrsListener)">getNearByQrs(Location, float, OnGetNearByQrsListener)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>
+<div class="block">Function to get the nearby locations in the given radius(in meters)</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#getNumCodes()">getNumCodes()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
 <dd>
 <div class="block">Get the total number of codes scanned by the player</div>
@@ -275,15 +362,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the bitmap of the image stored</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCodeFragment.GameCodeFragmentHost.html#getPlayer()">getPlayer()</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/GameCodeFragment.GameCodeFragmentHost.html" title="interface in com.example.explqrer">GameCodeFragment.GameCodeFragmentHost</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/MainActivity.html#getPlayer()">getPlayer()</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/MainActivity.html" title="class in com.example.explqrer">MainActivity</a></dt>
 <dd>
-<div class="block">Get the username</div>
+<div class="block">Get the player</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerDisplayActivity.html#getPlayer()">getPlayer()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerDisplayActivity.html" title="class in com.example.explqrer">PlayerDisplayActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/UserProfileActivity.html#getPlayer()">getPlayer()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/UserProfileActivity.html" title="class in com.example.explqrer">UserProfileActivity</a></dt>
+<dd>
+<div class="block">gets the Player profile object player object from the main activity</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#getPlayer(java.lang.String,com.example.explqrer.OnGetPlayerListener)">getPlayer(String, OnGetPlayerListener)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
 <dd>
 <div class="block">This function returns all the data that is stored about a user</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/OnGetPlayerListener.html#getPlayerListener(java.util.Map)">getPlayerListener(Map&lt;String, Object&gt;)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnGetPlayerListener.html" title="interface in com.example.explqrer">OnGetPlayerListener</a></dt>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/MainActivity.html#getPlayerListener(com.example.explqrer.PlayerProfile)">getPlayerListener(PlayerProfile)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/MainActivity.html" title="class in com.example.explqrer">MainActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/OnGetPlayerListener.html#getPlayerListener(com.example.explqrer.PlayerProfile)">getPlayerListener(PlayerProfile)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnGetPlayerListener.html" title="interface in com.example.explqrer">OnGetPlayerListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerDisplayActivity.html#getPlayerListener(com.example.explqrer.PlayerProfile)">getPlayerListener(PlayerProfile)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerDisplayActivity.html" title="class in com.example.explqrer">PlayerDisplayActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/ScannedRankLeaderboard.html#getPlayerName()">getPlayerName()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/ScannedRankLeaderboard.html" title="class in com.example.explqrer">ScannedRankLeaderboard</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/ScannedRankLeaderboard.html#getPlayerRank()">getPlayerRank()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/ScannedRankLeaderboard.html" title="class in com.example.explqrer">ScannedRankLeaderboard</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#getPoints()">getPoints()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
 <dd>
@@ -301,11 +404,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/OnGetPtsLListener.html#getPtsLListener(long)">getPtsLListener(long)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnGetPtsLListener.html" title="interface in com.example.explqrer">OnGetPtsLListener</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#getQR(com.example.explqrer.OnGetQrsListener)">getQR(OnGetQrsListener)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
-<dd>
-<div class="block">Method to get all the qr hashes and the users that scanned that qr code</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#getQrL(java.lang.String,com.example.explqrer.OnGetQrLListener)">getQrL(String, OnGetQrLListener)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#getQrL(java.lang.String,com.example.explqrer.OnGetQrListener)">getQrL(String, OnGetQrListener)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
 <dd>
 <div class="block">Method to get the position of the user on the qr scanned leaderboard</div>
 </dd>
@@ -315,7 +414,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/OnGetQrLeaderBoardListener.html#getQrLeaderBoardListener(java.util.ArrayList)">getQrLeaderBoardListener(ArrayList&lt;String&gt;)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnGetQrLeaderBoardListener.html" title="interface in com.example.explqrer">OnGetQrLeaderBoardListener</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/OnGetQrLListener.html#getQrLListener(long)">getQrLListener(long)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnGetQrLListener.html" title="interface in com.example.explqrer">OnGetQrLListener</a></dt>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/OnGetQrListener.html#getQrListener(long)">getQrListener(long)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnGetQrListener.html" title="interface in com.example.explqrer">OnGetQrListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#getScore()">getScore()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
 <dd>
@@ -343,6 +442,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/CommentsAdaptor.html#getView(int,android.view.View,android.view.ViewGroup)">getView(int, View, ViewGroup)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/CommentsAdaptor.html" title="class in com.example.explqrer">CommentsAdaptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/LocationAdapter.html#getView(int,android.view.View,android.view.ViewGroup)">getView(int, View, ViewGroup)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/LocationAdapter.html" title="class in com.example.explqrer">LocationAdapter</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a id="I:H">
 <!--   -->
@@ -358,11 +459,39 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#hashCode(java.lang.String)">hashCode(String)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#hashPts(java.lang.String)">hashPts(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#hasScannedBefore(java.lang.String,java.lang.String)">hasScannedBefore(String, String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#hasScannedBefore(java.lang.String,java.lang.String,com.example.explqrer.OnHasScannedBeforeListener)">hasScannedBefore(String, String, OnHasScannedBeforeListener)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
 <dd>
 <div class="block">Method to check if the qr has been scanned before by a given user</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/OnHasScannedBeforeListener.html#hasScannedBeforeListener(boolean)">hasScannedBeforeListener(boolean)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnHasScannedBeforeListener.html" title="interface in com.example.explqrer">OnHasScannedBeforeListener</a></dt>
+<dd>&nbsp;</dd>
+</dl>
+<a id="I:I">
+<!--   -->
+</a>
+<h2 class="title">I</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#isAdmin()">isAdmin()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/IsPlayerQrFragment.html" title="class in com.example.explqrer"><span class="typeNameLink">IsPlayerQrFragment</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/IsPlayerQrFragment.html#%3Cinit%3E()">IsPlayerQrFragment()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/IsPlayerQrFragment.html" title="class in com.example.explqrer">IsPlayerQrFragment</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/IsPlayerQrFragment.IsPlayerQrFragmentListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">IsPlayerQrFragment.IsPlayerQrFragmentListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+</dl>
+<a id="I:L">
+<!--   -->
+</a>
+<h2 class="title">L</h2>
+<dl>
+<dt><a href="com/example/explqrer/LocationAdapter.html" title="class in com.example.explqrer"><span class="typeNameLink">LocationAdapter</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/LocationAdapter.html#%3Cinit%3E(android.content.Context,java.util.ArrayList,double,double)">LocationAdapter(Context, ArrayList&lt;GameCode.CodeLocation&gt;, double, double)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/LocationAdapter.html" title="class in com.example.explqrer">LocationAdapter</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a id="I:M">
 <!--   -->
@@ -373,9 +502,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/MainActivity.html#%3Cinit%3E()">MainActivity()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/MainActivity.html" title="class in com.example.explqrer">MainActivity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/MapActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">MapActivity</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/MapActivity.html#%3Cinit%3E()">MapActivity()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/MapActivity.html" title="class in com.example.explqrer">MapActivity</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/ScanningPageActivity.MyImageAnalyzer.html#%3Cinit%3E(android.widget.TextView)">MyImageAnalyzer(TextView)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/ScanningPageActivity.MyImageAnalyzer.html" title="class in com.example.explqrer">ScanningPageActivity.MyImageAnalyzer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/RecyclerViewAdapter.MyViewHolder.html#%3Cinit%3E(android.view.View)">MyViewHolder(View)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/RecyclerViewAdapter.MyViewHolder.html" title="class in com.example.explqrer">RecyclerViewAdapter.MyViewHolder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.MyViewHolder.html#%3Cinit%3E(android.view.View,android.content.Context)">MyViewHolder(View, Context)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.MyViewHolder.html" title="class in com.example.explqrer">RecyclerViewAdapterLeaderBoard.MyViewHolder</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a id="I:N">
@@ -383,7 +518,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">N</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/CodeScannedFragment.html#newInstance(java.lang.String,java.lang.String)">newInstance(String, String)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/CodeScannedFragment.html" title="class in com.example.explqrer">CodeScannedFragment</a></dt>
+<dt><a href="com/example/explqrer/NearbyQRListInMapShow.html" title="class in com.example.explqrer"><span class="typeNameLink">NearbyQRListInMapShow</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/NearbyQRListInMapShow.html#%3Cinit%3E()">NearbyQRListInMapShow()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/NearbyQRListInMapShow.html" title="class in com.example.explqrer">NearbyQRListInMapShow</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCodeFragment.html#newInstance(com.example.explqrer.GameCode)">newInstance(GameCode)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/GameCodeFragment.html" title="class in com.example.explqrer">GameCodeFragment</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCodeFragment.html#newInstance(com.example.explqrer.GameCode.CodeLocation)">newInstance(GameCode.CodeLocation)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/GameCodeFragment.html" title="class in com.example.explqrer">GameCodeFragment</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/CodeScannedFragment.html#newInstance(java.lang.String)">newInstance(String)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/CodeScannedFragment.html" title="class in com.example.explqrer">CodeScannedFragment</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/IsPlayerQrFragment.html#newInstance(java.lang.String)">newInstance(String)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/IsPlayerQrFragment.html" title="class in com.example.explqrer">IsPlayerQrFragment</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a id="I:O">
@@ -393,21 +538,47 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/CodeScannedFragment.html#onAttach(android.content.Context)">onAttach(Context)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/CodeScannedFragment.html" title="class in com.example.explqrer">CodeScannedFragment</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/IsPlayerQrFragment.html#onAttach(android.content.Context)">onAttach(Context)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/IsPlayerQrFragment.html" title="class in com.example.explqrer">IsPlayerQrFragment</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryAdapter.html#onBindViewHolder(com.example.explqrer.GalleryAdapter.ViewHolder,int)">onBindViewHolder(GalleryAdapter.ViewHolder, int)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryAdapter.html" title="class in com.example.explqrer">GalleryAdapter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/RecyclerViewAdapter.html#onBindViewHolder(com.example.explqrer.RecyclerViewAdapter.MyViewHolder,int)">onBindViewHolder(RecyclerViewAdapter.MyViewHolder, int)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/RecyclerViewAdapter.html" title="class in com.example.explqrer">RecyclerViewAdapter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.html#onBindViewHolder(com.example.explqrer.RecyclerViewAdapterLeaderBoard.MyViewHolder,int)">onBindViewHolder(RecyclerViewAdapterLeaderBoard.MyViewHolder, int)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.html" title="class in com.example.explqrer">RecyclerViewAdapterLeaderBoard</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/Comment.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/Comment.html" title="class in com.example.explqrer">Comment</a></dt>
+<dd>
+<div class="block">Method for adding comments</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/EditProfileActivity.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/EditProfileActivity.html" title="class in com.example.explqrer">EditProfileActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/MainActivity.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/MainActivity.html" title="class in com.example.explqrer">MainActivity</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/MapActivity.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/MapActivity.html" title="class in com.example.explqrer">MapActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/NearbyQRListInMapShow.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/NearbyQRListInMapShow.html" title="class in com.example.explqrer">NearbyQRListInMapShow</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerDisplayActivity.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerDisplayActivity.html" title="class in com.example.explqrer">PlayerDisplayActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/PointsRank.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PointsRank.html" title="class in com.example.explqrer">PointsRank</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/ProfileQr.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/ProfileQr.html" title="class in com.example.explqrer">ProfileQr</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/ScannedRank.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/ScannedRank.html" title="class in com.example.explqrer">ScannedRank</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/ScanningPageActivity.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/ScanningPageActivity.html" title="class in com.example.explqrer">ScanningPageActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/SearchActivity.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/SearchActivity.html" title="class in com.example.explqrer">SearchActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/UniqueRank.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/UniqueRank.html" title="class in com.example.explqrer">UniqueRank</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/UserProfileActivity.html#onCreate(android.os.Bundle)">onCreate(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/UserProfileActivity.html" title="class in com.example.explqrer">UserProfileActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/CodeScannedFragment.html#onCreateDialog(android.os.Bundle)">onCreateDialog(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/CodeScannedFragment.html" title="class in com.example.explqrer">CodeScannedFragment</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCodeFragment.html#onCreateDialog(android.os.Bundle)">onCreateDialog(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GameCodeFragment.html" title="class in com.example.explqrer">GameCodeFragment</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/IsPlayerQrFragment.html#onCreateDialog(android.os.Bundle)">onCreateDialog(Bundle)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/IsPlayerQrFragment.html" title="class in com.example.explqrer">IsPlayerQrFragment</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryAdapter.html#onCreateViewHolder(android.view.ViewGroup,int)">onCreateViewHolder(ViewGroup, int)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryAdapter.html" title="class in com.example.explqrer">GalleryAdapter</a></dt>
 <dd>
@@ -415,9 +586,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/RecyclerViewAdapter.html#onCreateViewHolder(android.view.ViewGroup,int)">onCreateViewHolder(ViewGroup, int)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/RecyclerViewAdapter.html" title="class in com.example.explqrer">RecyclerViewAdapter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.html#onCreateViewHolder(android.view.ViewGroup,int)">onCreateViewHolder(ViewGroup, int)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.html" title="class in com.example.explqrer">RecyclerViewAdapterLeaderBoard</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/OnGetQrsListener.html#onError(java.lang.Exception)">onError(Exception)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnGetQrsListener.html" title="interface in com.example.explqrer">OnGetQrsListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/OnUserQrsListener.html#onError(java.lang.Exception)">onError(Exception)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnUserQrsListener.html" title="interface in com.example.explqrer">OnUserQrsListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCodeFragment.html#onGetCode(com.example.explqrer.GameCode)">onGetCode(GameCode)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GameCodeFragment.html" title="class in com.example.explqrer">GameCodeFragment</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/OnGetCodeListener.html#onGetCode(com.example.explqrer.GameCode)">onGetCode(GameCode)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnGetCodeListener.html" title="interface in com.example.explqrer">OnGetCodeListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/OnGetCodeListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetCodeListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/OnGetCommentsListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetCommentsListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/OnGetNearByQrsListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetNearByQrsListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/OnGetPlayerListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetPlayerListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
@@ -427,7 +610,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/OnGetQrLeaderBoardListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetQrLeaderBoardListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/example/explqrer/OnGetQrLListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetQrLListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dt><a href="com/example/explqrer/OnGetQrListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetQrListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/OnGetQrsListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetQrsListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
@@ -435,9 +618,27 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/OnGetUniqueLListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetUniqueLListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/OnHasScannedBeforeListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnHasScannedBeforeListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/UniformSizeImageView.html#onMeasure(int,int)">onMeasure(int, int)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/UniformSizeImageView.html" title="class in com.example.explqrer">UniformSizeImageView</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/MainActivity.html#onNavigationItemSelected(android.view.MenuItem)">onNavigationItemSelected(MenuItem)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/MainActivity.html" title="class in com.example.explqrer">MainActivity</a></dt>
+<dd>
+<div class="block">Called when a navigation item is selected</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/PointsRank.html#onNavigationItemSelected(android.view.MenuItem)">onNavigationItemSelected(MenuItem)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PointsRank.html" title="class in com.example.explqrer">PointsRank</a></dt>
+<dd>
+<div class="block">Called when a navigation item is selected</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/ScannedRank.html#onNavigationItemSelected(android.view.MenuItem)">onNavigationItemSelected(MenuItem)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/ScannedRank.html" title="class in com.example.explqrer">ScannedRank</a></dt>
+<dd>
+<div class="block">Called when a navigation item is selected</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/UniqueRank.html#onNavigationItemSelected(android.view.MenuItem)">onNavigationItemSelected(MenuItem)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/UniqueRank.html" title="class in com.example.explqrer">UniqueRank</a></dt>
+<dd>
+<div class="block">Called when a navigation item is selected</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/UserProfileActivity.html#onNavigationItemSelected(android.view.MenuItem)">onNavigationItemSelected(MenuItem)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/UserProfileActivity.html" title="class in com.example.explqrer">UserProfileActivity</a></dt>
 <dd>
 <div class="block">Called when a navigation item is selected</div>
 </dd>
@@ -453,6 +654,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">requestPermission result
  If add permission not add successfully, show the text</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/MainActivity.html#onResume()">onResume()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/MainActivity.html" title="class in com.example.explqrer">MainActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/OnScannedByListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnScannedByListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/OnSearchPlayersListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnSearchPlayersListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/OnUserQrsListener.html#onUserQrsFilled(java.util.ArrayList)">onUserQrsFilled(ArrayList&lt;String&gt;)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnUserQrsListener.html" title="interface in com.example.explqrer">OnUserQrsListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/OnUserQrsListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnUserQrsListener</span></a> - Interface in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
@@ -464,17 +671,41 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h2 class="title">P</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/EditProfileActivity.html#performEditProfile(android.view.View)">performEditProfile(View)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/EditProfileActivity.html" title="class in com.example.explqrer">EditProfileActivity</a></dt>
+<dd>
+<div class="block">preform actions to update information in the app</div>
+</dd>
+<dt><a href="com/example/explqrer/PlayerDisplayActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">PlayerDisplayActivity</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerDisplayActivity.html#%3Cinit%3E()">PlayerDisplayActivity()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/PlayerDisplayActivity.html" title="class in com.example.explqrer">PlayerDisplayActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer"><span class="typeNameLink">PlayerProfile</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#%3Cinit%3E(java.lang.String,java.lang.String)">PlayerProfile(String, String)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/PointsRank.html" title="class in com.example.explqrer"><span class="typeNameLink">PointsRank</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/PointsRank.html#%3Cinit%3E()">PointsRank()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/PointsRank.html" title="class in com.example.explqrer">PointsRank</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryBuilder.html#populateGallery(com.example.explqrer.PlayerProfile,androidx.recyclerview.widget.RecyclerView,android.content.Context,com.example.explqrer.GameCodeFragment.GameCodeFragmentHost)">populateGallery(PlayerProfile, RecyclerView, Context, GameCodeFragment.GameCodeFragmentHost)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/GalleryBuilder.html" title="class in com.example.explqrer">GalleryBuilder</a></dt>
+<dd>
+<div class="block">This populates the gallery with a GalleryAdapter
+  Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
+  Author: Adam Sinicki</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/IsPlayerQrFragment.IsPlayerQrFragmentListener.html#processDecision(com.example.explqrer.ScanningPageActivity.RETURNS)">processDecision(ScanningPageActivity.RETURNS)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/IsPlayerQrFragment.IsPlayerQrFragmentListener.html" title="interface in com.example.explqrer">IsPlayerQrFragment.IsPlayerQrFragmentListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/ScanningPageActivity.html#processDecision(com.example.explqrer.ScanningPageActivity.RETURNS)">processDecision(ScanningPageActivity.RETURNS)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/ScanningPageActivity.html" title="class in com.example.explqrer">ScanningPageActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/CodeScannedFragment.CodeScannerFragmentListener.html#processQR(com.example.explqrer.GameCode,java.lang.Boolean)">processQR(GameCode, Boolean)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/CodeScannedFragment.CodeScannerFragmentListener.html" title="interface in com.example.explqrer">CodeScannedFragment.CodeScannerFragmentListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/MainActivity.html#processQR(com.example.explqrer.GameCode,java.lang.Boolean)">processQR(GameCode, Boolean)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/MainActivity.html" title="class in com.example.explqrer">MainActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/ProfileQr.html" title="class in com.example.explqrer"><span class="typeNameLink">ProfileQr</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Link: https://www.android-examples.com/generate-qr-code-in-android-using-zxing-library-in-android-studio/
+ Author: Juned Mughal
+ generates a QR for the player to sign in to new device or for someone else to view their account</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/ProfileQr.html#%3Cinit%3E()">ProfileQr()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/ProfileQr.html" title="class in com.example.explqrer">ProfileQr</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/ProxyBitmap.html" title="class in com.example.explqrer"><span class="typeNameLink">ProxyBitmap</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
@@ -482,6 +713,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Created by John on 07-Sep-15.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/ProxyBitmap.html#%3Cinit%3E(android.graphics.Bitmap)">ProxyBitmap(Bitmap)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/ProxyBitmap.html" title="class in com.example.explqrer">ProxyBitmap</a></dt>
+<dd>&nbsp;</dd>
+</dl>
+<a id="I:Q">
+<!--   -->
+</a>
+<h2 class="title">Q</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/ProfileQr.html#QRcodeWidth">QRcodeWidth</a></span> - Static variable in class com.example.explqrer.<a href="com/example/explqrer/ProfileQr.html" title="class in com.example.explqrer">ProfileQr</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a id="I:R">
@@ -493,6 +732,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/RecyclerViewAdapter.MyViewHolder.html" title="class in com.example.explqrer"><span class="typeNameLink">RecyclerViewAdapter.MyViewHolder</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.html" title="class in com.example.explqrer"><span class="typeNameLink">RecyclerViewAdapterLeaderBoard</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.html#%3Cinit%3E(android.content.Context,java.util.ArrayList)">RecyclerViewAdapterLeaderBoard(Context, ArrayList&lt;ScannedRankLeaderboard&gt;)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.html" title="class in com.example.explqrer">RecyclerViewAdapterLeaderBoard</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/RecyclerViewAdapterLeaderBoard.MyViewHolder.html" title="class in com.example.explqrer"><span class="typeNameLink">RecyclerViewAdapterLeaderBoard.MyViewHolder</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/MainActivity.html#refresh()">refresh()</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/MainActivity.html" title="class in com.example.explqrer">MainActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/SearchActivity.html#refresh()">refresh()</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/SearchActivity.html" title="class in com.example.explqrer">SearchActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/UserProfileActivity.html#refresh()">refresh()</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/UserProfileActivity.html" title="class in com.example.explqrer">UserProfileActivity</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#refreshProfile()">refreshProfile()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
 <dd>
 <div class="block">refresh the profile, including highest and lowest codes,
@@ -501,6 +752,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#removeCode(com.example.explqrer.GameCode)">removeCode(GameCode)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
 <dd>
 <div class="block">Remove a code from a player profile</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryAdapter.html#removeImage(com.example.explqrer.GameCode)">removeImage(GameCode)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryAdapter.html" title="class in com.example.explqrer">GalleryAdapter</a></dt>
+<dd>
+<div class="block">remove the image in the galleryList</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/MainActivity.html#requestPermissionsIfNecessary(java.lang.String%5B%5D)">requestPermissionsIfNecessary(String[])</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/MainActivity.html" title="class in com.example.explqrer">MainActivity</a></dt>
 <dd>
@@ -512,6 +767,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">S</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#scannedBy(java.lang.String,com.example.explqrer.OnScannedByListener)">scannedBy(String, OnScannedByListener)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/CodeScannedFragment.html#scannedByListener(int)">scannedByListener(int)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/CodeScannedFragment.html" title="class in com.example.explqrer">CodeScannedFragment</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/OnScannedByListener.html#scannedByListener(int)">scannedByListener(int)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnScannedByListener.html" title="interface in com.example.explqrer">OnScannedByListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/ScannedRank.html" title="class in com.example.explqrer"><span class="typeNameLink">ScannedRank</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>
+<div class="block">all the methods to create the Leaderboard</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/ScannedRank.html#%3Cinit%3E()">ScannedRank()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/ScannedRank.html" title="class in com.example.explqrer">ScannedRank</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/ScannedRankLeaderboard.html" title="class in com.example.explqrer"><span class="typeNameLink">ScannedRankLeaderboard</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/ScannedRankLeaderboard.html#%3Cinit%3E(java.lang.String,java.lang.String)">ScannedRankLeaderboard(String, String)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/ScannedRankLeaderboard.html" title="class in com.example.explqrer">ScannedRankLeaderboard</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/ScanningPageActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">ScanningPageActivity</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>
 <div class="block">Citation 1: https://www.youtube.com/watch?v=iryHXuwuJ3Q
@@ -524,6 +795,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><a href="com/example/explqrer/ScanningPageActivity.MyImageAnalyzer.html" title="class in com.example.explqrer"><span class="typeNameLink">ScanningPageActivity.MyImageAnalyzer</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/example/explqrer/SearchActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">SearchActivity</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/SearchActivity.html#%3Cinit%3E()">SearchActivity()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/SearchActivity.html" title="class in com.example.explqrer">SearchActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#searchPlayers(java.lang.String,com.example.explqrer.OnSearchPlayersListener)">searchPlayers(String, OnSearchPlayersListener)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/OnSearchPlayersListener.html#searchPlayersListener(java.util.ArrayList)">searchPlayersListener(ArrayList&lt;String&gt;)</a></span> - Method in interface com.example.explqrer.<a href="com/example/explqrer/OnSearchPlayersListener.html" title="interface in com.example.explqrer">OnSearchPlayersListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/PlayerProfile.html#setAsAdmin()">setAsAdmin()</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/PlayerProfile.html" title="class in com.example.explqrer">PlayerProfile</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/MapActivity.html#setCamera(android.location.Location)">setCamera(Location)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/MapActivity.html" title="class in com.example.explqrer">MapActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryListItem.html#setCodeDescription(java.lang.String)">setCodeDescription(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryListItem.html" title="class in com.example.explqrer">GalleryListItem</a></dt>
+<dd>
+<div class="block">set the codeDescription to the parameter provided</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryListItem.html#setCodePts(int)">setCodePts(int)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryListItem.html" title="class in com.example.explqrer">GalleryListItem</a></dt>
+<dd>
+<div class="block">sets the codePts to the object</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/Comments.html#setComment(java.lang.String)">setComment(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/Comments.html" title="class in com.example.explqrer">Comments</a></dt>
 <dd>
 <div class="block">Function to set the comment</div>
@@ -534,9 +825,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#setDescription(java.lang.String)">setDescription(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryListItem.html#setImageId(android.graphics.Bitmap)">setImageId(Bitmap)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryListItem.html" title="class in com.example.explqrer">GalleryListItem</a></dt>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryListItem.html#setHashCode(java.lang.String)">setHashCode(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryListItem.html" title="class in com.example.explqrer">GalleryListItem</a></dt>
 <dd>
-<div class="block">This sets the image ID into the ImageListItem object</div>
+<div class="block">sets the hashCode of the object to the param provided</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryListItem.html#setImage(android.graphics.Bitmap)">setImage(Bitmap)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GalleryListItem.html" title="class in com.example.explqrer">GalleryListItem</a></dt>
+<dd>
+<div class="block">This sets the attribute image of the GalleryListItem object</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.html#setLocation(android.location.Location)">setLocation(Location)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.html" title="class in com.example.explqrer">GameCode</a></dt>
 <dd>
@@ -552,7 +847,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/MainActivity.html#setPlayer(com.example.explqrer.PlayerProfile)">setPlayer(PlayerProfile)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/MainActivity.html" title="class in com.example.explqrer">MainActivity</a></dt>
 <dd>
-<div class="block">Update the username</div>
+<div class="block">Update the player</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/Comments.html#setUsername(java.lang.String)">setUsername(String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/Comments.html" title="class in com.example.explqrer">Comments</a></dt>
 <dd>
@@ -570,8 +865,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/UniformSizeImageView.html#%3Cinit%3E(android.content.Context,android.util.AttributeSet)">UniformSizeImageView(Context, AttributeSet)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/UniformSizeImageView.html" title="class in com.example.explqrer">UniformSizeImageView</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryList.html#updateGallery(com.example.explqrer.PlayerProfile)">updateGallery(PlayerProfile)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/GalleryList.html" title="class in com.example.explqrer">GalleryList</a></dt>
+<dt><a href="com/example/explqrer/UniqueRank.html" title="class in com.example.explqrer"><span class="typeNameLink">UniqueRank</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/UniqueRank.html#%3Cinit%3E()">UniqueRank()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/UniqueRank.html" title="class in com.example.explqrer">UniqueRank</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryBuilder.html#updateImageList(com.example.explqrer.PlayerProfile)">updateImageList(PlayerProfile)</a></span> - Static method in class com.example.explqrer.<a href="com/example/explqrer/GalleryBuilder.html" title="class in com.example.explqrer">GalleryBuilder</a></dt>
+<dd>
+<div class="block">updates the list of images that the gallery displays</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/EditProfileActivity.html#updatePlayerInfo(java.lang.String,java.lang.String,com.example.explqrer.DataHandler)">updatePlayerInfo(String, String, DataHandler)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/EditProfileActivity.html" title="class in com.example.explqrer">EditProfileActivity</a></dt>
+<dd>
+<div class="block">updates the username and email of object player profile</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#updatePlayerJson(com.example.explqrer.PlayerProfile)">updatePlayerJson(PlayerProfile)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>
+<div class="block">Function to update the json file of the player</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#updatePlayerUsername(java.lang.String,com.example.explqrer.PlayerProfile)">updatePlayerUsername(String, PlayerProfile)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
+<dd>
+<div class="block">Function to update the username of the player</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#updatePts(java.lang.String,long)">updatePts(String, long)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
 <dd>
 <div class="block">Method to update the points of a specific player</div>
@@ -597,17 +910,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">This function updates the unique scanned of the user</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#uploadImage(com.example.explqrer.GameCode,java.lang.String)">uploadImage(GameCode, String)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><a href="com/example/explqrer/UserProfileActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">UserProfileActivity</span></a> - Class in <a href="com/example/explqrer/package-summary.html">com.example.explqrer</a></dt>
 <dd>
 <div class="block">all the methods to create the User Profile</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/example/explqrer/UserProfileActivity.html#%3Cinit%3E()">UserProfileActivity()</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/UserProfileActivity.html" title="class in com.example.explqrer">UserProfileActivity</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/example/explqrer/DataHandler.html#userQrs(java.lang.String,com.example.explqrer.OnUserQrsListener)">userQrs(String, OnUserQrsListener)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/DataHandler.html" title="class in com.example.explqrer">DataHandler</a></dt>
-<dd>
-<div class="block">Method to get all the hashes of the QRs scanned by a specific user</div>
-</dd>
 </dl>
 <a id="I:V">
 <!--   -->
@@ -617,7 +928,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/example/explqrer/GalleryAdapter.ViewHolder.html#%3Cinit%3E(android.view.View)">ViewHolder(View)</a></span> - Constructor for class com.example.explqrer.<a href="com/example/explqrer/GalleryAdapter.ViewHolder.html" title="class in com.example.explqrer">GalleryAdapter.ViewHolder</a></dt>
 <dd>&nbsp;</dd>
 </dl>
-<a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a></div>
+<a id="I:W">
+<!--   -->
+</a>
+<h2 class="title">W</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="com/example/explqrer/GameCode.CodeLocation.html#writeToParcel(android.os.Parcel,int)">writeToParcel(Parcel, int)</a></span> - Method in class com.example.explqrer.<a href="com/example/explqrer/GameCode.CodeLocation.html" title="class in com.example.explqrer">GameCode.CodeLocation</a></dt>
+<dd>&nbsp;</dd>
+</dl>
+<a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a></div>
 </main>
 <footer role="contentinfo">
 <nav role="navigation">

@@ -4,12 +4,4 @@
         android:id="@+id/edit_profile"
         android:title="Edit Profile" />
 
-    <item
-        android:id="@+id/scan_sign_in"
-        android:title="Scan To Sign-in" />
-
-    <item
-        android:id="@+id/select_delete"
-        android:title="Select to Delete" />
-
 </menu>

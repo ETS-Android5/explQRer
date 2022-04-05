@@ -25,6 +25,8 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
@@ -33,6 +35,7 @@ import com.google.mlkit.vision.common.InputImage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,7 +48,10 @@ import java.util.concurrent.Executors;
  * Citation 2: https://developers.google.com/ml-kit/vision/barcode-scanning/android
  */
 
-public class ScanningPageActivity extends AppCompatActivity {
+public class ScanningPageActivity extends AppCompatActivity
+        implements IsPlayerQrFragment.IsPlayerQrFragmentListener {
+
+    enum RETURNS {SCAN, SEE_PROFILE, LOG_IN}
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -66,6 +72,8 @@ public class ScanningPageActivity extends AppCompatActivity {
 
     private DataHandler dataHandler;
     private boolean isScanning = false;
+    private boolean isPlayerQR = false;
+    private static String rawValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +82,7 @@ public class ScanningPageActivity extends AppCompatActivity {
 
         // get the player from main activity
         playerProfile = MainActivity.getPlayer();
-        dataHandler = new DataHandler();
+        dataHandler = DataHandler.getInstance();
         // get ImageView and Textview for later use
         alreadyScanned = findViewById(R.id.already_scanned_text);
         goBack = findViewById(R.id.go_back);
@@ -186,17 +194,49 @@ public class ScanningPageActivity extends AppCompatActivity {
      * @param barcodes
      */
     private void readerBarcodeData( List<Barcode> barcodes) {
+        // TODO: Set up check if the dialogue is cancelled
+        // so that the camera can start scanning again.
         for (Barcode barcode : barcodes) {
-            String rawValue = barcode.getRawValue();
-            if (rawValue == null || playerProfile.hasCode(rawValue)) {
+            rawValue = barcode.getRawValue();
+            if (rawValue == null) {
                 continue;
             }
-            Intent intent = new Intent();
-            intent.putExtra("Code", rawValue);
-            setResult(RESULT_OK, intent);
-            finish();
+            if (rawValue.startsWith("Player QR: ")) {
+                IsPlayerQrFragment isPlayerQrFragment = IsPlayerQrFragment.newInstance(rawValue);
+                isPlayerQrFragment.show(getSupportFragmentManager(), "PLAYER_QR");
+                isScanning = true;
+                break;
+            } else {
+                processDecision(RETURNS.SCAN);
+            }
         }
     }
+
+    @Override
+    public void processDecision(RETURNS value) {
+        Intent intent = new Intent();
+        switch (value) {
+            case SCAN:
+                if (!playerProfile.hasCode(rawValue)) {
+                    intent.putExtra("Code", rawValue);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+                break;
+            case LOG_IN:
+                intent.putExtra("Username", rawValue.substring(11));
+                setResult(2, intent);
+                finish();
+                break;
+            case SEE_PROFILE:
+
+                intent.putExtra("Username", rawValue.substring(11));
+                setResult(3, intent);
+                finish();
+                break;
+        }
+    }
+
 
     /**
      * requestPermission result
@@ -210,7 +250,7 @@ public class ScanningPageActivity extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode== REQUEST_PERMISSIONS_REQUEST_CODE &&grantResults.length>0){
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE && grantResults.length>0){
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
               Toast.makeText(ScanningPageActivity.this,"Permission denied",
                       Toast.LENGTH_LONG).show();

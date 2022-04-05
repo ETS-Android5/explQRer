@@ -11,10 +11,13 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Gallery;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.auth.User;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,14 +27,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * takes images and binds them to view holders
  * Link: https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
  * Author: Adam Sinicki
  * This is a class for a custom adapter for the recycler View
  */
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
-    private ArrayList<GalleryListItem> galleryList;
-    private Context context;
+    private static ArrayList<GalleryListItem> galleryList;
+    private static Context context;
+    private static GameCodeFragment.GameCodeFragmentHost host;
+    private PlayerProfile player;
+    private static GalleryAdapter galleryAdapterInstance;
 
     /**
      * Constructor for the class
@@ -40,10 +47,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
      * @param galleryList
      *  galleryList is the array list for the adapter
      */
-    public GalleryAdapter(Context context, ArrayList<GalleryListItem> galleryList) {
+    public GalleryAdapter(Context context, ArrayList<GalleryListItem> galleryList,
+                          GameCodeFragment.GameCodeFragmentHost host) {
         this.galleryList = galleryList;
         this.context = context;
-        System.out.println("in adapter");
+        this.host = host;
+        this.player = host.getPlayer();
+
     }
 
     /**
@@ -86,6 +96,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     }
 
     /**
+     * remove the image in the galleryList
+     */
+    public void removeImage(GameCode codeImage){
+        galleryList.remove(codeImage);
+
+    }
+
+    /**
      * This class creates the ViewHolder which makes it easier to iterate through images
      */
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -94,7 +112,25 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             super(view);
 
             image = view.findViewById(R.id.image);
+            view.setOnClickListener(view1 -> {
+
+                String codeHash = galleryList.get(getBindingAdapterPosition()).getHashCode();
+                GameCode code = player.getCode(codeHash);
+                host.createFragment(code.getSha256hex());
+            });
         }
     }
+
+    /**
+     * get instance of the GalleryAdapater
+     * @return galleryAdapterInstance
+     */
+    public static GalleryAdapter getInstance() {
+        if (galleryAdapterInstance == null) {
+            galleryAdapterInstance = new GalleryAdapter(context,galleryList,host);
+        }
+        return galleryAdapterInstance;
+    }
+
 
 }

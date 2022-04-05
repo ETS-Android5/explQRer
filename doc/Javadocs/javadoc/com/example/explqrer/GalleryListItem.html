@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -177,17 +177,59 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>android.graphics.Bitmap</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getImage()">getImage</a></span>()</code></th>
+<td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCodeDescription()">getCodeDescription</a></span>()</code></th>
 <td class="colLast">
-<div class="block">This gets the ID of the image stored in the ImageListItem object</div>
+<div class="block">gets the descrition of the code that is stored in the object</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setImageId(android.graphics.Bitmap)">setImageId</a></span>&#8203;(android.graphics.Bitmap&nbsp;bitmapImage)</code></th>
+<td class="colFirst"><code>int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCodePts()">getCodePts</a></span>()</code></th>
 <td class="colLast">
-<div class="block">This sets the image ID into the ImageListItem object</div>
+<div class="block">get the codePts of the object</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getHashCode()">getHashCode</a></span>()</code></th>
+<td class="colLast">
+<div class="block">get the hashCode of the GalleryListItem object</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>android.graphics.Bitmap</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getImage()">getImage</a></span>()</code></th>
+<td class="colLast">
+<div class="block">This gets the bitmap image of the image stored in the GalleryListItem object</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setCodeDescription(java.lang.String)">setCodeDescription</a></span>&#8203;(java.lang.String&nbsp;codeDescription)</code></th>
+<td class="colLast">
+<div class="block">set the codeDescription to the parameter provided</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setCodePts(int)">setCodePts</a></span>&#8203;(int&nbsp;codePts)</code></th>
+<td class="colLast">
+<div class="block">sets the codePts to the object</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setHashCode(java.lang.String)">setHashCode</a></span>&#8203;(java.lang.String&nbsp;hashCode)</code></th>
+<td class="colLast">
+<div class="block">sets the hashCode of the object to the param provided</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setImage(android.graphics.Bitmap)">setImage</a></span>&#8203;(android.graphics.Bitmap&nbsp;bitmapImage)</code></th>
+<td class="colLast">
+<div class="block">This sets the attribute image of the GalleryListItem object</div>
 </td>
 </tr>
 </table>
@@ -240,25 +282,110 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getImage</h4>
 <pre class="methodSignature">public&nbsp;android.graphics.Bitmap&nbsp;getImage()</pre>
-<div class="block">This gets the ID of the image stored in the ImageListItem object</div>
+<div class="block">This gets the bitmap image of the image stored in the GalleryListItem object</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>imageId
-      Which is the ID stored in the ImageListItem of an image</dd>
+      Which is the bitmap image stored in the GalleryListItem of an image</dd>
 </dl>
 </li>
 </ul>
-<a id="setImageId(android.graphics.Bitmap)">
+<a id="setImage(android.graphics.Bitmap)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setImage</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setImage&#8203;(android.graphics.Bitmap&nbsp;bitmapImage)</pre>
+<div class="block">This sets the attribute image of the GalleryListItem object</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>bitmapImage</code> - Which is the URL of an image</dd>
+</dl>
+</li>
+</ul>
+<a id="getHashCode()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getHashCode</h4>
+<pre class="methodSignature">public&nbsp;java.lang.String&nbsp;getHashCode()</pre>
+<div class="block">get the hashCode of the GalleryListItem object</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>hashCode</dd>
+</dl>
+</li>
+</ul>
+<a id="setHashCode(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setHashCode</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setHashCode&#8203;(java.lang.String&nbsp;hashCode)</pre>
+<div class="block">sets the hashCode of the object to the param provided</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>hashCode</code> - the hash of the QR of the object</dd>
+</dl>
+</li>
+</ul>
+<a id="getCodeDescription()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCodeDescription</h4>
+<pre class="methodSignature">public&nbsp;java.lang.String&nbsp;getCodeDescription()</pre>
+<div class="block">gets the descrition of the code that is stored in the object</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>codeDescription
+   The description writen for the code</dd>
+</dl>
+</li>
+</ul>
+<a id="setCodeDescription(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setCodeDescription</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setCodeDescription&#8203;(java.lang.String&nbsp;codeDescription)</pre>
+<div class="block">set the codeDescription to the parameter provided</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>codeDescription</code> - </dd>
+</dl>
+</li>
+</ul>
+<a id="getCodePts()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCodePts</h4>
+<pre class="methodSignature">public&nbsp;int&nbsp;getCodePts()</pre>
+<div class="block">get the codePts of the object</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>codePts</dd>
+</dl>
+</li>
+</ul>
+<a id="setCodePts(int)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>setImageId</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setImageId&#8203;(android.graphics.Bitmap&nbsp;bitmapImage)</pre>
-<div class="block">This sets the image ID into the ImageListItem object</div>
+<h4>setCodePts</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setCodePts&#8203;(int&nbsp;codePts)</pre>
+<div class="block">sets the codePts to the object</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>bitmapImage</code> - Which is the URL of an image</dd>
+<dd><code>codePts</code> - </dd>
 </dl>
 </li>
 </ul>

@@ -104,6 +104,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">android.widget.ArrayAdapter&lt;T&gt; (implements android.widget.Filterable, android.widget.ThemedSpinnerAdapter)
 <ul>
 <li class="circle">com.example.explqrer.<a href="CommentsAdaptor.html" title="class in com.example.explqrer"><span class="typeNameLink">CommentsAdaptor</span></a></li>
+<li class="circle">com.example.explqrer.<a href="LocationAdapter.html" title="class in com.example.explqrer"><span class="typeNameLink">LocationAdapter</span></a></li>
 </ul>
 </li>
 </ul>
@@ -125,12 +126,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul>
 <li class="circle">androidx.appcompat.app.AppCompatActivity (implements androidx.appcompat.app.ActionBarDrawerToggle.DelegateProvider, androidx.appcompat.app.AppCompatCallback, androidx.core.app.TaskStackBuilder.SupportParentable)
 <ul>
+<li class="circle">com.example.explqrer.<a href="Comment.html" title="class in com.example.explqrer"><span class="typeNameLink">Comment</span></a></li>
 <li class="circle">com.example.explqrer.<a href="EditProfileActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">EditProfileActivity</span></a></li>
-<li class="circle">com.example.explqrer.<a href="GalleryList.html" title="class in com.example.explqrer"><span class="typeNameLink">GalleryList</span></a></li>
-<li class="circle">com.example.explqrer.<a href="MainActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">MainActivity</span></a> (implements com.example.explqrer.<a href="CodeScannedFragment.CodeScannerFragmentListener.html" title="interface in com.example.explqrer">CodeScannedFragment.CodeScannerFragmentListener</a>, com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener)</li>
+<li class="circle">com.example.explqrer.<a href="MainActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">MainActivity</span></a> (implements com.example.explqrer.<a href="CodeScannedFragment.CodeScannerFragmentListener.html" title="interface in com.example.explqrer">CodeScannedFragment.CodeScannerFragmentListener</a>, com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener, com.example.explqrer.<a href="OnGetPlayerListener.html" title="interface in com.example.explqrer">OnGetPlayerListener</a>)</li>
+<li class="circle">com.example.explqrer.<a href="MapActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">MapActivity</span></a> (implements com.example.explqrer.<a href="OnGetNearByQrsListener.html" title="interface in com.example.explqrer">OnGetNearByQrsListener</a>)</li>
+<li class="circle">com.example.explqrer.<a href="NearbyQRListInMapShow.html" title="class in com.example.explqrer"><span class="typeNameLink">NearbyQRListInMapShow</span></a></li>
+<li class="circle">com.example.explqrer.<a href="PlayerDisplayActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">PlayerDisplayActivity</span></a> (implements com.example.explqrer.<a href="GameCodeFragment.GameCodeFragmentHost.html" title="interface in com.example.explqrer">GameCodeFragment.GameCodeFragmentHost</a>, com.example.explqrer.<a href="OnGetPlayerListener.html" title="interface in com.example.explqrer">OnGetPlayerListener</a>)</li>
+<li class="circle">com.example.explqrer.<a href="PointsRank.html" title="class in com.example.explqrer"><span class="typeNameLink">PointsRank</span></a> (implements com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener)</li>
 <li class="circle">com.example.explqrer.<a href="ProfileQr.html" title="class in com.example.explqrer"><span class="typeNameLink">ProfileQr</span></a></li>
-<li class="circle">com.example.explqrer.<a href="ScanningPageActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">ScanningPageActivity</span></a></li>
-<li class="circle">com.example.explqrer.<a href="UserProfileActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">UserProfileActivity</span></a></li>
+<li class="circle">com.example.explqrer.<a href="ScannedRank.html" title="class in com.example.explqrer"><span class="typeNameLink">ScannedRank</span></a> (implements com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener)</li>
+<li class="circle">com.example.explqrer.<a href="ScanningPageActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">ScanningPageActivity</span></a> (implements com.example.explqrer.<a href="IsPlayerQrFragment.IsPlayerQrFragmentListener.html" title="interface in com.example.explqrer">IsPlayerQrFragment.IsPlayerQrFragmentListener</a>)</li>
+<li class="circle">com.example.explqrer.<a href="SearchActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">SearchActivity</span></a></li>
+<li class="circle">com.example.explqrer.<a href="UniqueRank.html" title="class in com.example.explqrer"><span class="typeNameLink">UniqueRank</span></a> (implements com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener)</li>
+<li class="circle">com.example.explqrer.<a href="UserProfileActivity.html" title="class in com.example.explqrer"><span class="typeNameLink">UserProfileActivity</span></a> (implements com.example.explqrer.<a href="GameCodeFragment.GameCodeFragmentHost.html" title="interface in com.example.explqrer">GameCodeFragment.GameCodeFragmentHost</a>, com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener)</li>
 </ul>
 </li>
 </ul>
@@ -152,27 +160,34 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul>
 <li class="circle">androidx.fragment.app.DialogFragment (implements android.content.DialogInterface.OnCancelListener, android.content.DialogInterface.OnDismissListener)
 <ul>
-<li class="circle">com.example.explqrer.<a href="CodeScannedFragment.html" title="class in com.example.explqrer"><span class="typeNameLink">CodeScannedFragment</span></a></li>
+<li class="circle">com.example.explqrer.<a href="CodeScannedFragment.html" title="class in com.example.explqrer"><span class="typeNameLink">CodeScannedFragment</span></a> (implements com.example.explqrer.<a href="OnScannedByListener.html" title="interface in com.example.explqrer">OnScannedByListener</a>)</li>
+<li class="circle">com.example.explqrer.<a href="GameCodeFragment.html" title="class in com.example.explqrer"><span class="typeNameLink">GameCodeFragment</span></a> (implements com.example.explqrer.<a href="OnGetCodeListener.html" title="interface in com.example.explqrer">OnGetCodeListener</a>)</li>
+<li class="circle">com.example.explqrer.<a href="IsPlayerQrFragment.html" title="class in com.example.explqrer"><span class="typeNameLink">IsPlayerQrFragment</span></a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="circle">com.example.explqrer.<a href="GalleryBuilder.html" title="class in com.example.explqrer"><span class="typeNameLink">GalleryBuilder</span></a></li>
 <li class="circle">com.example.explqrer.<a href="GalleryListItem.html" title="class in com.example.explqrer"><span class="typeNameLink">GalleryListItem</span></a></li>
 <li class="circle">com.example.explqrer.<a href="GameCode.html" title="class in com.example.explqrer"><span class="typeNameLink">GameCode</span></a> (implements java.io.Serializable)</li>
+<li class="circle">com.example.explqrer.<a href="GameCode.CodeLocation.html" title="class in com.example.explqrer"><span class="typeNameLink">GameCode.CodeLocation</span></a> (implements android.os.Parcelable)</li>
 <li class="circle">com.example.explqrer.<a href="PlayerProfile.html" title="class in com.example.explqrer"><span class="typeNameLink">PlayerProfile</span></a> (implements java.io.Serializable)</li>
 <li class="circle">com.example.explqrer.<a href="ProxyBitmap.html" title="class in com.example.explqrer"><span class="typeNameLink">ProxyBitmap</span></a> (implements java.io.Serializable)</li>
 <li class="circle">androidx.recyclerview.widget.RecyclerView.Adapter&lt;VH&gt;
 <ul>
 <li class="circle">com.example.explqrer.<a href="GalleryAdapter.html" title="class in com.example.explqrer"><span class="typeNameLink">GalleryAdapter</span></a></li>
 <li class="circle">com.example.explqrer.<a href="RecyclerViewAdapter.html" title="class in com.example.explqrer"><span class="typeNameLink">RecyclerViewAdapter</span></a></li>
+<li class="circle">com.example.explqrer.<a href="RecyclerViewAdapterLeaderBoard.html" title="class in com.example.explqrer"><span class="typeNameLink">RecyclerViewAdapterLeaderBoard</span></a></li>
 </ul>
 </li>
 <li class="circle">androidx.recyclerview.widget.RecyclerView.ViewHolder
 <ul>
 <li class="circle">com.example.explqrer.<a href="GalleryAdapter.ViewHolder.html" title="class in com.example.explqrer"><span class="typeNameLink">GalleryAdapter.ViewHolder</span></a></li>
 <li class="circle">com.example.explqrer.<a href="RecyclerViewAdapter.MyViewHolder.html" title="class in com.example.explqrer"><span class="typeNameLink">RecyclerViewAdapter.MyViewHolder</span></a></li>
+<li class="circle">com.example.explqrer.<a href="RecyclerViewAdapterLeaderBoard.MyViewHolder.html" title="class in com.example.explqrer"><span class="typeNameLink">RecyclerViewAdapterLeaderBoard.MyViewHolder</span></a></li>
 </ul>
 </li>
+<li class="circle">com.example.explqrer.<a href="ScannedRankLeaderboard.html" title="class in com.example.explqrer"><span class="typeNameLink">ScannedRankLeaderboard</span></a></li>
 <li class="circle">com.example.explqrer.<a href="ScanningPageActivity.MyImageAnalyzer.html" title="class in com.example.explqrer"><span class="typeNameLink">ScanningPageActivity.MyImageAnalyzer</span></a> (implements androidx.camera.core.ImageAnalysis.Analyzer)</li>
 <li class="circle">android.view.View (implements android.view.accessibility.AccessibilityEventSource, android.graphics.drawable.Drawable.Callback, android.view.KeyEvent.Callback)
 <ul>
@@ -195,14 +210,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h2 title="Interface Hierarchy">Interface Hierarchy</h2>
 <ul>
 <li class="circle">com.example.explqrer.<a href="CodeScannedFragment.CodeScannerFragmentListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">CodeScannedFragment.CodeScannerFragmentListener</span></a></li>
+<li class="circle">com.example.explqrer.<a href="GameCodeFragment.GameCodeFragmentHost.html" title="interface in com.example.explqrer"><span class="typeNameLink">GameCodeFragment.GameCodeFragmentHost</span></a></li>
+<li class="circle">com.example.explqrer.<a href="IsPlayerQrFragment.IsPlayerQrFragmentListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">IsPlayerQrFragment.IsPlayerQrFragmentListener</span></a></li>
+<li class="circle">com.example.explqrer.<a href="OnGetCodeListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetCodeListener</span></a></li>
+<li class="circle">com.example.explqrer.<a href="OnGetCommentsListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetCommentsListener</span></a></li>
+<li class="circle">com.example.explqrer.<a href="OnGetNearByQrsListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetNearByQrsListener</span></a></li>
 <li class="circle">com.example.explqrer.<a href="OnGetPlayerListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetPlayerListener</span></a></li>
 <li class="circle">com.example.explqrer.<a href="OnGetPtsLeaderBoardListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetPtsLeaderBoardListener</span></a></li>
 <li class="circle">com.example.explqrer.<a href="OnGetPtsLListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetPtsLListener</span></a></li>
 <li class="circle">com.example.explqrer.<a href="OnGetQrLeaderBoardListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetQrLeaderBoardListener</span></a></li>
-<li class="circle">com.example.explqrer.<a href="OnGetQrLListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetQrLListener</span></a></li>
+<li class="circle">com.example.explqrer.<a href="OnGetQrListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetQrListener</span></a></li>
 <li class="circle">com.example.explqrer.<a href="OnGetQrsListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetQrsListener</span></a></li>
 <li class="circle">com.example.explqrer.<a href="OnGetUniqueLeaderBoardListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetUniqueLeaderBoardListener</span></a></li>
 <li class="circle">com.example.explqrer.<a href="OnGetUniqueLListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnGetUniqueLListener</span></a></li>
+<li class="circle">com.example.explqrer.<a href="OnHasScannedBeforeListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnHasScannedBeforeListener</span></a></li>
+<li class="circle">com.example.explqrer.<a href="OnScannedByListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnScannedByListener</span></a></li>
+<li class="circle">com.example.explqrer.<a href="OnSearchPlayersListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnSearchPlayersListener</span></a></li>
 <li class="circle">com.example.explqrer.<a href="OnUserQrsListener.html" title="interface in com.example.explqrer"><span class="typeNameLink">OnUserQrsListener</span></a></li>
 </ul>
 </section>
