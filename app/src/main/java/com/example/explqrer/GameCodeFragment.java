@@ -102,6 +102,9 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             }
         });
 
+        if (!(getActivity() instanceof UserProfileActivity)) {
+            deleteButton.setVisibility(View.GONE);
+        }
 
         player = MainActivity.getPlayer();
         try {
@@ -113,9 +116,6 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             codePoints = code.getScore();
             completeDescription = codePoints + " pts; \n" + (codeDescription != null ? codeDescription : "");
             fragmentDescriptionView.setText(completeDescription);
-            if (player.getCode(hash) == null) {
-                deleteButton.setVisibility(View.GONE);
-            }
             if (codeImage != null) {
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
@@ -165,9 +165,6 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
         codeDescription = code.getDescription();
         codePoints = code.getScore();
         completeDescription = codePoints + " pts; \n" + (codeDescription != null ? codeDescription : "");
-        if (player.getCode(hash) == null) {
-            deleteButton.setVisibility(View.GONE);
-        }
         fragmentDescriptionView.setText(completeDescription);
         if (codeImage != null) {
             cardView.setVisibility(View.VISIBLE);
@@ -190,10 +187,6 @@ public class GameCodeFragment extends DialogFragment implements OnGetCodeListene
             startActivity(intent);
         });
 
-        HashMap<String, GameCode> codes = player.getCodes();
-        if (!codes.containsKey(code.getSha256hex())) {
-            deleteButton.setVisibility(View.GONE);
-        }
         deleteButton.setOnClickListener(v -> {
             View view12 = LayoutInflater.from(getContext()).inflate(R.layout.confirm_delete_qr_prompt, null);
             AlertDialog.Builder deletePrompt = new AlertDialog.Builder(GameCodeFragment.this.getActivity());
