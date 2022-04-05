@@ -156,7 +156,7 @@ public class GameCode implements Serializable {
     public void setPhoto(Bitmap photo) {
         if (photo == null) { return; }
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        photo.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+        photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         this.photo = new ProxyBitmap(BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size()));
     }
 
