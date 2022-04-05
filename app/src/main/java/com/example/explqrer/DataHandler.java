@@ -866,7 +866,7 @@ public class DataHandler {
             StorageReference imageRef = storageReference.child("images/" + hash + ".jpg");
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            image.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+            image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] imageData = baos.toByteArray();
 
             // Upload the image
