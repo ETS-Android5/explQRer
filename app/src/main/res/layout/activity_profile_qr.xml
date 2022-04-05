@@ -7,9 +7,9 @@
 
 
     <ImageView
+        android:id="@+id/imageViewProfileQR"
         android:layout_width="400dp"
         android:layout_height="400dp"
-        android:id="@+id/imageView"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         />

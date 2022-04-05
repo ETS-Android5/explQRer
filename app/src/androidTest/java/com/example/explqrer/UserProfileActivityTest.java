@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
 
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -30,7 +31,7 @@ public class UserProfileActivityTest {
 
     @Rule
     public ActivityTestRule<MainActivity> rule =
-            new ActivityTestRule<>(MainActivity.class, true, true);
+            new ActivityTestRule<MainActivity>(MainActivity.class);
 
     @Before
     public void setup() throws Exception {
@@ -58,4 +59,17 @@ public class UserProfileActivityTest {
     public void tearDown() throws Exception {
         solo.finishOpenedActivities();
     }
+
+
+    @Test
+    public void checkProfileQR(){
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.clickOnButton("DENY");
+        solo.clickOnButton("DENY");
+        solo.clickOnButton("Profile");
+        solo.assertCurrentActivity("Wrong Activity", UserProfileActivity.class);
+        solo.clickOnButton("Profile QR");
+        solo.waitForView(R.id.)
+    }
+
 }

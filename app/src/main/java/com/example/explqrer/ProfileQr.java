@@ -28,14 +28,14 @@ public class ProfileQr extends AppCompatActivity {
         // get the player from main activity
         player = MainActivity.getPlayer();
 
-        ImageView imageView = (ImageView)findViewById(R.id.imageView);
+        ImageView imageViewProfileQR = (ImageView)findViewById(R.id.imageViewProfileQR);
 
 
         try {
             Bitmap bitmap = TextToImageEncode("Player QR: " + player.getName());
             System.out.println(player.getName());
 
-            imageView.setImageBitmap(bitmap);
+            imageViewProfileQR.setImageBitmap(bitmap);
 
         } catch (WriterException e) {
             e.printStackTrace();
