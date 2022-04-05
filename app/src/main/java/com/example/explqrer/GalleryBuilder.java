@@ -2,7 +2,9 @@ package com.example.explqrer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,7 +55,11 @@ public class GalleryBuilder {
         for(GameCode qr : qrCodes ){
 
             GalleryListItem galleryListItem = new GalleryListItem();
-            galleryListItem.setImage(qr.getPhoto());
+            if (qr.getPhoto() == null) {
+                galleryListItem.setImage(UserProfileActivity.defaultQr);
+            } else {
+                galleryListItem.setImage(qr.getPhoto());
+            }
             galleryListItem.setHashCode(qr.getSha256hex());
             listOfImages.add(galleryListItem);
         }
